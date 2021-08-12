@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width= device-width, initial-scale=1.0">
+
+    <!-- login_page.html è un'estensione di base.html -->
+    {% extends 'main/base.html' %}
+
+    <!-- ridefinisco title -->
+    <title>{% block title %}Login/Registration{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- carico la directory static per poter usare i suoi file -->
+    {% load static %}
+
+    <!-- carico file style.css presente in static -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <!-- carico link a Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+    <!-- carico ????? -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+
+    <!-- carico link a font -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!----------------------------------------- LOGIN_PAGE ---------------------------------------->
+    {% block login_page %}
+    <div class="login_page">
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <div class="form_container_login">
+                        <img src="{% static 'images/user_icon.png' %}">
+                        <h3>Sign Up Now</h3>
+                        <form id="LoginForm" action="{% url 'users:login_all'%}" method="post">
+                            {% csrf_token %} <!-- da mettere all'interno del form -->
+                            <input type="text" class="input-box" placeholder="Username" maxlength="15">
+                            <input type="password" class="input-box" placeholder="Password" maxlength="15">
+                            <p><span><input type="checkbox"></span>I agree to the terms of services</p>
+                            <button type="submit" class="btn">Login</button>
+                            <hr>
+                            <label>Sei nuovo?</label>
+                            <a href="{% url 'registration_page' %}" class="btn">Crea il tuo account</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!----------------------------------------- Js ToggleMenu ---------------------------------------->
+   <script>
+
+       var LoginForm = document.getElementById("LoginForm");
+       var RegForm = document.getElementById("RegForm");
+       var Indicator = document.getElementById("Indicator");
+
+       function register(){
+         RegForm.style.transform = "translateX(0px)";
+         LoginForm.style.transform = "translateX(0px)";
+         Indicator.style.transform = "translateX(100px)";
+       }
+
+       function login(){
+         RegForm.style.transform = "translateX(300px)";
+         LoginForm.style.transform = "translateX(300px)";
+         Indicator.style.transform = "translateX(0px)";
+       }
+
+
+   </script>
+    {% endblock %}
+</body>
+</html>

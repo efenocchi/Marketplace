@@ -14,8 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+#poichè si sta utilizzando Django >= 2.x si userà path e non url + pattern '' e non regexp r'^$' (analogamente nelle views)
 from django.urls import path
+from django.conf.urls import include    #aggiungo per poter usare la funzione include
 
+#RICORDARSI: la / iniziale non va scritta all'inizio perchè si assume già inclusa nel path di grado inferiore
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('main.urls')),          #appena apro localhost:8000 parte la main.views
+    path('users/', include('users.urls')),
 ]
