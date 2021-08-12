@@ -1,0 +1,133 @@
+<!-- questo file.html è un file di base in cui figurano solo la barra in alto e la fine del sito -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width= device-width, initial-scale=1.0">
+    <title>{% block title %}Base{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- carico la directory static per poter usare i suoi file -->
+    {% load static %}
+
+    <!-- carico file style.css presente in static -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <!-- carico link a Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
+    <!-- carico ????? -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+
+    <!-- carico link a font -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+<!----------------------------------------- COMMON-MENU ---------------------------------------->
+    <div class="header">
+        <div class="container">
+            <div class="navbar">
+                <div class="logo">
+                    <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" width="200px"></a>
+                </div>
+                <nav>
+                    <ul id="MenuItems">
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li><a href="">Shops</a></li>
+                        <li><a href="{% url 'login_page' %}">Account</a></li> <!-- chiamo la pagina col nome specificato nel campo name in urls.py di main -->
+                        <li><a href="">About</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                    </ul>
+                </nav>
+                <a href="{% url 'empty_cart' %}"><img src="{% static 'images/cart.png'%}" width="30px" height="30px"></a>
+                <img src="{% static 'images/menu.png'%}" class="menu_icon" onclick="menutoggle()">
+            </div>
+<!----------------------------------------- HOME.HTML-FIRST_ROW ---------------------------------------->
+            {% block first_row %}
+            {% endblock %}
+        </div>
+    </div>
+<!----------------------------------------- HOME.HTML-GALLERY ----------------------------------------->
+    {% block gallery %}
+    {% endblock %}
+<!----------------------------------------- HOME.HTML-CAROUSEL ----------------------------------------->
+    {% block carousel %}
+    {% endblock %}
+<!----------------------------------------- HOME.HTML-OFFER -------------------------------------------->
+    {% block offer %}
+    {% endblock %}
+<!----------------------------------------- HOME.HTML-TESTIMONIAL -------------------------------------->
+    {% block testimonial %}
+    {% endblock %}
+<!----------------------------------------- HOME.HTML-BRANDS ------------------------------------------->
+    {% block brands %}
+    {% endblock %}
+<!----------------------------------------- LOGIN_PAGE.HTML-LOGIN ------------------------->
+    {% block login_page %}
+    {% endblock %}
+<!----------------------------------------- REGISTRATION_PAGE.HTML-REGISTRATION ------------------------->
+    {% block registration_page %}
+    {% endblock %}
+<!----------------------------------------- EMPTY_CART.HTML-EMPTY_CART ------------------------->
+    {% block empty_cart %}
+    {% endblock %}
+<!----------------------------------------- CONTACT.HTML-CONTACT ------------------------->
+    {% block contact %}
+    {% endblock %}
+<!----------------------------------------- COMMON-END SITE -------------------------------------------->
+    <div class="end_site">
+        <div class="container">
+            <div class="row">
+                <div class="end_site_col-1">
+                    <h3>Download Our App</h3>
+                    <p>Download App for Android and IOS</p>
+                    <div class="app_logo">
+                        <img src="{% static 'images/app_store.png' %}">
+                        <img src="{% static 'images/play_store.png' %}">
+                    </div>
+                </div>
+
+                <div class="end_site_col-2">
+                    <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" width="200px"></a>
+                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
+                </div>
+
+                <div class="end_site_col-3">
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li>Coupons</li>
+                        <li>Blog Post</li>
+                        <li>Return Policy</li>
+                        <li>Join Affiliate</li>
+                    </ul>
+                </div>
+
+                <div class="end_site_col-4">
+                    <h3>Follow us</h3>
+                    <ul>
+                        <li>Instagram</li>
+                        <li>Facebook</li>
+                        <li>Twitter</li>
+                        <li>Youtube</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p class="copyright">Copyright 2021</p>
+        </div>
+    </div>
+<!----------------------------------------- Js ToggleMenu ---------------------------------------->
+   <script>
+       var MenuItems = document.getElementById("MenuItems");
+
+       MenuItems.style.maxHeight = "0px";
+
+       function menutoggle(){
+         if(MenuItems.style.maxHeight == "0px") MenuItems.style.maxHeight = "200px";
+         else MenuItems.style.maxHeight = "0px";
+       }
+
+   </script>
+</body>
+</html>
