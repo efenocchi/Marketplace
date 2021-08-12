@@ -1,0 +1,499 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+}
+.navbar{
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+nav{
+    flex: 1;
+    text-align: right;
+}
+
+nav ul{
+    display: inline-block;
+    list-style-type: none;
+}
+
+nav ul li{
+    display: inline-block;
+    margin-right: 20px;
+}
+
+/* colore scritte Home, Shops, Login, About,Contact */
+a{
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+
+}
+
+/* colore scritta piccola */
+p{
+    color: black;
+}
+
+.container{
+    max-width: 1300px;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.row{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.col-2{
+    flex-basis: 50%;
+    min-width: 300px;
+}
+
+/* immagine sportiva */
+.col-2 img{
+    max-width: 100%;
+    padding: 50px 0;
+    border-radius: 100%;
+}
+
+/* scritta in grande */
+.col-2 h1{
+    font-size: 50px;
+    line-height: 60px;
+    margin: 25px 0;
+}
+
+/* bottone Explore Now */
+.btn{
+    display: inline-block;
+    background: red;
+    color: white;
+    padding: 8px 30px;
+    margin: 30px 0;
+    border-radius: 30px;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
+
+/* transizione bottone da rosso a blu */
+.btn:hover{
+    background: blue;
+}
+
+/* colore sfondo */
+.header{
+    background: radial-gradient(white, #90ee90); /* se modifico questo modifico anche .offer e .login_page background */
+}
+
+.header .row{
+    margin-top: 70px;
+}
+/* ----------------------------------------- IMMAGE GALLERY ---------------------------------------- */
+.container_gallery{
+    width: 1000px;
+    height: 400px;
+    background: #ccc;
+    margin: 20px auto;
+    display: flex;
+}
+
+.col_gallery{
+    height: 100%;
+    flex: 1;
+    color: white;
+    box-sizing: border-box;
+    padding: 25px;
+    position:relative;
+    transition: 0.6s;
+}
+
+.col_gallery:nth-child(1){
+    background: blue;
+}
+
+.col_gallery:nth-child(2){
+    background: pink;
+}
+
+.col_gallery:nth-child(3){
+    background: green;
+}
+
+.col_gallery h2{
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+
+}
+
+.caption{
+    max-width: 230px;
+    font-size: 12px;
+    margin: 28px 0;
+    display: none;
+}
+
+.caption button{
+    border: 1px solid #fff;
+    background: transparent;
+    outline: none;
+    padding: 8px 18px;
+    color: white;
+    border-radius: 30px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.col_gallery img{
+    width: 200px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.col_gallery:hover{
+    flex-grow: 2.5;
+}
+
+.col_gallery:hover .caption{
+    display: block;
+}
+
+.col_gallery:hover h2{
+    text-align: left;
+}
+/* ---------------------------------- CAROUSEL ----------------------------------------------------------- */
+.carousel-inner{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    background-size: cover;
+}
+
+/* ---------------------------------- OFFER ----------------------------------------------------------- */
+/* contenitore offerta, distanza dalla categoria sopra, colore sfondo ... */
+.offer{
+    background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .login_page */
+    margin-top: 10px; /* distanza dal contenitore sopra */
+    padding: 30px 0;
+}
+
+/*immagine offerta */
+.col-2 .offer-img{
+    padding: 80px;  /* PADDING = DIMENSIONE -> più alto il valore più è piccola*/
+}
+
+/* colore scritta offerta */
+small{
+    color: black;
+}
+
+/* ---------------------------------- TESTIMONIAL ----------------------------------------------------------- */
+.col-3{
+    flex-basis: 30%;
+    min-width: 250px;
+    margin-bottom: 30px;
+}
+
+.col-3 img{
+    width: 100%;
+}
+
+.small-container{
+    max-width: 1080px;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.rating .fa{
+    color: #ff523b;
+}
+
+.testimonial{
+    padding-top: 100px;
+}
+
+.testimonial .col-3{
+    text-align: center;
+    padding: 40px 20px;
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.5s;
+}
+
+.testimonial .col-3 img{
+    width: 50px;
+    margin-top: 20px;
+    border-radius: 50%;
+}
+
+.testimonial .col-3:hover{
+    transform: translateY(-10px);
+}
+
+/* ---------------------------------- BRANDS ----------------------------------------------------------- */
+.brands{
+    margin: 100px auto;
+}
+
+.col-4{
+    width: 160px;
+}
+
+.col-4 img{
+    width: 100%;
+    cursor: pointer;
+    filter: grayscale(100%);
+}
+
+.col-4 img:hover{
+    filter: grayscale(0%);
+}
+/* ---------------------------------- LOGIN_PAGE ----------------------------------------------------------- */
+.login_page{
+    margin: 0px;
+    padding: 0;
+    font-family: sans-serif;
+    background: #ffebcd;        /* pink */
+    background-size: cover;
+    background-position: center;
+
+}
+
+.form_container_login{
+    width: 300px;
+    box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+    background: #fff;
+    padding: 20px;
+    margin: 8% auto 0;
+    text-align: center;
+}
+.form_container_login img{
+    width: 70px;
+    margin-top: -50px;
+}
+/* ---------------------------------- REGISTRATION_PAGE ----------------------------------------------------------- */
+.registration_page{
+    padding: 50px 0;
+    background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
+}
+
+/* schermata registration */
+.form-container{
+    background: white;
+    width: 300px;
+    height: 400px;
+    position: relative;
+    text-align: center;
+    padding: 20px 0;
+    margin: auto;
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.form-container span{
+    font-weight: bold;
+    padding: 0 10px;
+    color: #555;
+    cursor: pointer;
+    width: 100px;
+    display: inline-block;
+}
+
+.form-btn{
+    display: inline-block;
+}
+
+.form-container form{
+    max-width: 300px;
+    padding: 0 20px;
+    position: absolute;
+    top: 130px;
+    transition: transform 1s;
+}
+
+form input{
+    width: 100%
+    height: 30px;
+    margin: 10px 0;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
+
+form .btn{
+    width: 100%;
+    border:none;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+form .btn:focus{
+    outline: none;  /* non c'è bordo se clicco sul pulsante */
+}
+
+#RegFormUser{
+    left: -300px;
+}
+
+#RegFormShop{
+    left: 0;
+}
+
+form a{
+    font-size: 12px;
+}
+
+#Indicator{
+    width: 100px;
+    border: none;
+    background: #ff523b;
+    height: 3px;
+    margin- top: 8px;
+    transform: translateX(100px);
+    transition: transform 1s;
+}
+/* ---------------------------------- EMPTY_CART ----------------------------------------------------------- */
+.empty-container{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.row-empty-1{
+    margin-left: 30px;
+}
+
+.row-empty-3{
+    margin-right:10px;
+    margin-top: -20px;
+}
+
+.row-empty-1 .empty_cart-img{
+    width: 150px;
+    height: 150px;
+    padding: 10px;  /* PADDING = DIMENSIONE -> più alto il valore più è piccola*/
+}
+
+/* ---------------------------------- CART ----------------------------------------------------------- */
+
+
+/* ---------------------------------- END SITE ----------------------------------------------------------- */
+.end_site{
+    background: #000;
+    color: #8a8a8a;
+    font-size: 14px;
+    padding: 60px 0 20px;
+}
+
+.end_site p{
+    color: #8a8a8a;
+}
+
+.end_site h3{
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.end_site_col-1, .end_site_col-2, .end_site_col-3, .end_site_col-4{
+    min-width: 250px;
+    margin-bottom: 20px;
+}
+
+.end_site_col-1{
+    flex-basis: 30%
+}
+
+.end_site_col-2{
+    flex: 1;
+    text-align: center;
+}
+
+.end_site_col-2 img{
+    width: 180px;
+    margin-bottom: 20px;
+}
+
+.end_site_col-3, .end_site_col-4{
+    flex-basis: 12%;
+    text-align: center;
+}
+
+ul{
+    list-style-type: none;
+}
+
+.app_logo{
+    margin-top: 20px;
+}
+
+.app_logo img{
+    width: 140px;
+}
+
+.end_site hr{
+    border: none;
+    background: #b5b5b5;
+    height: 1px;
+    margin 20px 0;
+}
+
+.copyright{
+    text-align: center;
+}
+
+/* ---------------------------------- MEDIA QUERY MENU ----------------------------------------------------------- */
+.menu_icon{
+    width: 28px;
+    margin-left: 20px;
+    display: none;
+}
+
+@media only screen and (max-width: 800px){
+    nav ul{
+        position: absolute;
+        top: 70px;
+        left: 0;
+        background: #333;
+        width: 100%;
+        overflow: hidden;
+        transition: max-height 0.5s;
+    }
+
+    nav ul li{
+        display: block;
+        margin-right: 50px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    nav ul li a{
+        color: #fff;
+    }
+
+    .menu_icon{
+        display: block;
+        cursor: pointer;
+    }
+
+}
+
+@media only screen and (max-width: 600px){
+    .row{
+        text-align: center;
+    }
+
+    .col-2, .col-3, .col-4{
+        flex-basis: 100%;
+    }
+}

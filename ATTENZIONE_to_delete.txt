@@ -1,0 +1,9 @@
+Chrome non ricarica sempre automaticamente i file .css -> SOLUZIONI:
+1) usare Firefox
+2) eseguire ogni volta che si vuole testare un .css i seguenti comandi sulla pagina del brownser localhost:8000:
+    CTRL+SHIFT+R
+    CTRL+R
+
+-----------------------------------------------------------------------------------------------------------------
+DA FARE: Scegliere immagine favicon.ico
+-----------------------------------------------------------------------------------------------------------------
