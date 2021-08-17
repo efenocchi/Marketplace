@@ -19,3 +19,6 @@ def empty_cart(request):
 
 def contact(request):
     return render(request, 'main/contact.html')
+
+def mostra_logout_avvenuto(request):
+    return render(request, 'main/logout_effettuato.html')

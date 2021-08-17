@@ -18,4 +18,5 @@ urlpatterns = [
 
     #/main/contact
     path('contact', views.contact, name='contact'),
+    path('mostra_logout_avvenuto', views.mostra_logout_avvenuto, name='mostra_logout_avvenuto'),
 ]

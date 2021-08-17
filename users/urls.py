@@ -12,6 +12,8 @@ urlpatterns = [
     # /utenti/registrazione/
     path('registration', views.registration, name='registration'),
 
+    path('test_login', views.test_login, name='test_login'),
+
     # /utenti/registrazione/normale
     #path('registration/user', views.registration_user, name='registration_user'),
 

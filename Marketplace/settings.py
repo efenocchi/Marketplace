@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-import os
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,6 +26,8 @@ SECRET_KEY = 'a823r%q55&$n)wt7@7wmz2_)a5+7xdg0o6vg+*$^+_s5@#ph(d'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+LOGIN_URL = '/login/'  # Se è deselezionata faccio il login e logout standard, altrimenti uso Google
 
 
 # Application definition
@@ -56,7 +58,7 @@ ROOT_URLCONF = 'Marketplace.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
