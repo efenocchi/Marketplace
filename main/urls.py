@@ -7,6 +7,7 @@ urlpatterns = [
     #views.name = name
     path('', views.index, name='index'),    #quando viene riconosciuto il path localhost:8000 vengo reindirizzato alla funzione index presente in views.py di main
 
+
     #/main/login/
     path('login', views.login_page, name='login_page'),
 
@@ -19,4 +20,5 @@ urlpatterns = [
     #/main/contact
     path('contact', views.contact, name='contact'),
     path('mostra_logout_avvenuto', views.mostra_logout_avvenuto, name='mostra_logout_avvenuto'),
+    path('autenticato', views.autenticato, name='autenticato'),
 ]

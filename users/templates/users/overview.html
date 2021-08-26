@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Capability overview</title>
+</head>
+<body>
+<form action="" method="post">
+    {{ formset.management_form }}
+    {% csrf_token %}
+    <ul>
+    {% for form in formset %}
+        <li>
+        {{ form }}
+        </li>
+    {% endfor %}
+    </ul>
+    <input type="submit" name="save" value="Submit" />
+</form>
+</body>
+</html>
