@@ -10,7 +10,7 @@ urlpatterns = [
     #/main/login/
     path('login', views.login_page, name='login_page'),
 
-    # /main/registration/
+    #/main/registration/
     path('registration', views.registration_page, name='registration_page'),
 
     #/main/cart-> DA CAMBIAREEEEEEEEEE !!!!! NON VOGLIO IL CARRRELLO VUOTO NELLA HOME è solo x vedere la grafica
@@ -18,4 +18,5 @@ urlpatterns = [
 
     #/main/contact
     path('contact', views.contact, name='contact'),
+
 ]

@@ -17,10 +17,16 @@ from django.contrib import admin
 #poichè si sta utilizzando Django >= 2.x si userà path e non url + pattern '' e non regexp r'^$' (analogamente nelle views)
 from django.urls import path
 from django.conf.urls import include    #aggiungo per poter usare la funzione include
+from django.conf import settings
+from django.conf.urls.static import static
 
 #RICORDARSI: la / iniziale non va scritta all'inizio perchè si assume già inclusa nel path di grado inferiore
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),          #appena apro localhost:8000 parte la main.views
     path('users/', include('users.urls')),
+    path('items/', include('items.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

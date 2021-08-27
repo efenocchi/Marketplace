@@ -7,3 +7,10 @@ Chrome non ricarica sempre automaticamente i file .css -> SOLUZIONI:
 -----------------------------------------------------------------------------------------------------------------
 DA FARE: Scegliere immagine favicon.ico
 -----------------------------------------------------------------------------------------------------------------
+POSSIBILE ERRORE IMAGEFIELD E SOLUZIONE:
+ERRORS:
+items.Item.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
+        HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
+-----------------------------------------------------------------------------------------------------------------
+gestione accessi multipli client-side
+-----------------------------------------------------------------------------------------------------------------
