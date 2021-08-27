@@ -37,7 +37,7 @@ def login_all(request):
             if user is not None:
                 if user.is_active:
                     login(request, user) #[modifica]invece che loggare direttamente, creare un pop-up che avvisi l'utente che può loggarsi
-                                    # mostrare quindi la pagina principale, evitando di loggare in automatico
+                    # mostrare quindi la pagina principale, evitando di loggare in automatico
                     #controllo se ha fatto l'accesso un utente normale o un negozio
                     return HttpResponse("L'utente " + request.user.username + " si è loggato con successo")
  
