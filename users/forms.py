@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 import re
 from .static import NamingList
-import magic
+#import magic
 
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
 MIME_TYPES = ['image/jpeg', 'image/png']

@@ -10,13 +10,13 @@
     <!-- carico la directory static per poter usare i suoi file -->
     {% load static %}
 
-    <!-- carico file style.css presente in static -->
+    <!-- carico link a Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
-    <!-- carico link a Bootstrap -->
+    <!-- carico file style.css presente in static -->
     <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 
-    <!-- carico ????? -->
+    <!-- carico link a Google fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
 
     <!-- carico link a font -->
@@ -36,7 +36,7 @@
                         <li><a href="{% url 'index' %}">Home</a></li>
                         <li><a href="">Shops</a></li>
                         <li><a href="{% url 'login_page' %}">Account</a></li> <!-- chiamo la pagina col nome specificato nel campo name in urls.py di main -->
-                        <li><a href="">About</a></li>
+                        <li><a href="{% url 'items:item_page' %}">Product_Temp</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </nav>
@@ -77,6 +77,12 @@
     {% endblock %}
 <!----------------------------------------- CONTACT.HTML-CONTACT ------------------------->
     {% block contact %}
+    {% endblock %}
+<!----------------------------------------- ITEM_PAGE.HTML-ITEM_PAGE -------------------------------------------->
+    {% block item_page %}
+    {% endblock %}
+<!----------------------------------------- BUY_PAGE.HTML-BUY_PAGE -------------------------------------------->
+    {% block buy_page %}
     {% endblock %}
 <!----------------------------------------- COMMON-END SITE -------------------------------------------->
     <div class="end_site">

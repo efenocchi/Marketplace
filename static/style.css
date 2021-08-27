@@ -333,8 +333,6 @@ small{
     background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
 }
 
-
-
 /* schermata registration */
 .form-container{
     background: white;
@@ -410,9 +408,95 @@ form a{
     border: none;
     background: #ff523b;
     height: 3px;
-    margin- top: 8px;
+    margin-top: 8px;
     transform: translateX(100px);
     transition: transform 1s;
+}
+/* ---------------------------------- ITEM_PAGE ----------------------------------------------------------- */
+.row-2{
+    background: blue;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px 20px 20px 20px;
+    justify-content: normal; /* Can be changed in the live sample */
+
+}
+
+.col-item{
+    background: white;
+
+}
+.modify-delete{
+    text-align: right;
+}
+
+/* ---------------------------------- BUY_PAGE ----------------------------------------------------------- */
+.container-item{
+    background: pink;
+    max-width: auto;
+    padding: 20px 20px 20px 20px;
+}
+
+.col-gallery{
+    flex-basis: 50%;
+    min-width: 300px;
+}
+
+.col-gallery img{
+    max-width: 100%;
+    padding: 0px 0;
+}
+
+.single-product{
+    margin-top: 0px;
+}
+
+.single-product .col-gallery img{
+    padding: 4px;
+}
+
+.single-product .col-gallery{
+    padding: 20px;
+}
+
+.single-product h4{
+    margin: 20px 0;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.single-product select{
+    display: block;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.single-product input{
+    width: 50px;
+    height: 40px;
+    padding-left: 10px;
+    font-size: 20px;
+    margin-right: 10px;
+    border: 1px solid #ff523b;
+}
+
+input:focus{
+    outline: none;
+}
+
+.single-product .fa{
+    color: #ff523b;
+    margin-left: 10px;
+}
+
+.small-img-row{
+    display: flex;
+    justify-content: space-between;
+}
+
+.small-img-col{
+    flex-basis: 24%;
+    cursor: pointer;
 }
 /* ---------------------------------- EMPTY_CART ----------------------------------------------------------- */
 .empty-container{
