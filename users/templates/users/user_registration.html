@@ -1,0 +1,45 @@
+{% extends base %}
+{% load staticfiles%}
+{% block title %}Marketplace - Registrazione normale{% endblock %}
+
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-md-6" style="float: none; margin: 0 auto;">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div style="text-align: center;">
+                        <h3>Registra un account utente normale</h3>
+                    </div>
+                    <br>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form id="user-form" class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <br>
+                        {% include 'utenti/base_registrazione.html' %}
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Registrati</button>
+                            </div>
+                        </div>
+                    </form>
+                    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+                    <script type="text/javascript" src="{% static 'user_form_validator.js' %}"></script>
+
+                    <br>
+                    <p> I campi contrassegnati con <span style="color:red;">*</span> sono obbligatori.</p>
+                </div>
+                <div class="panel-footer">
+                    Hai già un account? <a href="{% url 'utenti:utenti_login' %}">Clicca qui</a> per fare il log in.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

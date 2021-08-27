@@ -1,0 +1,12 @@
+
+
+                        <form id="RegFormShop" action="{% url 'users:normal_user_registration' oid=oid_value%}" method="post">
+                            {% csrf_token %}
+                             {% include 'users/base_registrazione.html' %}
+                            {{oid}}
+<!--                            <input type="text" placeholder="Username">-->
+<!--                            <input type="email" placeholder="Email">-->
+<!--                            <input type="password" placeholder="Password">-->
+
+                            <button type="submit" class="btn">Register Shop</button>
+                        </form>

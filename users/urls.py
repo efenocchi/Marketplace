@@ -10,13 +10,24 @@ urlpatterns = [
     path('login', views.login_all, name='login_all'),
 
     # /utenti/registrazione/
-    path('registration', views.registration, name='registration'),
+    # path('registration', views.registration, name='registration'),
+
+    # path('test_login', views.test_login, name='test_login'),
 
     # /utenti/registrazione/normale
-    #path('registration/user', views.registration_user, name='registration_user'),
+    path('normal_user_registration', views.normal_user_registration, name='normal_user_registration'),
 
-    # /utenti/registrazione/petsitter
-    #path('registration/shop', views.registration_shop, name='registration_shop'),
+    path('logout_user', views.logout_user, name='logout_user'),
+
+    path('shop_registration', views.shop_registration, name='shop_registration'),
+
+    # path('<int:oid>/insert_user_info', views.insert_user_info, name='insert_user_info'),
+    path('<int:oid>/prova_passaggio_interi', views.prova_passaggio_interi, name='prova_passaggio_interi'),
+    path('insert_user_info', views.insert_user_info, name='insert_user_info'),
+    path('insert_shop_info', views.insert_shop_info, name='insert_shop_info'),
+
+
+    # path('prova_registrazione', views.prova_registrazione, name='prova_registrazione'),
 
     # /utenti/logout/
     #path('logout', views.logout, name='logout'),

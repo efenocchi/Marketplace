@@ -38,13 +38,14 @@
                         <h3>Sign Up Now</h3>
                         <form id="LoginForm" action="{% url 'users:login_all'%}" method="post">
                             {% csrf_token %} <!-- da mettere all'interno del form -->
-                            <input type="text" class="input-box" placeholder="Username" maxlength="15">
-                            <input type="password" class="input-box" placeholder="Password" maxlength="15">
+                            <input type="text" name="username" class="input-box" placeholder="Username" maxlength="15">
+                            <input type="password" name="password" class="input-box" placeholder="Password" maxlength="15">
+
                             <p><span><input type="checkbox"></span>I agree to the terms of services</p>
                             <button type="submit" class="btn">Login</button>
                             <hr>
                             <label>Sei nuovo?</label>
-                            <a href="{% url 'registration_page' %}" class="btn">Crea il tuo account</a>
+                            <a href="{% url 'users:normal_user_registration' %}" class="btn">Crea il tuo account</a>
                         </form>
                     </div>
                 </div>

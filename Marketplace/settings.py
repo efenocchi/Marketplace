@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = '/login/'  # Se è deselezionata faccio il login e logout standard, altrimenti uso Google
+
 
 # Application definition
 
