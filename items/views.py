@@ -15,6 +15,7 @@ def item_page(request):
 
     general_user = GeneralUser.objects.get(user=request.user)
 
+
     #metto nella var all_items tutti gli oggetti item che ho nel db
     all_items = Item.objects.all()
 
