@@ -25,7 +25,7 @@ def item_page(request):
     if general_user.login_negozio == False:
         return render(request, 'items/item_page.html', {'all_items': all_items})
     else:
-        return HttpResponse("sono un negozio e devo visualizzare un'altra schermata")
+        return HttpResponse("sono un negozio e devo visualizzare un'altra schermata" + request.user.username)
 
 
 def buy_page(request, item_selected_id):
