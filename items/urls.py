@@ -9,10 +9,15 @@ urlpatterns = [
 
     path('<int:item_selected_id>/', views.buy_page, name='buy_page'),
 
-    # /annunci/#annuncio/modifica/
+    #/annunci/#annuncio/modifica/
     path('<int:item_selected_id>/modify', views.modify_item, name='modify_item'),
 
-    # /annunci/#annuncio/elimina/
+    #/annunci/#annuncio/elimina/
     path('<int:item_selected_id>/delete', views.delete_item, name='delete_item'),
+
+    #/annunci/#annuncio/add_to_cart/
+    path('<int:item_selected_id>/add_to_cart', views.add_to_cart, name='add_to_cart'),
+
+    path('<int:item_selected_id>/remove_single_item_from_cart', views.remove_single_item_from_cart, name='remove_single_item_from_cart'),
 
 ]
