@@ -2,13 +2,15 @@
 from django.urls import path
 from . import views
 
+
+
 urlpatterns = [
 
     #views.name = name
     path('', views.index, name='index'),    #quando viene riconosciuto il path localhost:8000 vengo reindirizzato alla funzione index presente in views.py di main
 
     #/main/login/
-    path('login', views.login_page, name='login_page'),
+    # path('login', views.login_page, name='login_page'),
 
     #/main/registration/
     path('registration', views.registration_page, name='registration_page'),

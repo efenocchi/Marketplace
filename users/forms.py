@@ -6,7 +6,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 import re
 from .static import NamingList
-#import magic
+
+# import magic
 
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
 MIME_TYPES = ['image/jpeg', 'image/png']
@@ -20,6 +21,7 @@ class UserForm(forms.ModelForm):
     # last_name = forms.CharField(max_length=30, label="Cognome")
     # email = forms.EmailField(max_length=254)
     password = forms.CharField(widget=forms.PasswordInput(attrs={'id': 'password'}))
+
     # conferma_password = forms.CharField(widget=forms.PasswordInput())
 
     # Il modello User è già creato da Django, esiste di default
@@ -96,20 +98,20 @@ class NormalUserForm(ModelForm):
     provincia = forms.ChoiceField(choices=NamingList.AnagraficaIstat.ListaProvince)
 
     class Meta:
-        model = models.NormalUser
+        model = models.GeneralUser
         fields = [
-                  'indirizzo',
-                  'citta',
-                'regione',
-                  'provincia',
-
-                  # 'telefono',
-                  # 'data_nascita',
-                  # 'foto_profilo',
-                # 'eta',
-                  # 'sesso',
-                   'descrizione'
-                  ]
+            'indirizzo',
+            'citta',
+            'regione',
+            'provincia',
+            'codice_postale',
+            # 'telefono',
+            # 'data_nascita',
+            # 'foto_profilo',
+            # 'eta',
+            # 'sesso',
+            'descrizione'
+        ]
 
     # def clean_indirizzo(self):
     #     # controllo indirizzo
@@ -191,6 +193,7 @@ class NormalUserForm(ModelForm):
     #         raise ValidationError(_('Errore: il campo caratteristiche deve avere lunghezza fra 1 e 245 caratteri.'))
     #     return self.cleaned_data['descrizione']
 
+
 class ShopProfileForm(ModelForm):
     # per formattazione errori e richieste (vedi documentazione Django)
     required_css_class = 'required'
@@ -202,15 +205,14 @@ class ShopProfileForm(ModelForm):
     provincia = forms.ChoiceField(choices=NamingList.AnagraficaIstat.ListaProvince)
 
     class Meta:
-        model = models.ShopProfile
+        model = models.GeneralUser
         fields = [
             'indirizzo',
             'citta',
             'regione',
             'provincia',
-            # 'latitudine',
-            # 'longitudine',
-            # 'telefono',
+            'codice_postale',
+            'telefono',
             # 'foto_profilo',
             'descrizione'
         ]

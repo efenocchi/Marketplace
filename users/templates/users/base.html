@@ -35,7 +35,7 @@
                     <ul id="MenuItems">
                         <li><a href="{% url 'index' %}">Home</a></li>
                         <li><a href="">Shops</a></li>
-                        <li><a href="{% url 'login_page' %}">Account</a></li> <!-- chiamo la pagina col nome specificato nel campo name in urls.py di main -->
+                        <li><a href="{% url 'users:login_all' %}">Account</a></li> <!-- chiamo la pagina col nome specificato nel campo name in urls.py di main -->
                         <li><a href="">About</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>

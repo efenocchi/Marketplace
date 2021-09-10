@@ -11,8 +11,8 @@ def autenticato(request):
     #add something
     #return render(request, '404.html', status=404, context=context)
 
-def login_page(request):
-    return render(request, 'users/login_page.html')
+# def login_page(request):
+#     return render(request, 'users/login_page.html')
 
 def registration_page(request):
     return render(request, 'users/registration_page.html')
