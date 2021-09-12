@@ -1,16 +1,29 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+from django.conf import settings
 
 #CLASSE dei PRODOTTI in vendita
+from django.templatetags.static import static
+
+
 class Item(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     name = models.CharField(max_length=100)
-    price = models.FloatField()
+    price = models.FloatField(default=0)
     category = models.TextField()
     description = models.TextField()
-    image = models.ImageField()
+    image = models.FileField(null=True, default='', blank=True)
 
+
+    def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
+        if self.image:
+            return settings.MEDIA_URL + str(self.image)
+
+        return default_path
     #faccio in modo che tutti i file quando li aggiungo abbiano il nome=name
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
 class OrderItem(models.Model):
     #user = models.ForeignKey(settings.AUTH_USER_MODEL,

@@ -6,7 +6,9 @@
 
     <!-- home.html è un'estensione di base.html -->
     {% extends 'main/base.html' %}
-
+     {% block menu_id %}
+        <li><a href="{% url 'users:login_all' %}">Iscriviti o Accedi</a></li>
+    {% endblock %}
     <!-- ridefinisco title -->
     <title>{% block title %}Ecommerce Webside Design{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">

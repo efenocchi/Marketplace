@@ -17,7 +17,7 @@ from .models import GeneralUser
 from . import models
 from . import forms
 import requests
-import tkinter as tk
+
 
 
 def index(request):
@@ -62,23 +62,10 @@ def login_all(request):
         # return render(request, 'users/login_page.html', {'error_message': 'Immettere un utente e una password validi'})
 
 
-# def registration(request):
-#     """
-#     Permette agli utenti di registrarsi al sito.
-#
-#     :param request: request utente.
-#     :return: render della pagina di registrazione o redirect a pagina principale.
-#     """
-#
-#     if not request.user.is_authenticated:
-#         base_template = 'main/contact.html'
-#         return render(request, 'users/contact.html', {'base_template': base_template})
-#     else:
-#         return HttpResponseRedirect(reverse('main:index'))
-
 # uguale alla registrazione dell'utente, se non cambia niente in futuro se ne può lasciare solo una
 def shop_registration(request):
     form = UserForm(request.POST or None, oauth_user=0)
+
     if form.is_valid() and \
             not User.objects.filter(username=form.cleaned_data['username']).exists():
         shop = form.save(commit=False)
@@ -154,7 +141,7 @@ def normal_user_registration(request):
     return render(request, 'users/registration_page.html', context)
 
 
-@login_required(login_url='/login')  # aggiungere il controllo che sia un negozio e non un utente
+@login_required(login_url='/users/login')  # aggiungere il controllo che sia un negozio e non un utente
 def insert_shop_info(request):
     """
     [modifica]
@@ -226,7 +213,7 @@ def prova_passaggio_interi(request, oid):
     return render(request, 'users/prova_passaggio.html', context)
 
 
-@login_required(login_url='/users/login/')
+@login_required(login_url='/users/login')
 def insert_user_info(request):
     """
     [modifica]
@@ -375,7 +362,7 @@ def insert_user_info(request):
 # else:
 #     raise Http404
 
-@login_required(login_url='/login')
+@login_required(login_url='/users/login')
 def logout_user(request):
     # [modifica] creare un pop-up in JS della durata di 2-3 secondi che mostri il nome dell'utente che si è disconnesso
     # nel mentre caricare la pagina principale invece che la pagina con la scritta
@@ -421,7 +408,7 @@ def isUser(user):
     return not general_user.login_negozio
 
 
-@login_required(login_url='/login')
+@login_required(login_url='/users/login')
 @user_passes_test(isUser)
 def show_distance_shops(request):
 

@@ -1,9 +1,11 @@
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+
 from .models import Item,OrderItem,Order  # importo il modello così che possa utilizzalo, andrà a
                                           # pescare gli Item dal db e conservarli in una variabile
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 
@@ -13,7 +15,63 @@ from .forms import ItemForm
 from django.utils import timezone
 
 
-@login_required(login_url='/users/login/')
+def isShop(user):
+    print("isShop")
+    general_user = GeneralUser.objects.get(user=user)
+    print("fineisshop")
+    return general_user.login_negozio
+
+
+@login_required(login_url='/users/login')
+@user_passes_test(isShop)
+def add_item(request):
+
+    """
+    Permette all'utente di inserire un nuovo item.
+
+    :param request: request utente.
+    :return: render pagina inserisci_annuncio e redirect alla home.
+    """
+
+    # if nega_accesso_senza_profilo(request):
+    #     return HttpResponseRedirect(reverse('utenti:scelta_profilo_oauth'))
+
+    form = ItemForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        print("FORM ITEM VALIDA!!")
+        item = Item.objects.create(user=request.user)
+        item.name = form.cleaned_data['name']
+        item.price = form.cleaned_data['price']
+        item.category = form.cleaned_data['category']
+        item.description = form.cleaned_data['description']
+        # item.image = form.cleaned_data['image']
+
+        try:
+            print("entra nel try")
+            item.image = request.FILES['image']
+        except Exception:
+            print("entra nell'except")
+            item.image = item.item_pic_or_default()
+        print("FOTO PROFILO ", item.image)
+        item.save()
+
+        return HttpResponseRedirect(reverse('items:item_page'))
+
+    context = {
+        "form": form,
+    }
+
+    # return render(request, 'users/base_registrazione.html', context)
+    return render(request, 'items/insert.html', context)
+
+
+def show_item_shop(request):
+    ...
+
+
+
+@login_required(login_url='/users/login')
 def item_page(request):
     """
     Dobbiamo ritornare due pagine differenti a seconda che il login sia stato fatto da un utente o da un negozio
@@ -24,15 +82,16 @@ def item_page(request):
 
     #metto nella var all_items tutti gli oggetti item che ho nel db
     all_items = Item.objects.all()
+    item_shop = Item.objects.filter(user=request.user)
 
-    #faccio il render della pagina html item_page e le passo la var all_items
-    #per farlo passo un dictionary chiamato all_items con valori presi dalla var sopra all_items
-    #così la var all_items che contiene i dati estratti dal db verrà passata alla pagina html
-    #item_page.html che potrà accedervi tramite la var all_items
+
     if general_user.login_negozio == False:
         return render(request, 'items/item_page.html', {'all_items': all_items})
+        # return HttpResponse("sono un utente e devo visualizzare la BARRA DI RICERCA" + request.user.username)
+
     else:
-        return HttpResponse("sono un negozio e devo visualizzare un'altra schermata" + request.user.username)
+        return render(request, 'items/item_page.html', {'all_items': item_shop})
+        # return HttpResponse("sono un negozio e devo visualizzare un'altra schermata" + request.user.username)
 
 
 def buy_page(request, item_selected_id):
@@ -47,6 +106,7 @@ def buy_page(request, item_selected_id):
 
 def modify_item(request, item_selected_id):
     print(request)
+
 
 def delete_item(request, item_selected_id):
     #if nega_accesso_senza_profilo(request):
@@ -113,7 +173,7 @@ def add_to_cart(request, item_selected_id):
         messages.info(request, "This item was added to your cart.")
         context = {"all_items": order}
         print(context)
-        return render(request, 'items/add_to_cart.html',context)
+        return render(request, 'items/add_to_cart.html', context)
 
 
 #@login_required
