@@ -14,7 +14,7 @@ class Item(models.Model):
     category = models.TextField()
     description = models.TextField()
     image = models.FileField(null=True, default='', blank=True)
-
+    # quantity_available = models.IntegerField(null=True)
 
     def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
         if self.image:

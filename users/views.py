@@ -180,17 +180,7 @@ def insert_shop_info(request):
         except Exception:
             shop_profile.foto_profilo = None
 
-        shop_profile.stato = 'Italia'
-        shop_profile.indirizzo = shopform.cleaned_data['indirizzo']
-        shop_profile.citta = shopform.cleaned_data['citta']
-        # shop_profile.provincia = shopform.cleaned_data['provincia']
-        # shop_profile.regione = shopform.cleaned_data['regione']
-        shop_profile.codice_postale = shopform.cleaned_data['codice_postale']
-        shop_profile.descrizione = shopform.cleaned_data['descrizione']
-
-        shop_profile.latitudine, shop_profile.longitudine = compute_position(shop_profile)
-        shop_profile.login_negozio = True
-        shop_profile.save()
+        set_shop_info(shop_profile, shopform)
 
         return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
                             ' che abita in via: ' + shop_profile.indirizzo)
@@ -252,21 +242,7 @@ def insert_user_info(request):
         except Exception:
             general_user.foto_profilo = None
 
-        general_user.stato = 'Italia'
-        general_user.indirizzo = normalform.cleaned_data['indirizzo']
-        general_user.citta = normalform.cleaned_data['citta']
-        general_user.provincia = normalform.cleaned_data['provincia']
-        general_user.regione = normalform.cleaned_data['regione']
-        general_user.codice_postale = normalform.cleaned_data['codice_postale']
-        # general_user.telefono = normalform.cleaned_data['telefono']
-        # general_user.data_nascita = normalform.cleaned_data['data_nascita']
-        # general_user.eta = normalform.cleaned_data['eta']
-        # general_user.sesso = normalform.cleaned_data['sesso']
-        general_user.descrizione = normalform.cleaned_data['descrizione']
-
-        general_user.latitudine, general_user.longitudine = compute_position(general_user)
-        general_user.save()
-
+        set_user_info(general_user, normalform)
         return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
                             ' che abita in via: ' + general_user.indirizzo)
         # return HttpResponseRedirect(reverse('users:prova_passaggio_interi', kwargs={'oid':request.user.pk}))
@@ -535,5 +511,109 @@ def computeTime(id_univoci, complete_parameters):
     print(response_post_JSON['distance'])
     print(response_post_JSON['time'])
     print(time)
+
+
+@login_required(login_url='/users/login')
+def modify_profile(request):
+
+    user = GeneralUser.objects.get(user=request.user)
+
+    # if user_profile.has_usable_password():  # se la password è valida
+    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=0)
+    # else:
+    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=1)
+    #     oaut_user = True
+
+    if user.login_negozio:
+        form = ShopProfileForm(request.POST or None, instance=user)
+    else:
+        form = NormalUserForm(request.POST or None, instance=user)
+
+    if form.is_valid() and user.login_negozio:
+        set_shop_info(user, form)
+        return HttpResponseRedirect(reverse('index'))
+
+    elif form.is_valid() and not user.login_negozio:
+        set_user_info(user, form)
+        return HttpResponseRedirect(reverse('index'))
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'items/insert.html', context)
+
+
+def set_shop_info(shop_profile, shopform):
+    """
+    Se questa funzione viene chiamata quando devo registrare un nuovo utente allora salverò le info dell'utente,
+    se viene chiamata quando devo modificare le info di un utente allora controllo se devo calcolare nuovamente
+    le coordinate geografiche o se sono rimaste invariate
+
+    :param shop_profile: profilo del negozio
+    :param shopform: form relative al profilo negozio
+    :return: i valori vengono salvati nel database quindi non ho bisogno di ritornare niente
+    """
+
+    shop_profile.stato = 'Italia'
+    # se uno di questi valori è cambiato allora calcolo nuovamente anche le coordinate geografiche
+    if shop_profile.indirizzo != shopform.cleaned_data['indirizzo'] or \
+            shop_profile.citta != shopform.cleaned_data['citta'] or \
+            shop_profile.codice_postale != shopform.cleaned_data['codice_postale']:
+
+        shop_profile.indirizzo = shopform.cleaned_data['indirizzo']
+        shop_profile.citta = shopform.cleaned_data['citta']
+        shop_profile.codice_postale = shopform.cleaned_data['codice_postale']
+        shop_profile.latitudine, shop_profile.longitudine = compute_position(shop_profile)
+
+    shop_profile.regione = shopform.cleaned_data['regione']
+    shop_profile.provincia = shopform.cleaned_data['provincia']
+    shop_profile.telefono = shopform.cleaned_data['telefono']
+    shop_profile.descrizione = shopform.cleaned_data['descrizione']
+    shop_profile.login_negozio = True
+    shop_profile.save()
+
+
+def set_user_info(general_user, normalform):
+    """
+    Vedi funzione set_shop_info
+    :param general_user:
+    :param normalform:
+    :return:
+    """
+    general_user.stato = 'Italia'
+    if general_user.indirizzo != normalform.cleaned_data['indirizzo'] or \
+            general_user.citta != normalform.cleaned_data['citta'] or \
+            general_user.codice_postale != normalform.cleaned_data['codice_postale']:
+
+        general_user.stato = 'Italia'
+        general_user.indirizzo = normalform.cleaned_data['indirizzo']
+        general_user.citta = normalform.cleaned_data['citta']
+        general_user.codice_postale = normalform.cleaned_data['codice_postale']
+        general_user.latitudine, general_user.longitudine = compute_position(general_user)
+
+    general_user.stato = 'Italia'
+    general_user.provincia = normalform.cleaned_data['provincia']
+    general_user.regione = normalform.cleaned_data['regione']
+    # general_user.telefono = normalform.cleaned_data['telefono']
+    # general_user.data_nascita = normalform.cleaned_data['data_nascita']
+    # general_user.eta = normalform.cleaned_data['eta']
+    # general_user.sesso = normalform.cleaned_data['sesso']
+    general_user.descrizione = normalform.cleaned_data['descrizione']
+
+    general_user.save()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

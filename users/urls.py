@@ -20,6 +20,7 @@ urlpatterns = [
     path('logout_user', views.logout_user, name='logout_user'),
 
     path('shop_registration', views.shop_registration, name='shop_registration'),
+    path('modify_profile', views.modify_profile, name='modify_profile'),
 
     # path('<int:oid>/insert_user_info', views.insert_user_info, name='insert_user_info'),
     path('<int:oid>/prova_passaggio_interi', views.prova_passaggio_interi, name='prova_passaggio_interi'),
