@@ -14,6 +14,7 @@ from .models import Item    #importo il modello così che possa utilizzalo, andr
 from .forms import ItemForm
 from django.utils import timezone
 
+
 def search(request):
     word_searched= request.GET.get('search')
     item_searched = Item.objects.filter(name__contains=word_searched)
@@ -22,6 +23,7 @@ def search(request):
     context['item_searched'] = item_searched
     context['word_searched'] = word_searched
     return render(request, 'items/search.html',context)
+
 
 def isShop(user):
     print("isShop")

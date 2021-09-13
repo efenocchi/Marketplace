@@ -27,6 +27,10 @@ class UserForm(forms.ModelForm):
     # Il modello User è già creato da Django, esiste di default
     class Meta:
         model = User
+        # serve per eliminare la scritta "Required. 150 characters ..." quando viene cambiato il valore nella form
+        help_texts = {
+            'username': None,
+        }
         fields = ('username',
                   'password',
                   # 'conferma_password',

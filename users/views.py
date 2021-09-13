@@ -57,8 +57,8 @@ def login_all(request):
         return render(request, 'users/login_page.html')
     else:
         # se l'utente è loggato gli faccio vedere la pagina items (andrà cambiata con la pagina per info utente-negozio) [modifica]
-        #return HttpResponseRedirect(reverse('items:item_page'))
-        return render(request, 'users/login_page.html', {'error_message': 'Immettere un utente e una password validi'})
+        return HttpResponseRedirect(reverse('items:item_page'))
+        # return render(request, 'users/login_page.html', {'error_message': 'Immettere un utente e una password validi'})
 
 
 # uguale alla registrazione dell'utente, se non cambia niente in futuro se ne può lasciare solo una
@@ -224,11 +224,6 @@ def insert_user_info(request):
 
     # user_profile = User.objects.get(pk=oid)
     user_profile = User.objects.get(pk=request.user.pk)
-    # if user_profile.has_usable_password():  # se la password è valida
-    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=0)
-    # else:
-    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=1)
-    #     oaut_user = True
 
     form = UserForm(data=request.POST or None, instance=user_profile, oauth_user=1)
     normalform = NormalUserForm(request.POST or None, request.FILES or None)
@@ -515,9 +510,10 @@ def computeTime(id_univoci, complete_parameters):
 @login_required(login_url='/users/login')
 def modify_profile(request):
 
-    user = GeneralUser.objects.get(user=request.user)
-    user_basic = User.objects.get(pk=request.user.pk)
-    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
+    shop_or_user = GeneralUser.objects.get(user=request.user)
+    user = User.objects.get(pk=request.user.pk)
+    form = UserForm(data=request.POST or None, instance=user, oauth_user=0)
+
 
     # if form.is_valid() and \
     #         not User.objects.filter(username=form.cleaned_data['username']).exists():
@@ -527,26 +523,38 @@ def modify_profile(request):
     #     shop.set_password(password)
     #     shop.save()
 
-    if user.login_negozio:
-        form = ShopProfileForm(request.POST or None, instance=user)
+    if shop_or_user.login_negozio:
+        form_user_or_shop = ShopProfileForm(request.POST or None, instance=shop_or_user)
     else:
-        form = NormalUserForm(request.POST or None, instance=user)
+        form_user_or_shop = NormalUserForm(request.POST or None, instance=shop_or_user)
 
-    if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
-        set_shop_info(user, form)
+    if form_user_or_shop.is_valid() and form.is_valid():
+        # entro se l'username non è già presente o se è già presente e coincide con l'userneme di chi è loggato
+        if not User.objects.filter(username=form.cleaned_data['username']).exists() or \
+                form.cleaned_data['username'] == request.user.username:
 
-        return HttpResponseRedirect(reverse('index'))
+            user_form = form.save(commit=False)
+            password = form.cleaned_data['password']
+            user_form.set_password(password)
+            user_form.save()
 
-    elif form.is_valid() and not user.login_negozio:
-        set_user_info(user, form)
-        return HttpResponseRedirect(reverse('index'))
+            if shop_or_user.login_negozio:
+                set_shop_info(shop_or_user, form_user_or_shop)
+            else:
+                set_user_info(shop_or_user, form_user_or_shop)
+
+            if shop_or_user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('index'))
 
     context = {
-        "form_for_username": form_for_username,
         "form": form,
+        "form_user_or_shop": form_user_or_shop,
     }
 
     return render(request, 'users/modify_profile.html', context)
+
 
 
 def set_shop_info(shop_profile, shopform):
