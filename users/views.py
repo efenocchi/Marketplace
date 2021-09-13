@@ -556,7 +556,6 @@ def modify_profile(request):
     return render(request, 'users/modify_profile.html', context)
 
 
-
 def set_shop_info(shop_profile, shopform):
     """
     Se questa funzione viene chiamata quando devo registrare un nuovo utente allora salverò le info dell'utente,
