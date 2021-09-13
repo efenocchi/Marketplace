@@ -18,8 +18,8 @@ urlpatterns = [
     #/main/cart-> DA CAMBIAREEEEEEEEEE !!!!! NON VOGLIO IL CARRRELLO VUOTO NELLA HOME è solo x vedere la grafica
     path('empty_cart', views.empty_cart, name='empty_cart'),
 
-    #/main/contact
     path('contact', views.contact, name='contact'),
+
     path('mostra_logout_avvenuto', views.mostra_logout_avvenuto, name='mostra_logout_avvenuto'),
     path('autenticato', views.autenticato, name='autenticato'),
 ]

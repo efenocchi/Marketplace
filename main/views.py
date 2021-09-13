@@ -20,8 +20,8 @@ def registration_page(request):
 def empty_cart(request):
     return render(request, 'main/empty_cart.html')
 
-def contact(request):
-    return render(request, 'main/contact.html')
-
 def mostra_logout_avvenuto(request):
     return render(request, 'users/logout_effettuato.html')
+
+def contact(request):
+    return render(request, 'main/contact.html')

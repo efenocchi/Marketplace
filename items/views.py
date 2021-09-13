@@ -14,6 +14,14 @@ from .models import Item    #importo il modello così che possa utilizzalo, andr
 from .forms import ItemForm
 from django.utils import timezone
 
+def search(request):
+    word_searched= request.GET.get('search')
+    item_searched = Item.objects.filter(name__contains=word_searched)
+
+    context = {}
+    context['item_searched'] = item_searched
+    context['word_searched'] = word_searched
+    return render(request, 'items/search.html',context)
 
 def isShop(user):
     print("isShop")
@@ -75,7 +83,6 @@ def item_page(request):
     """
     Dobbiamo ritornare due pagine differenti a seconda che il login sia stato fatto da un utente o da un negozio
     """
-
     general_user = GeneralUser.objects.get(user=request.user)
 
 
@@ -83,13 +90,22 @@ def item_page(request):
     all_items = Item.objects.all()
     item_shop = Item.objects.filter(user=request.user)
 
+    context = {}
+    context['user'] = general_user
+    context['all_items'] = all_items
+    #faccio il render della pagina html item_page e le passo la var all_items
+    #per farlo passo un dictionary chiamato all_items con valori presi dalla var sopra all_items
+    #così la var all_items che contiene i dati estratti dal db verrà passata alla pagina html
+    #item_page.html che potrà accedervi tramite la var all_items
 
     if general_user.login_negozio == False:
-        return render(request, 'items/item_page.html', {'all_items': all_items})
+        #se sono un utente
+        return render(request, 'items/item_page.html', context)
         # return HttpResponse("sono un utente e devo visualizzare la BARRA DI RICERCA" + request.user.username)
 
     else:
-        return render(request, 'items/item_page.html', {'all_items': item_shop})
+        #se sono un negozio
+        return render(request, 'items/item_page.html', context)
         # return HttpResponse("sono un negozio e devo visualizzare un'altra schermata" + request.user.username)
 
 
@@ -105,7 +121,6 @@ def buy_page(request, item_selected_id):
 
 def modify_item(request, item_selected_id):
     print(request)
-
 
 def delete_item(request, item_selected_id):
     #if nega_accesso_senza_profilo(request):

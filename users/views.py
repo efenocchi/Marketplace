@@ -57,8 +57,8 @@ def login_all(request):
         return render(request, 'users/login_page.html')
     else:
         # se l'utente è loggato gli faccio vedere la pagina items (andrà cambiata con la pagina per info utente-negozio) [modifica]
-        return HttpResponseRedirect(reverse('items:item_page'))
-        # return render(request, 'users/login_page.html', {'error_message': 'Immettere un utente e una password validi'})
+        #return HttpResponseRedirect(reverse('items:item_page'))
+        return render(request, 'users/login_page.html', {'error_message': 'Immettere un utente e una password validi'})
 
 
 # uguale alla registrazione dell'utente, se non cambia niente in futuro se ne può lasciare solo una

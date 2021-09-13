@@ -6,11 +6,9 @@
 
     <!-- login_page.html è un'estensione di base.html -->
     {% extends 'main/base.html' %}
-    {% block menu_id %}
-    <li><a href="{% url 'index' %}">Home</a></li>
-    {% endblock %}
+
     <!-- ridefinisco title -->
-    <title>{% block title %}Mostra oggetti{% endblock %}</title>
+    <title>{% block title %}Item_Page{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -30,11 +28,28 @@
 </head>
 <body>
     {% block item_page %}
-    <h5>Shop Page</h5>
-        <div class="container-item">
-            <div class="row-2">
-                {% for item in all_items %}
-                <div class="col-item">
+    <main>
+        <div class="container">
+            <div class="container text-center">
+                {% if user.user is not None %}
+                    <h2 id="title">Welcome Shop: {{ user.user }}</h2>
+                {% endif %}
+            </div>
+    <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
+        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+            <div class="small-container">
+                <form class="d-flex" method="get" action="{% url 'items:search'%}">
+                    {% csrf_token %}
+                    <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+    <!------------------------------ SEZIONE ELENCO PRODOTTI ----------------------------------------->
+        <section class="text-center mb-4">
+            <div class="row wow fadeIn">
+            {% for item in all_items %}
+                <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
                         <div class="modify-delete">
                             <a href="{% url 'items:modify_item' item_selected_id=item.id%}" class="fa fa-pencil" aria-hidden="true"></a>
@@ -48,14 +63,11 @@
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+            {% endfor %}
             </div>
+        </section>
         </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
-
+    </main>
     {% endblock %}
 </body>
 </html>

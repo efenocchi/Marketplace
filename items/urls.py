@@ -22,4 +22,5 @@ urlpatterns = [
 
     path('<int:item_selected_id>/remove_single_item_from_cart', views.remove_single_item_from_cart, name='remove_single_item_from_cart'),
 
+    path('search/', views.search, name='search'),
 ]

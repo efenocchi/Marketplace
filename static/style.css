@@ -263,17 +263,17 @@ small{
 }
 /* ---------------------------------- LOGIN_PAGE ----------------------------------------------------------- */
 .login_page{
-    margin: 0px;
-    padding: 0;
+    margin: 20px;
     font-family: sans-serif;
     background: #ffebcd;        /* pink */
     background-size: cover;
     background-position: center;
-
 }
 
 .form_container_login{
-    width: 300px;
+    background: white;
+    width: 400px;
+    height: 500px;
     box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
     background: #fff;
     padding: 20px;
@@ -285,49 +285,80 @@ small{
     margin-top: -50px;
 }
 
-/* ---------------------------------- INSERT_INFO ----------------------------------------------------------- */
-.insert_page{
+.form_container_login input{
+    width: 300px;
+    height: 30px;
+    margin-right: 55px;
+    margin-left: 30px;
+    margin-top: 10px;
+    padding: 0 10px; /* scritta dentro campo input-distanza dal bordo sx */
+    border: 1px solid #ccc;
+}
+
+#check_terms{
+    margin-left: -210px;
+    margin-top: 20px;
+}
+
+#check_terms_text{
+    margin-left: 20px;
+    margin-top: -30px;
+}
+/* ---------------------------------- INSERT_INFO - INSERT_SHOP_INFO --------------------------------------------------- */
+.insert_login_page{
     padding: 50px 0;
     background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
 }
 
-.form-container-modify-info{
-    background: white;
-    width: 350px;
-    height: 400px;
+/* schermata insert_info_shop/user */
+.form_container_modify_info{
+    background: #db7272;
+    width: 550px;
+    height: 880px;
     max-height: 900px;
     position: relative;
     text-align: center;
     padding: 20px 0;
-    margin: auto;
+    margin: 50px auto; /* distanza dal bordo alto */
     box-shadow: 0 0 20px 0px rgba(0,0,0,0.1);
     overflow: scroll;
     overflow: auto;
     overflow-y: auto;
     overflow-x: hidden;
-    }
+}
 
-.form-container-modify-info span{
+.form_container_modify_info span{
     font-weight: bold;
-    padding: 0 10px;
     color: #555;
-    cursor: pointer;
-    width: 300px;
-    display: inline-block;
-}
-.form-modify-info-btn{
     display: inline-block;
 }
 
-.form-container-modify-info form{
-    max-width: 500px;
-    padding: 0 30px;
+.form-btn{
+    display: inline-block;
+}
+
+/* container campi username e password */
+.form_container_modify_info form{
+    width: 550px;
+    height: 810px;
+    max-width: 600px;
+    margin-top: -80px;
+    padding: 0 20px;
     position: absolute;
-    top: 130px;
+    top: 150px;
     transition: transform 1s;
+    background: white;
 }
 
-/* ---------------------------------- REGISTRATION_PAGE ----------------------------------------------------------- */
+.form_container_modify_info input{
+    width: 300px;
+    height: 30px;
+    margin-left: 80px;
+    margin-top: 10px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
+/* ------------------------------- REGISTRATION_PAGE ----------------------------------------------------------- */
 .registration_page{
     padding: 50px 0;
     background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
@@ -336,8 +367,8 @@ small{
 /* schermata registration */
 .form-container{
     background: white;
-    width: 300px;
-    height: 400px;
+    width: 500px;
+    height: 550px;
     max-height: 900px;
     position: relative;
     text-align: center;
@@ -350,7 +381,7 @@ small{
     overflow-x: hidden;
 
 }
-
+/* scritte Register User e Register Shop */
 .form-container span{
     font-weight: bold;
     padding: 0 10px;
@@ -364,27 +395,32 @@ small{
     display: inline-block;
 }
 
+/* container campi username e password */
 .form-container form{
-    max-width: 300px;
+    width: 500px;
+    height: 400px;
+    max-width: 600px;
     padding: 0 20px;
     position: absolute;
-    top: 130px;
+    top: 150px;
     transition: transform 1s;
+    background: white;
 }
 
-form input{
-    width: 100%
+.form-container input{
+    width: 300px;
     height: 30px;
-    margin: 10px 0;
+    margin-left: 80px;
+    margin-top: 10px;
     padding: 0 10px;
     border: 1px solid #ccc;
 }
 
 form .btn{
-    width: 100%;
+    width: 200px;
     border:none;
     cursor: pointer;
-    margin: 10px 0;
+    margin: 30px 0;
 }
 
 form .btn:focus{
@@ -392,7 +428,7 @@ form .btn:focus{
 }
 
 #RegFormUser{
-    left: -300px;
+    left: -402px;
 }
 
 #RegFormShop{
@@ -419,7 +455,6 @@ form a{
     flex-wrap: wrap;
     padding: 20px 20px 20px 20px;
     justify-content: normal; /* Can be changed in the live sample */
-
 }
 
 .col-item{
@@ -430,6 +465,36 @@ form a{
     text-align: right;
 }
 
+.d-flex{
+    position: center;
+}
+
+#search{
+    width: 300px;
+    height: 40px;
+    margin-left: 80px;
+    margin-top: 10px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
+
+#search_button{
+    width: 150px;
+    margin-top: 10px;
+    border:none;
+    cursor: pointer;
+}
+
+#title{
+    margin-top: 20px;
+    text-align: center;
+    color: #0d4488;
+}
+/* ---------------------------------- SEARCH ----------------------------------------------------------- */
+#no_search_result{
+    margin-top: -20px;
+    margin-left: -30px;
+}
 /* ---------------------------------- BUY_PAGE ----------------------------------------------------------- */
 .container-item{
     background: pink;
