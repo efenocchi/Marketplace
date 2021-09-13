@@ -27,6 +27,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+
+<!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
+    {% block menu_id %}
+    <li><a href="{% url 'index' %}">Home</a></li>
+    {% endblock %}
+
+
 <!----------------------------------------- LOGIN_PAGE ---------------------------------------->
     {% block insert_info %}
     <div class="registration_page">

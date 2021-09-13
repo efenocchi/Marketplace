@@ -6,9 +6,7 @@
 
     <!-- login_page.html è un'estensione di base.html -->
     {% extends 'main/base.html' %}
-    {% block menu_id %}
-    <li><a href="{% url 'index' %}">Home</a></li>
-    {% endblock %}
+
     <!-- ridefinisco title -->
     <title>{% block title %}Login/Registration{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,6 +27,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+
+<!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
+    {% block menu_id %}
+    <li><a href="{% url 'index' %}">Home</a></li>
+    {% endblock %}
+
+
 <!----------------------------------------- LOGIN_PAGE ---------------------------------------->
     {% block login_page %}
     <div class="login_page">

@@ -25,7 +25,6 @@ def isShop(user):
 @login_required(login_url='/users/login')
 @user_passes_test(isShop)
 def add_item(request):
-
     """
     Permette all'utente di inserire un nuovo item.
 
@@ -63,7 +62,7 @@ def add_item(request):
     }
 
     # return render(request, 'users/base_registrazione.html', context)
-    return render(request, 'items/insert.html', context)
+    return render(request, 'items/insert_item.html', context)
 
 
 def show_item_shop(request):

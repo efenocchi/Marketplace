@@ -24,7 +24,6 @@ def index(request):
     return render(request, 'users/home.html')  # pagina sito con barra di ricerca
 
 
-
 # le views nelle funzioni sono ancora collegate a caso tra le pagine html esistenti solo per vedere se funzionavano le funzioni
 
 def login_all(request):
@@ -180,8 +179,8 @@ def insert_shop_info(request):
         except Exception:
             shop_profile.foto_profilo = None
 
+        user_profile.indirizzo = shopform.cleaned_data['indirizzo']
         set_shop_info(shop_profile, shopform)
-
         return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
                             ' che abita in via: ' + shop_profile.indirizzo)
         # return HttpResponseRedirect(reverse('users:prova_passaggio_interi', kwargs={'oid':request.user.pk}))
@@ -517,20 +516,25 @@ def computeTime(id_univoci, complete_parameters):
 def modify_profile(request):
 
     user = GeneralUser.objects.get(user=request.user)
+    user_basic = User.objects.get(pk=request.user.pk)
+    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
 
-    # if user_profile.has_usable_password():  # se la password è valida
-    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=0)
-    # else:
-    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=1)
-    #     oaut_user = True
+    # if form.is_valid() and \
+    #         not User.objects.filter(username=form.cleaned_data['username']).exists():
+    #     shop = form.save(commit=False)
+    #     username = form.cleaned_data['username']
+    #     password = form.cleaned_data['password']
+    #     shop.set_password(password)
+    #     shop.save()
 
     if user.login_negozio:
         form = ShopProfileForm(request.POST or None, instance=user)
     else:
         form = NormalUserForm(request.POST or None, instance=user)
 
-    if form.is_valid() and user.login_negozio:
+    if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
         set_shop_info(user, form)
+
         return HttpResponseRedirect(reverse('index'))
 
     elif form.is_valid() and not user.login_negozio:
@@ -538,10 +542,11 @@ def modify_profile(request):
         return HttpResponseRedirect(reverse('index'))
 
     context = {
+        "form_for_username": form_for_username,
         "form": form,
     }
 
-    return render(request, 'items/insert.html', context)
+    return render(request, 'users/modify_profile.html', context)
 
 
 def set_shop_info(shop_profile, shopform):
