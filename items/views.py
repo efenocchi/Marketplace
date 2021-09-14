@@ -16,12 +16,14 @@ from django.utils import timezone
 
 
 def search(request):
-    word_searched= request.GET.get('search')
+    word_searched = request.GET.get('search')
     item_searched = Item.objects.filter(name__contains=word_searched)
 
-    context = {}
-    context['item_searched'] = item_searched
-    context['word_searched'] = word_searched
+    context = {
+        'item_searched': item_searched,
+        'word_searched': word_searched
+    }
+
     return render(request, 'items/search.html',context)
 
 
@@ -94,7 +96,7 @@ def item_page(request):
 
     context = {}
     context['user'] = general_user
-    context['all_items'] = all_items
+
     #faccio il render della pagina html item_page e le passo la var all_items
     #per farlo passo un dictionary chiamato all_items con valori presi dalla var sopra all_items
     #così la var all_items che contiene i dati estratti dal db verrà passata alla pagina html
@@ -102,11 +104,13 @@ def item_page(request):
 
     if general_user.login_negozio == False:
         #se sono un utente
+        context['all_items'] = all_items
         return render(request, 'items/item_page.html', context)
         # return HttpResponse("sono un utente e devo visualizzare la BARRA DI RICERCA" + request.user.username)
 
     else:
         #se sono un negozio
+        context['all_items'] = item_shop
         return render(request, 'items/item_page.html', context)
         # return HttpResponse("sono un negozio e devo visualizzare un'altra schermata" + request.user.username)
 
@@ -125,8 +129,15 @@ def modify_item(request, item_selected_id):
     print(request)
 
 def delete_item(request, item_selected_id):
+    """
+    [Modifica] Usare Ajax per eliminare gli oggetti
+    :param request:
+    :param item_selected_id:
+    :return:
+    """
     #if nega_accesso_senza_profilo(request):
      #   return HttpResponseRedirect(reverse('utenti:scelta_profilo_oauth'))
+
 
     item_to_delete = Item.objects.filter(id=item_selected_id).first()
 

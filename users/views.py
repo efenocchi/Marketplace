@@ -179,7 +179,6 @@ def insert_shop_info(request):
         except Exception:
             shop_profile.foto_profilo = None
 
-        user_profile.indirizzo = shopform.cleaned_data['indirizzo']
         set_shop_info(shop_profile, shopform)
         return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
                             ' che abita in via: ' + shop_profile.indirizzo)
@@ -250,87 +249,6 @@ def insert_user_info(request):
     # return render(request, 'users/'+ str(oid) +'/insert_info.html', context)
     return render(request, 'users/insert_info.html', context)
 
-
-# else:
-#     raise Http404
-
-
-# if nega_accesso_senza_profilo(request):
-#     return HttpResponseRedirect(reverse('utenti:scelta_profilo_oauth'))
-
-# context = {'base_template': 'main/base.html'}
-# oaut_user = False
-# if int(oid) == int(request.user.pk):
-#     user_profile = User.objects.filter(id=oid).first()
-#     if user_profile.has_usable_password():
-#         form = UserForm(data=request.POST or None, instance=request.user, oauth_user=0)
-#     else:
-#         form = UserForm(data=request.POST or None, instance=request.user, oauth_user=1)
-#         oaut_user = True
-#
-#     profile = Profile.objects.filter(user=user_profile.pk).first()
-#
-#     if not profile.pet_sitter:
-#         profile_form = UtenteNormaleForm(data=request.POST or None, instance=profile, files=request.FILES)
-#     else:
-#         profile_form = UtentePetSitterForm(data=request.POST or None, instance=profile, files=request.FILES)
-#
-#     if form.is_valid() and profile_form.is_valid():
-#
-#         if not oaut_user:
-#             if form.cleaned_data['password'] != form.cleaned_data['conferma_password']:
-#                 context.update({'form': form})
-#                 context.update({'profileForm': profile_form})
-#                 context.update({'error_message': 'Errore: le due password inserite non corrispondono'})
-#
-#                 return render(request, 'utenti/modifica_profilo.html', context)
-#
-#         profile.latitudine, profile.longitudine = calcola_lat_lon(request, profile)
-#
-#         user = form.save(commit=False)
-#         if not oaut_user:
-#             password = form.cleaned_data['password']
-#             user.set_password(password)
-#         form.save()
-#         profile_form.save()
-#         if not oaut_user:
-#             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-#
-#         if user is not None:
-#             if user.is_active:
-#                 if not oaut_user:
-#                     login(request, user)
-#                 return HttpResponseRedirect(reverse('main:index'))
-#     else:
-#         try:
-#             if User.objects.exclude(pk=request.user.id).get(username=form['username'].value()):
-#                 context.update({'form': form})
-#                 context.update({'profileForm': profile_form})
-#                 context['user_profile'] = profile
-#
-#                 return render(request, 'utenti/modifica_profilo.html', context)
-#         except User.DoesNotExist:
-#             # Nessun utente trovato con questo username --> username valido
-#             pass
-#
-#         if oaut_user:
-#             form = UserForm(instance=request.user, oauth_user=1)
-#         else:
-#             form = UserForm(instance=request.user, oauth_user=0)
-#
-#         if not profile.pet_sitter:
-#             profile_form = UtenteNormaleForm(instance=profile)
-#         else:
-#             profile_form = UtentePetSitterForm(instance=profile)
-#
-#     context.update({'form': form})
-#     context.update({'profileForm': profile_form})
-#     context['user_profile'] = profile
-#
-#     return render(request, 'utenti/modifica_profilo.html', context)
-#
-# else:
-#     raise Http404
 
 @login_required(login_url='/users/login')
 def logout_user(request):
@@ -412,7 +330,6 @@ def show_distance_shops(request):
     if general_user.latitudine is not None and general_user.longitudine is not None:
         lat_shop = general_user.latitudine
         lng_shop = general_user.longitudine
-
 
     distanze = []
     indici = []
@@ -500,7 +417,7 @@ def computeTime(id_univoci, complete_parameters):
 
     # arrotondo al minuto successivo a meno che la posizione non sia la stessa
     time = [(float(x) + 59) // 60 for x in response_post_JSON['time']]
-    # time = (time + 0.5) // 60
+
     print(response_post_JSON)
     print(response_post_JSON['distance'])
     print(response_post_JSON['time'])
@@ -514,15 +431,6 @@ def modify_profile(request):
     user = User.objects.get(pk=request.user.pk)
     form = UserForm(data=request.POST or None, instance=user, oauth_user=0)
 
-
-    # if form.is_valid() and \
-    #         not User.objects.filter(username=form.cleaned_data['username']).exists():
-    #     shop = form.save(commit=False)
-    #     username = form.cleaned_data['username']
-    #     password = form.cleaned_data['password']
-    #     shop.set_password(password)
-    #     shop.save()
-
     if shop_or_user.login_negozio:
         form_user_or_shop = ShopProfileForm(request.POST or None, instance=shop_or_user)
     else:
@@ -533,15 +441,18 @@ def modify_profile(request):
         if not User.objects.filter(username=form.cleaned_data['username']).exists() or \
                 form.cleaned_data['username'] == request.user.username:
 
+            #se non creo questo oggetto non ci sarà differenza tra i campi dell'oggetto e i form
+            shop_or_user2 = GeneralUser.objects.get(user=request.user)
+
+            if shop_or_user.login_negozio:
+                set_shop_info(shop_or_user2, form_user_or_shop)
+            else:
+                set_user_info(shop_or_user2, form_user_or_shop)
+
             user_form = form.save(commit=False)
             password = form.cleaned_data['password']
             user_form.set_password(password)
             user_form.save()
-
-            if shop_or_user.login_negozio:
-                set_shop_info(shop_or_user, form_user_or_shop)
-            else:
-                set_user_info(shop_or_user, form_user_or_shop)
 
             if shop_or_user is not None:
                 if user.is_active:
@@ -568,16 +479,18 @@ def set_shop_info(shop_profile, shopform):
     """
 
     shop_profile.stato = 'Italia'
+
     # se uno di questi valori è cambiato allora calcolo nuovamente anche le coordinate geografiche
     if shop_profile.indirizzo != shopform.cleaned_data['indirizzo'] or \
             shop_profile.citta != shopform.cleaned_data['citta'] or \
             shop_profile.codice_postale != shopform.cleaned_data['codice_postale']:
-
+        print("diverso")
         shop_profile.indirizzo = shopform.cleaned_data['indirizzo']
         shop_profile.citta = shopform.cleaned_data['citta']
         shop_profile.codice_postale = shopform.cleaned_data['codice_postale']
         shop_profile.latitudine, shop_profile.longitudine = compute_position(shop_profile)
 
+    print("Non diverso?")
     shop_profile.regione = shopform.cleaned_data['regione']
     shop_profile.provincia = shopform.cleaned_data['provincia']
     shop_profile.telefono = shopform.cleaned_data['telefono']
