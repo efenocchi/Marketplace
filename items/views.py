@@ -1,5 +1,5 @@
 from math import radians, sin, cos, atan2, sqrt
-
+import requests
 from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -29,7 +29,7 @@ def search(request):
 
     print("è una lista", type(items_ordered))
     print("tipo di struttura", type(item_searched))
-    
+
     context = {
         'item_searched': items_ordered,
         'word_searched': word_searched
@@ -343,7 +343,6 @@ def show_distance_shops(request, items_available, ascending=True):
     print("distanze", distanze_negozi)
     print("indici", indici)
 
-
     complete_parameters = parameters[:]
     complete_parameters.insert(0,
                                general_user.indirizzo.replace("/", "") + ',' + general_user.citta.replace("/", "") + ','
@@ -367,3 +366,55 @@ def show_distance_shops(request, items_available, ascending=True):
     # computeTime(items_pk, complete_parameters)
     # return HttpResponse(distanze, indici)
     return items_pk
+
+
+def computeTime(request, item_selected_id):
+    """"
+    Passo gli identificativi univoci dei negozi più vicini e in base a questo filtro mostro i prodotti richiesti
+
+    [modifica] da modificare la descrizione della funzione
+
+    :param locations: è un elenco di indirizzi in cui il primo è quello dell'utente e
+                        gli altri sono quelli dei negozi più vicini in linea d'aria
+    :param id_utente: sono gli id univoci dell'utente e dei negozi a lui vicini in linea d'aria
+
+    [modifica] --> Funzione da mostrare in Ajax
+    """
+
+    # print('complete parameters \n', complete_parameters)
+
+    #se voglio posso iterare sull'oggetto e tenere solo alcuni negozi da mostrare, altrimenti posso fare la ricerca
+    #di tutte le distanze utente-negozio
+
+    item = Item.objects.filter(id=item_selected_id).first()
+    shop = GeneralUser.objects.get(user=item.user)
+    user = GeneralUser.objects.get(user=request.user)
+    parameters = []
+    # metto le coordinate dell'utente
+    parameters.append(user.indirizzo.replace("/", "") + ',' + user.citta.replace("/", "") + ','
+                      + user.stato.replace("/", "") + ',' + user.codice_postale.replace("/", ""))
+
+    #metto le coordinate del negozio relativo all'item
+    parameters.append(shop.indirizzo.replace("/", "") + ',' + shop.citta.replace("/", "") + ','
+                      + shop.stato.replace("/", "") + ',' + shop.codice_postale.replace("/", ""))
+
+    complete_parameters = parameters[:]
+
+    complete_parameters = {
+        'locations':
+            complete_parameters
+    }
+
+
+    response = requests.post(
+        "http://www.mapquestapi.com/directions/v2/routematrix?key=5EIZ4tvrnyP3cOOMXpKoGlQ0bo92YoM3", json=complete_parameters)
+    response_post_JSON = response.json()
+
+    # arrotondo al minuto successivo a meno che la posizione non sia la stessa
+    time = [(float(x) + 59) // 60 for x in response_post_JSON['time']]
+
+    print(response_post_JSON)
+    print(response_post_JSON['distance'])
+    print(response_post_JSON['time'])
+    print(time)
+    return HttpResponse("L'utente " + request.user.username + " si trova a " + str(time[1]) + " minuti dal negozio")

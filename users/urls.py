@@ -27,6 +27,7 @@ urlpatterns = [
     path('insert_user_info', views.insert_user_info, name='insert_user_info'),
     path('insert_shop_info', views.insert_shop_info, name='insert_shop_info'),
     # path('show_distance_shops', views.show_distance_shops, name='show_distance_shops'),
+    # path('show_distance_shops', views.show_distance_shops, name='show_distance_shops'),
 
 
     # path('prova_registrazione', views.prova_registrazione, name='prova_registrazione'),

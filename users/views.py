@@ -18,7 +18,6 @@ from . import forms
 import requests
 
 
-
 def index(request):
     return render(request, 'users/home.html')  # pagina sito con barra di ricerca
 
@@ -27,6 +26,7 @@ def index(request):
 
 def login_all(request):
     """
+    [modifica] aggiungere parte Ajax!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     Permette agli utenti di effettuare il login.
 
     :param request: request utente.
@@ -271,6 +271,8 @@ def logout_user(request):
 
 def compute_position(profile):
     """
+    [modifica] creare una funzione per similarità tra stringhe e scegliere il valore di CAP che più si avvicina
+
     Thanks to an external API we are able to find the latitude and longitude of a user and to compute
     the distance user-store.
     In order to be very precise we must insert these parameters --> street, city, state, postalCode
@@ -284,41 +286,35 @@ def compute_position(profile):
                                + ',' + profile.citta.replace("/", "") + ',' + profile.stato.replace("/", "") +
                                ',' + profile.codice_postale.replace("/", ""))
 
-    latLong = get_latlong.json()
+    response_get_JSON = get_latlong.json()
 
-    return latLong['results'][0]['locations'][0]['latLng']["lat"], \
-           latLong['results'][0]['locations'][0]['latLng']["lng"]
+    possibili_indirizzi = len(response_get_JSON['results'][0]['locations'])
+    postalCode = profile.codice_postale
+    postalCode_1 = str(int(postalCode)+1)
+    postalCode_0 = str(int(postalCode)-1)
 
 
-def computeTime(id_univoci, complete_parameters):
-    """"
-    Passo gli identificativi univoci dei negozi più vicini e in base a questo filtro mostro i prodotti richiesti
+    # se trovo il valore corrispondente al cap lo ritorno, altrimenti ne ritorno uno anche se non corretto
+    for i in range(possibili_indirizzi):
+        if response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode:
+            return response_get_JSON['results'][0]['locations'][i]['latLng']["lat"], \
+                   response_get_JSON['results'][0]['locations'][i]['latLng']["lng"]
 
-    :param locations: è un elenco di indirizzi in cui il primo è quello dell'utente e
-                        gli altri sono quelli dei negozi più vicini in linea d'aria
-    :param id_univoci: sono gli id univoci dell'utente e dei negozi a lui vicini in linea d'aria
-    """
+    # cerco l'indirizzo inerente a un CAP con una approssimazione di un valore, es dato 41125 cerco 41124 e 41123
+    for i in range(possibili_indirizzi):
+        if response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode or \
+                response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode_1 or \
+                response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode_0:
+            return response_get_JSON['results'][0]['locations'][i]['latLng']["lat"], \
+                   response_get_JSON['results'][0]['locations'][i]['latLng']["lng"]
 
-    print('complete parameters \n', complete_parameters)
-    #se voglio posso iterare sull'oggetto e tenere solo alcuni negozi da mostrare, altrimenti posso fare la ricerca
-    #di tutte le distanze utente-negozio
+    return response_get_JSON['results'][0]['locations'][0]['latLng']["lat"], \
+        response_get_JSON['results'][0]['locations'][0]['latLng']["lng"]
 
-    response = requests.post(
-        "http://www.mapquestapi.com/directions/v2/routematrix?key=5EIZ4tvrnyP3cOOMXpKoGlQ0bo92YoM3", json=complete_parameters)
-    response_post_JSON = response.json()
-
-    # arrotondo al minuto successivo a meno che la posizione non sia la stessa
-    time = [(float(x) + 59) // 60 for x in response_post_JSON['time']]
-
-    print(response_post_JSON)
-    print(response_post_JSON['distance'])
-    print(response_post_JSON['time'])
-    print(time)
 
 
 @login_required(login_url='/users/login')
 def modify_profile(request):
-
     shop_or_user = GeneralUser.objects.get(user=request.user)
     user = User.objects.get(pk=request.user.pk)
     form = UserForm(data=request.POST or None, instance=user, oauth_user=0)
@@ -333,7 +329,7 @@ def modify_profile(request):
         if not User.objects.filter(username=form.cleaned_data['username']).exists() or \
                 form.cleaned_data['username'] == request.user.username:
 
-            #se non creo questo oggetto non ci sarà differenza tra i campi dell'oggetto e i form
+            # se non creo questo oggetto non ci sarà differenza tra i campi dell'oggetto e i form
             shop_or_user2 = GeneralUser.objects.get(user=request.user)
 
             if shop_or_user.login_negozio:
@@ -402,7 +398,6 @@ def set_user_info(general_user, normalform):
     if general_user.indirizzo != normalform.cleaned_data['indirizzo'] or \
             general_user.citta != normalform.cleaned_data['citta'] or \
             general_user.codice_postale != normalform.cleaned_data['codice_postale']:
-
         general_user.stato = 'Italia'
         general_user.indirizzo = normalform.cleaned_data['indirizzo']
         general_user.citta = normalform.cleaned_data['citta']
@@ -419,18 +414,3 @@ def set_user_info(general_user, normalform):
     general_user.descrizione = normalform.cleaned_data['descrizione']
 
     general_user.save()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -9,6 +9,8 @@ urlpatterns = [
 
     path('add_item', views.add_item, name='add_item'),
 
+    path('<int:item_selected_id>/computeTime', views.computeTime, name='computeTime'),
+
     path('<int:item_selected_id>/', views.buy_page, name='buy_page'),
 
     #/annunci/#annuncio/modifica/
