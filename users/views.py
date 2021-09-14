@@ -1,5 +1,4 @@
 import threading
-from math import radians, sin, cos, atan2, sqrt
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
@@ -289,113 +288,6 @@ def compute_position(profile):
 
     return latLong['results'][0]['locations'][0]['latLng']["lat"], \
            latLong['results'][0]['locations'][0]['latLng']["lng"]
-
-
-def isUser(user):
-    general_user = GeneralUser.objects.get(user=user)
-    return not general_user.login_negozio
-
-
-@login_required(login_url='/users/login')
-@user_passes_test(isUser)
-def show_distance_shops(request):
-
-    """
-    Ordina gli annunci per distanza geografica secondo la selezione fatta dall'utente.
-    Il calcolo risultante permette di considerare la distanza tra due punti espressa in km.
-
-    :param ordina: indica se l'ordinamento deve essere crescente, decrescente o non ordinare.
-    :return: indici degli annunci ordinati.
-
-    """
-
-    general_user = GeneralUser.objects.get(user=request.user)
-
-    parameters = []
-
-    shops = GeneralUser.objects.filter(login_negozio=True)
-    print(shops)
-    # metto tutti i valori tranne il primo, li aggiorno e metto in testa il primo
-    for shop in shops:
-        print(shop)
-        print(shop.latitudine)
-        parameters.append(shop.indirizzo.replace("/", "") + ',' + shop.citta.replace("/", "") + ','
-                          + shop.stato.replace("/", "") + ',' + shop.codice_postale.replace("/", ""))
-        # parameters['locations'].append(str(shop.latitudine) + ',' + str(shop.longitudine))
-
-    # return HttpResponse(parameters['locations'])
-
-    lat_shop = 0
-    lng_shop = 0
-    if general_user.latitudine is not None and general_user.longitudine is not None:
-        lat_shop = general_user.latitudine
-        lng_shop = general_user.longitudine
-
-    distanze = []
-    indici = []
-    id_univoci = []
-    # raggio della terra approssimato
-    r = 6371.0
-
-    lat1 = radians(lat_shop)
-    lon1 = radians(lng_shop)
-
-    # Calcola le distanze di tutti gli annunci
-    for i, shop in enumerate(shops):
-        indici.append(i)
-        shop_profile = GeneralUser.objects.filter(user=shop.user).first()
-
-        if shop_profile.latitudine is not None and shop_profile.longitudine is not None:
-            lat2 = radians(shop_profile.latitudine)
-            lon2 = radians(shop_profile.longitudine)
-        else:
-            lat2 = 0
-            lon2 = 0
-        print(str(lat2) + ',' + str(lon2))
-
-        dlon = lon2 - lon1
-        dlat = lat2 - lat1
-
-        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        distanze.append(r * c)
-        id_univoci.append(shop.user)
-    # Ordina in base all'order param
-    # if ordina == 'crescente':
-    #     distanze, indici = (list(t) for t in zip(*sorted(zip(distanze, indici))))
-    #
-    # if ordina == 'decrescente':
-    #     distanze, indici = (list(t) for t in zip(*sorted(zip(distanze, indici), reverse=True)))
-
-    #adesso ho tutto ordinato
-    distanze, indici = (list(t) for t in zip(*sorted(zip(distanze, indici))))
-    _, id_univoci = (list(t) for t in zip(*sorted(zip(distanze, id_univoci))))
-    _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters))))
-
-    # return indici
-    print(distanze)
-    print(indici)
-
-    complete_parameters = parameters[:]
-    complete_parameters.insert(0, general_user.indirizzo.replace("/", "") + ',' + general_user.citta.replace("/", "") + ','
-                              + general_user.stato.replace("/", "") + ',' + general_user.codice_postale.replace("/", ""))
-
-    # Creo il dizionario che utilizzerò con per le richieste POST nella funzione successiva e
-    # inserisco anche l'indirizzo dell'utente (oltre a quello dei negozi)
-    complete_parameters = {
-        'locations':
-            complete_parameters
-
-    }
-
-    #inserisco anche l'identificatore univoco dell'utente
-    id_univoci.insert(0, request.user)
-    print('id_univoci', id_univoci)
-    # t = threading.Thread(target=computeTime, args=[id_univoci, complete_parameters], daemon=True)
-    # t.start()
-    computeTime(id_univoci, complete_parameters)
-    return HttpResponse(distanze, indici)
 
 
 def computeTime(id_univoci, complete_parameters):
