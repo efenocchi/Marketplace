@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 #CLASSE dei PRODOTTI in vendita
-from django.templatetags.static import static
 
 
 class Item(models.Model):

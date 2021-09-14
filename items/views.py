@@ -1,3 +1,4 @@
+import datetime
 from math import radians, sin, cos, atan2, sqrt
 import requests
 from django.contrib import messages
@@ -411,10 +412,24 @@ def computeTime(request, item_selected_id):
     response_post_JSON = response.json()
 
     # arrotondo al minuto successivo a meno che la posizione non sia la stessa
+    # è stato creato per un insieme di valori ma adesso gliene vengono passati solo due
     time = [(float(x) + 59) // 60 for x in response_post_JSON['time']]
 
     print(response_post_JSON)
     print(response_post_JSON['distance'])
     print(response_post_JSON['time'])
-    print(time)
-    return HttpResponse("L'utente " + request.user.username + " si trova a " + str(time[1]) + " minuti dal negozio")
+    print("time", time)
+    ore = ''
+
+    if time[1] // 60 > 0:
+        if time[1] // 3600 > 1:
+            ore = str(int(time[1] // 60)) + " ore e "
+        else:
+            ore = str(int(time[1] // 60)) + " ora e "
+
+    if time[1] % 60 > 1:
+        minuti = " minuti dal negozio"
+    else:
+        minuti = " minuto dal negozio"
+
+    return HttpResponse("L'utente " + request.user.username + " si trova a " + ore + str((int(time[1]) % 60)) + minuti)

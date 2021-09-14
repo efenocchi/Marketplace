@@ -54,6 +54,8 @@
                         <div class="modify-delete">
                             <a href="{% url 'items:modify_item' item_selected_id=item.id%}" class="fa fa-pencil" aria-hidden="true"></a>
                             <a href="{% url 'items:delete_item' item_selected_id=item.id%}" class="fa fa-times" aria-hidden="true"></a>
+
+
                         </div>
                         <img src="{{ item.image.url }}" class="card-img-top" alt="...">
                         <div class="card-body">
