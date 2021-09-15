@@ -38,10 +38,10 @@ def add_review_user(request, user_selected_id):
 
     review_form = ReviewShopForm(request.POST or None, request.FILES or None)
 
-    user_to_review = GeneralUser.objects.get(user=user_selected_id)
+    shop_to_review = GeneralUser.objects.get(user=user_selected_id)
 
     if review_form.is_valid():
-        review = ReviewItem.objects.get_or_create(writer=request.user, receiver=user_to_review)[0]
+        review = ReviewItem.objects.get_or_create(writer=request.user, receiver=shop_to_review)[0]
 
         review.title_of_comment = review_form.cleaned_data['title_of_comment']
         review.description = review_form.cleaned_data['description']
@@ -50,7 +50,7 @@ def add_review_user(request, user_selected_id):
         return HttpResponseRedirect(reverse('index'))
 
     context = {
-        "user_to_review": user_to_review,
+        "shop_to_review": shop_to_review,
         "review_form": review_form,
     }
 

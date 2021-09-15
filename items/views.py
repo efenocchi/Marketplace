@@ -90,12 +90,36 @@ def show_item_shop(request):
     ...
 
 
+def control_info_generalUser(user):
+    """
+    Se l'utente si è registrato ma non ha riempito i propri dati => non può visualizzare gli oggetti e viene rimandato
+    nella pagina di compilazione dati utente o shop
+    :param user:
+    :return:
+        - primo parametro: indica se l'utente può entrare nella pagina o no
+        - secondo parametro: se non può entrare indica quale modulo di compilazione dati debba essere caricato
+    """
+    if user.latitudine == 0 or user.longitudine == 0:
+        print("Entra nelle latlon")
+        if user.login_negozio:
+            print("Entra-1")
+            return False, HttpResponseRedirect(reverse('users:insert_shop_info'))
+        else:
+            print("Entra2")
+            return False, HttpResponseRedirect(reverse('users:insert_user_info'))
+    else:
+        return True, True
+
 @login_required(login_url='/users/login')
 def item_page(request):
     """
     Dobbiamo ritornare due pagine differenti a seconda che il login sia stato fatto da un utente o da un negozio
     """
     general_user = GeneralUser.objects.get(user=request.user)
+
+    is_registered, value_redirect = control_info_generalUser(general_user)
+    if not is_registered:
+        return value_redirect
 
     # metto nella var all_items tutti gli oggetti item che ho nel db
     all_items = Item.objects.all()
@@ -109,7 +133,7 @@ def item_page(request):
     # così la var all_items che contiene i dati estratti dal db verrà passata alla pagina html
     # item_page.html che potrà accedervi tramite la var all_items
 
-    if general_user.login_negozio == False:
+    if not general_user.login_negozio:
         # se sono un utente
         context['all_items'] = all_items
         return render(request, 'items/item_page.html', context)
@@ -433,3 +457,5 @@ def computeTime(request, item_selected_id):
         minuti = " minuto dal negozio"
 
     return HttpResponse("L'utente " + request.user.username + " si trova a " + ore + str((int(time[1]) % 60)) + minuti)
+
+

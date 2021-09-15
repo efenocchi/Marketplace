@@ -71,7 +71,11 @@ def shop_registration(request):
         password = form.cleaned_data['password']
         shop.set_password(password)
         shop.save()
-
+        # serve così se per qualche motivo non va a buon fine l'inserimento successivo dei dati del GeneralUser,
+        # posso inserirli in un secondo momento
+        general_user = GeneralUser.objects.get_or_create(user=shop)[0]
+        general_user.login_negozio = True
+        general_user.save()
         shop = authenticate(username=username, password=password)
         if shop is not None:
             if shop.is_active:
@@ -107,8 +111,9 @@ def normal_user_registration(request):
         user.set_password(password)
         user.save()
         print(user)
-
-        # print(profile)
+        general_user = GeneralUser.objects.get_or_create(user=user)[0]
+        general_user.login_negozio = False
+        general_user.save()
         print("passato oltre")
         '''try:
             profile.foto_profilo = request.FILES['foto_profilo']

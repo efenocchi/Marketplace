@@ -62,7 +62,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ item.name }}</h5>
                             <p class="card-text">{{ item.price }}€</p>
-                            <a href="{% url 'items:buy_page' item_selected_id=item.id%}" class="btn btn-primary">Acquista</a>
+                            <a href="{% url 'items:buy_page' item_selected_id=item.id quantity=1%}" class="btn btn-primary">Acquista</a>
                             <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
 
                         </div>
