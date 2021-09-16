@@ -9,7 +9,13 @@ urlpatterns = [
 
     path('add_item', views.add_item, name='add_item'),
 
+    path('send_email', views.send_email, name='send_email'),
+
     path('<int:item_selected_id>/computeTime', views.computeTime, name='computeTime'),
+
+    path('<int:item_selected_id>/show_feedback_item', views.show_feedback_item, name='show_feedback_item'),
+
+    path('<int:shop_selected_id>/show_feedback_shop', views.show_feedback_shop, name='show_feedback_shop'),
 
     path('<int:item_selected_id>/', views.buy_page, name='buy_page'),
 

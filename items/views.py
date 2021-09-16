@@ -6,6 +6,9 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
+from Marketplace import settings
+from review.forms import ReviewShopForm
+from review.models import ReviewItem, ReviewShop
 from .models import Item, OrderItem, Order  # importo il modello così che possa utilizzalo, andrà a
 # pescare gli Item dal db e conservarli in una variabile
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -17,7 +20,10 @@ from .models import \
     Item  # importo il modello così che possa utilizzalo, andrà a pescare gli Item dal db e conservarli in una variabile
 from .forms import ItemForm
 from django.utils import timezone
+from django.core.mail import send_mail
 
+
+# [modifica] usare send_mass_mail()
 
 def search(request):
     word_searched = request.GET.get('search')
@@ -44,6 +50,13 @@ def isShop(user):
     general_user = GeneralUser.objects.get(user=user)
     print("fineisshop")
     return general_user.login_negozio
+
+
+def send_email(request):
+    subject = "Sending an email with Django"
+    message = "Oggetto caricato"
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [settings.DEFAULT_FROM_EMAIL], fail_silently=False)
+    return HttpResponse("sono un utente e devo visualizzare la BARRA DI RICERCA" + request.user.username)
 
 
 @login_required(login_url='/users/login')
@@ -75,7 +88,6 @@ def add_item(request):
         except Exception:
             item.image = item.item_pic_or_default()
         item.save()
-
         return HttpResponseRedirect(reverse('items:item_page'))
 
     context = {
@@ -109,6 +121,7 @@ def control_info_generalUser(user):
             return False, HttpResponseRedirect(reverse('users:insert_user_info'))
     else:
         return True, True
+
 
 @login_required(login_url='/users/login')
 def item_page(request):
@@ -408,8 +421,8 @@ def computeTime(request, item_selected_id):
 
     # print('complete parameters \n', complete_parameters)
 
-    #se voglio posso iterare sull'oggetto e tenere solo alcuni negozi da mostrare, altrimenti posso fare la ricerca
-    #di tutte le distanze utente-negozio
+    # se voglio posso iterare sull'oggetto e tenere solo alcuni negozi da mostrare, altrimenti posso fare la ricerca
+    # di tutte le distanze utente-negozio
 
     item = Item.objects.filter(id=item_selected_id).first()
     shop = GeneralUser.objects.get(user=item.user)
@@ -419,7 +432,7 @@ def computeTime(request, item_selected_id):
     parameters.append(user.indirizzo.replace("/", "") + ',' + user.citta.replace("/", "") + ','
                       + user.stato.replace("/", "") + ',' + user.codice_postale.replace("/", ""))
 
-    #metto le coordinate del negozio relativo all'item
+    # metto le coordinate del negozio relativo all'item
     parameters.append(shop.indirizzo.replace("/", "") + ',' + shop.citta.replace("/", "") + ','
                       + shop.stato.replace("/", "") + ',' + shop.codice_postale.replace("/", ""))
 
@@ -430,14 +443,15 @@ def computeTime(request, item_selected_id):
             complete_parameters
     }
 
-
+    # ritorna il tempo in secondi
     response = requests.post(
-        "http://www.mapquestapi.com/directions/v2/routematrix?key=5EIZ4tvrnyP3cOOMXpKoGlQ0bo92YoM3", json=complete_parameters)
+        "http://www.mapquestapi.com/directions/v2/routematrix?key=5EIZ4tvrnyP3cOOMXpKoGlQ0bo92YoM3",
+        json=complete_parameters)
     response_post_JSON = response.json()
 
     # arrotondo al minuto successivo a meno che la posizione non sia la stessa
     # è stato creato per un insieme di valori ma adesso gliene vengono passati solo due
-    time = [(float(x) + 59) // 60 for x in response_post_JSON['time']]
+    time = [(float(x) + 59) // 60 for x in response_post_JSON['time']]  # da secondi ---> minuti
 
     print(response_post_JSON)
     print(response_post_JSON['distance'])
@@ -459,3 +473,36 @@ def computeTime(request, item_selected_id):
     return HttpResponse("L'utente " + request.user.username + " si trova a " + ore + str((int(time[1]) % 60)) + minuti)
 
 
+def show_feedback_item(request, item_selected_id):
+    """
+    [modifica]
+    Dobbiamo mostrare una serie di recensioni e cliccando sopra si può visualizzare l'intera recensione (fatta con card)
+    """
+
+    item = Item.objects.filter(id=item_selected_id).first()
+    reviews = ReviewItem.objects.filter(receiver=item)
+
+    context = {
+        'item': item,
+        'all_reviews': reviews
+    }
+
+    return render(request, 'items/show_feedback_item.html', context)
+
+
+def show_feedback_shop(request, shop_selected_id):
+    """
+    [modifica]
+    Dobbiamo mostrare una serie di recensioni e cliccando sopra si può visualizzare l'intera recensione (fatta con card)
+    """
+
+    shop = GeneralUser.objects.filter(id=shop_selected_id).first()
+    reviews = ReviewShop.objects.filter(receiver=shop.user)
+
+    print(reviews)
+    context = {
+        'shop': shop,
+        'all_reviews': reviews
+    }
+
+    return render(request, 'items/show_feedback_shop.html', context)

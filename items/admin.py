@@ -4,7 +4,7 @@ from .models import Item, OrderItem, Order
 
 # Faccio in modo di visualizzare nella schermata di admin gli Item
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ("pk", "user", "name", "price", "category", "description", "image")
+    list_display = ("pk", "user", "name", "price", "category", "quantity_available", "description", "image")
 
 
 admin.site.register(Item, ItemAdmin)

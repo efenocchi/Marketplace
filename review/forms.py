@@ -26,3 +26,16 @@ class ReviewShopForm(ModelForm):
             'description',
             'rating'
         ]
+
+
+class ReviewCustomerForm(ModelForm):
+    # per formattazione errori e richieste (vedi documentazione Django)
+    required_css_class = 'required'
+
+    class Meta:
+        model = models.ReviewItem
+        fields = [
+            'title_of_comment',
+            'description',
+            'rating'
+        ]

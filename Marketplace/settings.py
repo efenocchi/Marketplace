@@ -128,3 +128,15 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'product_image')
 MEDIA_URL = '/product_image/'
+
+# Email Settings
+DEFAULT_FROM_EMAIL = 'infomarketplaceavailable@gmail.com'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'infomarketplaceavailable@gmail.com'
+EMAIL_HOST_PASSWORD = 'Ciaociaompa'
+EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+

@@ -6,7 +6,7 @@
 
     <!-- login_page.html è un'estensione di base.html -->
 
-    {% extends 'main/base.html' %}
+
     {% block menu_id %}
         <li><a href="{% url 'index' %}">Home</a></li>
     {% endblock %}
@@ -32,15 +32,16 @@
 </head>
 <body>
 
-{% block add_review_item %}
+    {% block add_review_shop %}
+
 
 <!--    FUNZIONI E NOMI DI FUNZIONI SOTTOSTANTI IN HTML DA CONTROLLARE [MODIFICA] -->
 
-    <h5>Aggiungi una recensione per l'oggetto: {{item.name}}</h5>
+    <h5>Aggiungi una recensione per il negozio: {{shop_to_review.user.username}}</h5>
         <div class="container-item">
             <div class="row-2">
 
-                <form id="RegFormUser" action="{% url 'review:add_review_item' item_selected_id=item.id%}" method="post">
+                <form id="RegFormUser" action="{% url 'review:add_review_shop' shop_selected_id=shop_to_review.id%}" method="post">
                     {% for field in review_form %}
                         {% csrf_token %}
                         <div class="form-group">
@@ -51,12 +52,13 @@
                         <div class="col-sm-10" > {{ field }}</div>
                         </div>
                     {% endfor %}
-                    <button type="submit" class="btn">Aggiungi Recensione</button>
+                    <button type="submit" class="btn">Aggiungi Recensione Negozio</button>
                  </form>
             </div>
         </div>
 
-{% endblock %}
 
+
+    {% endblock %}
 </body>
 </html>

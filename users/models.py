@@ -1,7 +1,8 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from django.templatetags.static import static
 
 # Create your models here.
 
@@ -25,6 +26,11 @@ class GeneralUser(models.Model):
     # descrizione dei propri gusti in modo da poter ricevere consigli dai negozi tramite chat
     descrizione = models.CharField(max_length=250, default="", null=True)
     login_negozio = models.BooleanField(default=False)  # per capire se il login è fatta da un utente o da un negozio
+
+    # quando vengo bloccato viene settato questo valore il quale verrà controllato quando devo prenotare merce
+    data_fine_blocco = models.DateField(default=datetime.date.today)
+    # se vengo bloccato per un numero di volte elevate posso essere bannato
+    numero_volte_bloccato = models.IntegerField(default=0)
 
     # def foto_profilo_or_default(self, default_path=static("/images/user_default.jpg")):
     #     if self.foto_profilo:
