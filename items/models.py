@@ -33,9 +33,10 @@ class OrderItem(models.Model):
     def __str__(self):
         return self.item.name
 
+
 class Order(models.Model):
     #user = models.ForeignKey(settings.AUTH_USER_MODEL,
-        #                     on_delete=models.CASCADE)
+                            # on_delete=models.CASCADE)
 
     ref_code = models.CharField(max_length=20, blank=True, null=True)
     items = models.ManyToManyField(OrderItem)
