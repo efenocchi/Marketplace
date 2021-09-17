@@ -33,7 +33,6 @@ class OrderItem(models.Model):
     def __str__(self):
         return self.item.name
 
-
 class Order(models.Model):
     #user = models.ForeignKey(settings.AUTH_USER_MODEL,
         #                     on_delete=models.CASCADE)
