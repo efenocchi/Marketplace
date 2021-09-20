@@ -29,7 +29,7 @@ class Item(models.Model):
     description = models.TextField()
     quantity = models.IntegerField(default=1)
     image = models.FileField(null=True, default='', blank=True)
-    # quantity_available = models.IntegerField(null=True)
+    #quantity_available = models.IntegerField(null=True, default=1)
 
     def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
         if self.image:

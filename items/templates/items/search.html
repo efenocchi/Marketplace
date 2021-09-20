@@ -28,7 +28,7 @@
 </head>
 <body>
     {% block menu_id %}
-    <li><a href="{% url 'users:home_for_user' user_profile=user.id %}">Home</a></li>
+    <li><a href="{% url 'users:home_for_user'%}">Home</a></li>
     {% endblock %}
 
     {% block cart %}
@@ -91,10 +91,12 @@
                                 {% if item.quantity <= 0 %}
                                 <h5>{{ item.quantity }}</h5>
                                 <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
+                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
                                 {% endif %}
                                 {% if item.quantity > 0 %}
                                 <h5>{{ item.quantity }}</h5>
                                 <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Acquista</a>
+                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
                                 {% endif %}
                         </div>
                     </div>

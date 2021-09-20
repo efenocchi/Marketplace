@@ -29,7 +29,7 @@
 <body>
 
     {% block menu_id %}
-    <li><a href="{% url 'users:home_for_user' user_profile=user_profile.id %}">Home</a></li>
+    <li><a href="{% url 'users:home_for_user' %}">Home</a></li>
     {% endblock %}
 
     {% block cart %}
@@ -49,7 +49,7 @@
                       <div class="form-btn">
                           <span>Modify User Info</span>
                       </div>
-                      <form method="post" action="{% url 'users:home_for_user' user_profile=user_profile.id %}"enctype="multipart/form-data">
+                      <form method="post" action="{% url 'users:home_for_user' %}"enctype="multipart/form-data">
                           {% csrf_token %}
                           {% include 'users/base_modifica_utente.html' %}
                           <button type="submit" class="btn" value="Submit">Submit</button>

@@ -461,7 +461,6 @@ def view_order(request):
     context["all_items"] = order
     print(context)
     return render(request, 'items/view_order.html', context)
-        return render(request, 'items/empty_cart.html')
 
 
 def isUser(user):

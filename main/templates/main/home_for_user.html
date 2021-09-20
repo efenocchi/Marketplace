@@ -30,7 +30,7 @@
 
 <!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
     {% block menu_id %}
-        <li><a href="{% url 'users:modify_profile' user_profile=user_profile.id %}">User Info</a></li>
+        <li><a href="{% url 'users:modify_profile' %}">User Info</a></li>
         <li><a href="{% url 'items:item_page'%}">Item Page User</a></li>
         <li><a href="{% url 'items:view_order' %}">View Order</a></li>
         {% block logout %}
