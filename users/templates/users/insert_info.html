@@ -37,7 +37,6 @@
                       <div class="form-btn">
                           <span>Insert User Info</span>
                       </div>
-
                       <form action="{% url 'users:insert_user_info'%}" method="post">
                           {% csrf_token %}
                           {% include 'users/base_registrazione.html' %}

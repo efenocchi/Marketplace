@@ -27,6 +27,9 @@ class UserForm(forms.ModelForm):
     # Il modello User è già creato da Django, esiste di default
     class Meta:
         model = User
+        help_texts = {
+            'username': None,
+        }
         fields = ('username',
                   'password',
                   # 'conferma_password',

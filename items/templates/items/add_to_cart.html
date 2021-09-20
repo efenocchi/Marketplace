@@ -27,7 +27,25 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+    {% block menu_id %}
+    <li><a href="{% url 'users:home_for_user' user_profile=user.id %}">Home</a></li>
+    {% endblock %}
+
+    {% block cart %}
+    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">
+            {% if order_item.ordered != 1 %}
+                {% if all_items == 0 %}0{% endif %}
+                {% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}
+            {% endif %}
+            {% if order_item.ordered == 1 %}0{% endif %}
+        </span>
+        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
+    </a>
+    {% endblock %}
+
 {% block add_to_cart %}
+<p>{{ user }}{{order_qs}} {{all_items}}</p>
     <div class="container">
         <div class="table-responsive text-nowrap">
         <h2>Order Summary</h2>
@@ -37,24 +55,64 @@
                     <th scope="col">#</th>
                     <th scope="col">Product</th>
                     <th scope="col">Price</th>
+                    <th scope="col">Discount Price</th>
                     <th scope="col">Quantity</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
-            {% for order_item in all_items.items.all %}
-                <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ order_item.item.name }}</td>
-                    <td>{{ order_item.item.price }}</td>
-                    <td>{{ order_item.quantity }}</td>
-                    <td><a href="{% url 'items:remove_single_item_from_cart' item_selected_id=order_item.item.id%}" class="button" color="red">Delete</a></td>
-                </tr>
-            {% endfor %}
+            {% if order_item.ordered != 1 %}
+                {% for order_item in all_items.items.all %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ order_item.item.name }}</td>
+                        <td>{{ order_item.item.price }}</td>
+                        <td>{{ order_item.item.discount_price }}</td>
+                        <td>{{ order_item.quantity }}</td>
+                        <td><a href="{% url 'items:remove_single_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete</a></td>
+                        <td><a href="{% url 'items:remove_entire_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete All</a><td>
+                        <td>
+                        {% if order_item.item.discount_price %}
+                            ${{ order_item.get_total_discount_item_price }}
+                            <span class="badge badge-primary">Saving ${{ order_item.get_amount_saved }}</span>
+                        {% else %}
+                            ${{ order_item.get_total_item_price }}
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
             </tbody>
         </table>
+        <div class="col-md-12 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="badge badge-secondary badge-pill">{{ all_items.items.count }}</span>
+        </h4>
+        <ul class="list-group mb-3 z-depth-1">
+        {% if order_item.ordered != 1 %}
+            {% for order_item in all_items.items.all %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                <div>
+                <h6 class="my-0">{{ order_item.quantity }} x {{ order_item.item.name}}</h6>
+                <small class="text-muted">{{ order_item.item.description}}</small>
+                </div>
+                <span class="text-muted">${{ order_item.get_final_price }}</span>
+            </li>
+            {% endfor %}
+        {% endif %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>Total (USD)</span>
+            <strong>${{ all_items.get_total }}</strong>
+        </li>
+        </ul>
+    </div>
+        <td colspan="5">
+            <a class='btn btn-warning float-right ml-2' href="{% url 'items:checkout'%}">Proceed to checkout</a>
+            <a class='btn btn-primary float-right' href="{% url 'items:item_page'%}">Continue shopping</a>
+        </td>
         </div>
     </div>
+
 {% endblock %}
 </body>
 </html>

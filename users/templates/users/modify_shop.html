@@ -29,27 +29,20 @@
 <body>
 
     {% block menu_id %}
-    <li><a href="{% url 'users:home_for_user' user_profile=user_profile.id %}">Home</a></li>
-    {% endblock %}
-
-    {% block cart %}
-    <a href="{% url 'items:go_to_cart' %}"class="nav-link waves-effect">
-        <span class="badge bg-danger bg-secondary">{% if all_items == 0 %}0{% endif %}{% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}</span>
-        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
-    </a>
+    <li><a href="{% url 'users:home_for_shop' user_profile=user_profile.id %}">Home</a></li>
     {% endblock %}
 
     {% block modify_profile %}
     <div class="modify_user_page">
       <div class="container">
-          <h2 id="title">Modify User with Name:{{ user_profile }} and Id: {{ user_profile.id }}</h2>
+          <h2 id="title">Modify Shop with Name:{{ user_profile }} and Id: {{ user_profile.id }}</h2>
           <div class="row">
               <div class="col-2">
                   <div class="form_container_modify_user_page">
                       <div class="form-btn">
-                          <span>Modify User Info</span>
+                          <span>Modify Shop Info</span>
                       </div>
-                      <form method="post" action="{% url 'users:home_for_user' user_profile=user_profile.id %}"enctype="multipart/form-data">
+                      <form method="post" action="{% url 'users:home_for_shop' user_profile=user_profile.id %}"enctype="multipart/form-data">
                           {% csrf_token %}
                           {% include 'users/base_modifica_utente.html' %}
                           <button type="submit" class="btn" value="Submit">Submit</button>

@@ -1,9 +1,10 @@
 import threading
 from math import radians, sin, cos, atan2, sqrt
-
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
+from items.models import Order
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 # Create your views here.
@@ -97,7 +98,6 @@ def normal_user_registration(request):
 
     form = UserForm(request.POST or None, oauth_user=0)
     # normalform = NormalUserForm(request.POST or None, request.FILES or None)
-
     # form validi e utenti con lo stesso username non si sono già registrati
     if form.is_valid() and \
             not User.objects.filter(username=form.cleaned_data['username']).exists():
@@ -181,8 +181,12 @@ def insert_shop_info(request):
 
         user_profile.indirizzo = shopform.cleaned_data['indirizzo']
         set_shop_info(shop_profile, shopform)
-        return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
-                            ' che abita in via: ' + shop_profile.indirizzo)
+        print(user_profile)
+
+        context={"user_profile": shop_profile}
+        return render(request, 'main/home_for_shop.html', context)
+        #return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
+                           # ' che abita in via: ' + shop_profile.indirizzo)
         # return HttpResponseRedirect(reverse('users:prova_passaggio_interi', kwargs={'oid':request.user.pk}))
     else:
         print("normal form NON validi")
@@ -242,8 +246,19 @@ def insert_user_info(request):
             general_user.foto_profilo = None
 
         set_user_info(general_user, normalform)
-        return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
-                            ' che abita in via: ' + general_user.indirizzo)
+        order_qs = Order.objects.filter(
+            user=request.user,
+            ordered=False
+        )
+
+        if order_qs.exists():
+            order = Order.objects.get(user=request.user, ordered=False)
+        else:
+            order = 0
+        context={"user_profile": general_user,"all_items":order}
+        return render(request, 'main/home_for_user.html', context)
+        #return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
+         #                   ' che abita in via: ' + general_user.indirizzo)
         # return HttpResponseRedirect(reverse('users:prova_passaggio_interi', kwargs={'oid':request.user.pk}))
     else:
         print("normal form NON validi")
@@ -255,7 +270,32 @@ def insert_user_info(request):
     # return render(request, 'users/'+ str(oid) +'/insert_info.html', context)
     return render(request, 'users/insert_info.html', context)
 
+def home_for_user(request,user_profile):
 
+    user_profile = GeneralUser.objects.get(user=request.user)
+    print(user_profile)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = Order.objects.get(user=request.user, ordered=False)
+    else:
+        order = 0
+    context = {
+        "user_profile": user_profile,
+        "all_items": order
+    }
+
+    return render(request, 'main/home_for_user.html', context)
+
+def home_for_shop(request,user_profile):
+
+    user_profile = GeneralUser.objects.get(user=request.user)
+    context={}
+    context["user_profile"] = user_profile
+    return render(request, 'main/home_for_shop.html', context)
 # else:
 #     raise Http404
 
@@ -354,7 +394,10 @@ def logout_user(request):
     username = request.user.username
     logout(request)
     # return HttpResponseRedirect(reverse('main:index'))
-    return HttpResponse("Logout di " + username + " effettuato con successo")
+
+    messages.success(request,"Logout di " + username + " effettuato con successo" )
+    return render(request, 'main/home.html')
+    #return HttpResponse("Logout di " + username + " effettuato con successo")
 
 
 def compute_position(profile):
@@ -513,12 +556,20 @@ def computeTime(id_univoci, complete_parameters):
 
 
 @login_required(login_url='/users/login')
-def modify_profile(request):
-
+def modify_profile(request,user_profile):
     user = GeneralUser.objects.get(user=request.user)
     user_basic = User.objects.get(pk=request.user.pk)
     form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
 
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = Order.objects.get(user=request.user, ordered=False)
+    else:
+        order = 0
     # if form.is_valid() and \
     #         not User.objects.filter(username=form.cleaned_data['username']).exists():
     #     shop = form.save(commit=False)
@@ -544,10 +595,46 @@ def modify_profile(request):
     context = {
         "form_for_username": form_for_username,
         "form": form,
+        "user_profile":user,
+        "all_items": order
     }
 
     return render(request, 'users/modify_profile.html', context)
 
+@login_required(login_url='/users/login')
+def modify_shop(request,user_profile):
+    user = GeneralUser.objects.get(user=request.user)
+    user_basic = User.objects.get(pk=request.user.pk)
+    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
+    # if form.is_valid() and \
+    #         not User.objects.filter(username=form.cleaned_data['username']).exists():
+    #     shop = form.save(commit=False)
+    #     username = form.cleaned_data['username']
+    #     password = form.cleaned_data['password']
+    #     shop.set_password(password)
+    #     shop.save()
+
+    if user.login_negozio:
+        form = ShopProfileForm(request.POST or None, instance=user)
+    else:
+        form = NormalUserForm(request.POST or None, instance=user)
+
+    if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
+        set_shop_info(user, form)
+
+        return HttpResponseRedirect(reverse('index'))
+
+    elif form.is_valid() and not user.login_negozio:
+        set_user_info(user, form)
+        return HttpResponseRedirect(reverse('index'))
+
+    context = {
+        "form_for_username": form_for_username,
+        "form": form,
+        "user_profile":user,
+    }
+
+    return render(request, 'users/modify_shop.html', context)
 
 def set_shop_info(shop_profile, shopform):
     """
