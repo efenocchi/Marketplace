@@ -20,12 +20,19 @@ from django.conf.urls import include    #aggiungo per poter usare la funzione in
 from django.conf import settings
 from django.conf.urls.static import static
 
-#RICORDARSI: la / iniziale non va scritta all'inizio perchè si assume già inclusa nel path di grado inferiore
+# RICORDARSI: la / iniziale non va scritta all'inizio perchè si assume già inclusa nel path di grado inferiore
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),          #appena apro localhost:8000 parte la main.views
     path('users/', include('users.urls')),
     path('items/', include('items.urls')),
+    path('review/', include('review.urls')),
+    path('api/', include('API.urls')),
+
+    path('api/rest-auth/', include("rest_auth.urls")),
+    path('api/rest-auth/registration/', include("rest_auth.registration.urls")),
+
+    path('accounts/', include('allauth.urls')),
 ]
 
 if settings.DEBUG:

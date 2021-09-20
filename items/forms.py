@@ -1,10 +1,5 @@
 from django import forms
 from .models import Item
-from datetime import datetime
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
-import re
-#import magic
 
 MIME_TYPES = ['image/jpeg', 'image/png']
 
@@ -23,7 +18,7 @@ class ItemForm(forms.ModelForm):
 
     class Meta:
         model = Item
-        fields = ['name', 'price', 'category', 'description', 'image']
+        fields = ['name', 'price', 'category', 'quantity_available', 'description', 'image']
 
     # #CONTROLLO NAME ->OK
     # def clean_name(self):

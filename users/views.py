@@ -29,6 +29,7 @@ def index(request):
 
 def login_all(request):
     """
+    [modifica] aggiungere parte Ajax!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     Permette agli utenti di effettuare il login.
 
     :param request: request utente.
@@ -58,8 +59,8 @@ def login_all(request):
         return render(request, 'users/login_page.html')
     else:
         # se l'utente è loggato gli faccio vedere la pagina items (andrà cambiata con la pagina per info utente-negozio) [modifica]
-        #return HttpResponseRedirect(reverse('items:item_page'))
-        return render(request, 'users/login_page.html', {'error_message': 'Immettere un utente e una password validi'})
+        return HttpResponseRedirect(reverse('items:item_page'))
+        # return render(request, 'users/login_page.html', {'error_message': 'Immettere un utente e una password validi'})
 
 
 # uguale alla registrazione dell'utente, se non cambia niente in futuro se ne può lasciare solo una
@@ -73,7 +74,11 @@ def shop_registration(request):
         password = form.cleaned_data['password']
         shop.set_password(password)
         shop.save()
-
+        # serve così se per qualche motivo non va a buon fine l'inserimento successivo dei dati del GeneralUser,
+        # posso inserirli in un secondo momento
+        general_user = GeneralUser.objects.get_or_create(user=shop)[0]
+        general_user.login_negozio = True
+        general_user.save()
         shop = authenticate(username=username, password=password)
         if shop is not None:
             if shop.is_active:
@@ -108,8 +113,9 @@ def normal_user_registration(request):
         user.set_password(password)
         user.save()
         print(user)
-
-        # print(profile)
+        general_user = GeneralUser.objects.get_or_create(user=user)[0]
+        general_user.login_negozio = False
+        general_user.save()
         print("passato oltre")
         '''try:
             profile.foto_profilo = request.FILES['foto_profilo']
@@ -179,7 +185,6 @@ def insert_shop_info(request):
         except Exception:
             shop_profile.foto_profilo = None
 
-        user_profile.indirizzo = shopform.cleaned_data['indirizzo']
         set_shop_info(shop_profile, shopform)
         print(user_profile)
 
@@ -228,11 +233,6 @@ def insert_user_info(request):
 
     # user_profile = User.objects.get(pk=oid)
     user_profile = User.objects.get(pk=request.user.pk)
-    # if user_profile.has_usable_password():  # se la password è valida
-    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=0)
-    # else:
-    #     form = UserForm(data=request.POST or None, instance=request.user, oauth_user=1)
-    #     oaut_user = True
 
     form = UserForm(data=request.POST or None, instance=user_profile, oauth_user=1)
     normalform = NormalUserForm(request.POST or None, request.FILES or None)
@@ -402,6 +402,8 @@ def logout_user(request):
 
 def compute_position(profile):
     """
+    [modifica] creare una funzione per similarità tra stringhe e scegliere il valore di CAP che più si avvicina
+
     Thanks to an external API we are able to find the latitude and longitude of a user and to compute
     the distance user-store.
     In order to be very precise we must insert these parameters --> street, city, state, postalCode
@@ -415,188 +417,70 @@ def compute_position(profile):
                                + ',' + profile.citta.replace("/", "") + ',' + profile.stato.replace("/", "") +
                                ',' + profile.codice_postale.replace("/", ""))
 
-    latLong = get_latlong.json()
+    response_get_JSON = get_latlong.json()
 
-    return latLong['results'][0]['locations'][0]['latLng']["lat"], \
-           latLong['results'][0]['locations'][0]['latLng']["lng"]
-
-
-def isUser(user):
-    general_user = GeneralUser.objects.get(user=user)
-    return not general_user.login_negozio
+    possibili_indirizzi = len(response_get_JSON['results'][0]['locations'])
+    postalCode = profile.codice_postale
+    postalCode_1 = str(int(postalCode)+1)
+    postalCode_0 = str(int(postalCode)-1)
 
 
-@login_required(login_url='/users/login')
-@user_passes_test(isUser)
-def show_distance_shops(request):
+    # se trovo il valore corrispondente al cap lo ritorno, altrimenti ne ritorno uno anche se non corretto
+    for i in range(possibili_indirizzi):
+        if response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode:
+            return response_get_JSON['results'][0]['locations'][i]['latLng']["lat"], \
+                   response_get_JSON['results'][0]['locations'][i]['latLng']["lng"]
 
-    """
-    Ordina gli annunci per distanza geografica secondo la selezione fatta dall'utente.
-    Il calcolo risultante permette di considerare la distanza tra due punti espressa in km.
+    # cerco l'indirizzo inerente a un CAP con una approssimazione di un valore, es dato 41125 cerco 41124 e 41123
+    for i in range(possibili_indirizzi):
+        if response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode or \
+                response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode_1 or \
+                response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode_0:
+            return response_get_JSON['results'][0]['locations'][i]['latLng']["lat"], \
+                   response_get_JSON['results'][0]['locations'][i]['latLng']["lng"]
 
-    :param ordina: indica se l'ordinamento deve essere crescente, decrescente o non ordinare.
-    :return: indici degli annunci ordinati.
+    return response_get_JSON['results'][0]['locations'][0]['latLng']["lat"], \
+        response_get_JSON['results'][0]['locations'][0]['latLng']["lng"]
 
-    """
-
-    general_user = GeneralUser.objects.get(user=request.user)
-
-    parameters = []
-
-    shops = GeneralUser.objects.filter(login_negozio=True)
-    print(shops)
-    # metto tutti i valori tranne il primo, li aggiorno e metto in testa il primo
-    for shop in shops:
-        print(shop)
-        print(shop.latitudine)
-        parameters.append(shop.indirizzo.replace("/", "") + ',' + shop.citta.replace("/", "") + ','
-                          + shop.stato.replace("/", "") + ',' + shop.codice_postale.replace("/", ""))
-        # parameters['locations'].append(str(shop.latitudine) + ',' + str(shop.longitudine))
-
-    # return HttpResponse(parameters['locations'])
-
-    lat_shop = 0
-    lng_shop = 0
-    if general_user.latitudine is not None and general_user.longitudine is not None:
-        lat_shop = general_user.latitudine
-        lng_shop = general_user.longitudine
-
-
-    distanze = []
-    indici = []
-    id_univoci = []
-    # raggio della terra approssimato
-    r = 6371.0
-
-    lat1 = radians(lat_shop)
-    lon1 = radians(lng_shop)
-
-    # Calcola le distanze di tutti gli annunci
-    for i, shop in enumerate(shops):
-        indici.append(i)
-        shop_profile = GeneralUser.objects.filter(user=shop.user).first()
-
-        if shop_profile.latitudine is not None and shop_profile.longitudine is not None:
-            lat2 = radians(shop_profile.latitudine)
-            lon2 = radians(shop_profile.longitudine)
-        else:
-            lat2 = 0
-            lon2 = 0
-        print(str(lat2) + ',' + str(lon2))
-
-        dlon = lon2 - lon1
-        dlat = lat2 - lat1
-
-        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        distanze.append(r * c)
-        id_univoci.append(shop.user)
-    # Ordina in base all'order param
-    # if ordina == 'crescente':
-    #     distanze, indici = (list(t) for t in zip(*sorted(zip(distanze, indici))))
-    #
-    # if ordina == 'decrescente':
-    #     distanze, indici = (list(t) for t in zip(*sorted(zip(distanze, indici), reverse=True)))
-
-    #adesso ho tutto ordinato
-    distanze, indici = (list(t) for t in zip(*sorted(zip(distanze, indici))))
-    _, id_univoci = (list(t) for t in zip(*sorted(zip(distanze, id_univoci))))
-    _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters))))
-
-    # return indici
-    print(distanze)
-    print(indici)
-
-    complete_parameters = parameters[:]
-    complete_parameters.insert(0, general_user.indirizzo.replace("/", "") + ',' + general_user.citta.replace("/", "") + ','
-                              + general_user.stato.replace("/", "") + ',' + general_user.codice_postale.replace("/", ""))
-
-    # Creo il dizionario che utilizzerò con per le richieste POST nella funzione successiva e
-    # inserisco anche l'indirizzo dell'utente (oltre a quello dei negozi)
-    complete_parameters = {
-        'locations':
-            complete_parameters
-
-    }
-
-    #inserisco anche l'identificatore univoco dell'utente
-    id_univoci.insert(0, request.user)
-    print('id_univoci', id_univoci)
-    # t = threading.Thread(target=computeTime, args=[id_univoci, complete_parameters], daemon=True)
-    # t.start()
-    computeTime(id_univoci, complete_parameters)
-    return HttpResponse(distanze, indici)
-
-
-def computeTime(id_univoci, complete_parameters):
-    """"
-    Passo gli identificativi univoci dei negozi più vicini e in base a questo filtro mostro i prodotti richiesti
-
-    :param locations: è un elenco di indirizzi in cui il primo è quello dell'utente e
-                        gli altri sono quelli dei negozi più vicini in linea d'aria
-    :param id_univoci: sono gli id univoci dell'utente e dei negozi a lui vicini in linea d'aria
-    """
-
-    print('complete parameters \n', complete_parameters)
-    #se voglio posso iterare sull'oggetto e tenere solo alcuni negozi da mostrare, altrimenti posso fare la ricerca
-    #di tutte le distanze utente-negozio
-
-    response = requests.post(
-        "http://www.mapquestapi.com/directions/v2/routematrix?key=5EIZ4tvrnyP3cOOMXpKoGlQ0bo92YoM3", json=complete_parameters)
-    response_post_JSON = response.json()
-
-    # arrotondo al minuto successivo a meno che la posizione non sia la stessa
-    time = [(float(x) + 59) // 60 for x in response_post_JSON['time']]
-    # time = (time + 0.5) // 60
-    print(response_post_JSON)
-    print(response_post_JSON['distance'])
-    print(response_post_JSON['time'])
-    print(time)
 
 
 @login_required(login_url='/users/login')
-def modify_profile(request,user_profile):
-    user = GeneralUser.objects.get(user=request.user)
-    user_basic = User.objects.get(pk=request.user.pk)
-    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
+def modify_profile(request):
+    shop_or_user = GeneralUser.objects.get(user=request.user)
+    user = User.objects.get(pk=request.user.pk)
+    form = UserForm(data=request.POST or None, instance=user, oauth_user=0)
 
-    order_qs = Order.objects.filter(
-        user=request.user,
-        ordered=False
-    )
-
-    if order_qs.exists():
-        order = Order.objects.get(user=request.user, ordered=False)
+    if shop_or_user.login_negozio:
+        form_user_or_shop = ShopProfileForm(request.POST or None, instance=shop_or_user)
     else:
-        order = 0
-    # if form.is_valid() and \
-    #         not User.objects.filter(username=form.cleaned_data['username']).exists():
-    #     shop = form.save(commit=False)
-    #     username = form.cleaned_data['username']
-    #     password = form.cleaned_data['password']
-    #     shop.set_password(password)
-    #     shop.save()
+        form_user_or_shop = NormalUserForm(request.POST or None, instance=shop_or_user)
 
-    if user.login_negozio:
-        form = ShopProfileForm(request.POST or None, instance=user)
-    else:
-        form = NormalUserForm(request.POST or None, instance=user)
+    if form_user_or_shop.is_valid() and form.is_valid():
+        # entro se l'username non è già presente o se è già presente e coincide con l'userneme di chi è loggato
+        if not User.objects.filter(username=form.cleaned_data['username']).exists() or \
+                form.cleaned_data['username'] == request.user.username:
 
-    if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
-        set_shop_info(user, form)
+            # se non creo questo oggetto non ci sarà differenza tra i campi dell'oggetto e i form
+            shop_or_user2 = GeneralUser.objects.get(user=request.user)
 
-        return HttpResponseRedirect(reverse('index'))
+            if shop_or_user.login_negozio:
+                set_shop_info(shop_or_user2, form_user_or_shop)
+            else:
+                set_user_info(shop_or_user2, form_user_or_shop)
 
-    elif form.is_valid() and not user.login_negozio:
-        set_user_info(user, form)
-        return HttpResponseRedirect(reverse('index'))
+            user_form = form.save(commit=False)
+            password = form.cleaned_data['password']
+            user_form.set_password(password)
+            user_form.save()
+
+            if shop_or_user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('index'))
 
     context = {
-        "form_for_username": form_for_username,
         "form": form,
-        "user_profile":user,
-        "all_items": order
+        "form_user_or_shop": form_user_or_shop,
     }
 
     return render(request, 'users/modify_profile.html', context)
@@ -648,6 +532,7 @@ def set_shop_info(shop_profile, shopform):
     """
 
     shop_profile.stato = 'Italia'
+
     # se uno di questi valori è cambiato allora calcolo nuovamente anche le coordinate geografiche
     if shop_profile.indirizzo != shopform.cleaned_data['indirizzo'] or \
             shop_profile.citta != shopform.cleaned_data['citta'] or \

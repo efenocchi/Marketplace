@@ -51,7 +51,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
             <div class="small-container">
                 <form class="d-flex" method="get" action="{% url 'items:search'%}">
-                    {% csrf_token %}
+
                     <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>
                 </form>
@@ -66,6 +66,8 @@
                         <div class="modify-delete">
                             <a href="{% url 'items:modify_item' item_selected_id=item.id%}" class="fa fa-pencil" aria-hidden="true"></a>
                             <a href="{% url 'items:delete_item' item_selected_id=item.id%}" class="fa fa-times" aria-hidden="true"></a>
+
+
                         </div>
                         {% if item.quantity > 0 %}
                             <img src="{{ item.image.url }}" class="card-img-top" alt="...">

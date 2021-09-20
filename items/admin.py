@@ -1,7 +1,12 @@
 from django.contrib import admin
-from .models import Item,OrderItem,Order
+from .models import Item, OrderItem, Order
 
-#Faccio in modo di visualizzare nella schermata di admin gli Item
-admin.site.register(Item)
+
+# Faccio in modo di visualizzare nella schermata di admin gli Item
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ("pk", "user", "name", "price", "category", "quantity_available", "description", "image")
+
+
+admin.site.register(Item, ItemAdmin)
 admin.site.register(OrderItem)
 admin.site.register(Order)
