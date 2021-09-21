@@ -1,11 +1,38 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from "react";
-import { StyleSheet, Text, View,TouchableNativeFeedback} from 'react-native';
+import { StyleSheet, Button, Text, View,TouchableNativeFeedback} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import Drawer from './components/DrawerNavigator';
+import * as Font from 'expo-font';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './Pages/Login';
+
+// const AppContainer = createAppContainer(Drawer);
+const Stack = createNativeStackNavigator();
 
 
-const AppContainer = createAppContainer(Drawer);
+function HomeScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+      <Button
+        title="Go to Login"
+        onPress={() => navigation.navigate('Login')}
+      />
+    </View>
+  );
+}
+
+function NotCharged() {
+  const bodyText = "Non è stato caricato il Font";
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+
+      <Text numberOfLines={5}>{bodyText}</Text>
+    </View>
+  );
+}
 
 export default class App extends React.Component {
 
@@ -23,30 +50,35 @@ export default class App extends React.Component {
     global.user_id = -1;
     global.provincia = "AG";
     global.regione = "Abruzzo";
-  }
+    global.state = {
+      fontLoaded: false,
+    };
 
-  state = {
-    fontLoaded: false,
-  };
-
-  async componentDidMount() {
-    await Font.loadAsync({
+     Font.loadAsync({
       'satisfy': require('./assets/fonts/satisfy.ttf'),
       'typold-medium': require('./assets/fonts/typold-medium.otf')
-    });
+    }).then( global.state.fontLoaded = true)
 
-    this.setState({ fontLoaded: true });
-  }
+  } ;
+
+
 
   render () {
-    if (!this.state.fontLoaded) {
+    if (!global.state.fontLoaded) {
       return (
-        <View></View>
+        NotCharged()
       );
     }
-
     return (
-      <AppContainer navigation={this.props.navigation}/>
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={NotCharged} />
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Navigator>
+    </NavigationContainer>
     );
   }
+
+
 }

@@ -7,7 +7,7 @@ import { Dimensions } from 'react-native';
 import { IconButton } from 'react-native-paper';
 const {width, height} = Dimensions.get('window');
 
-class Login extends Component {
+export default class Login extends Component {
 
     constructor(props){
         super(props);
@@ -225,4 +225,3 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Login;
