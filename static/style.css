@@ -85,6 +85,15 @@ p{
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
 
+.btn_small{
+    display: inline-block;
+    background: red;
+    color: white;
+    padding: 8px 30px;
+    border-radius: 30px;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
+
 /* transizione bottone da rosso a blu */
 .btn:hover{
     background: blue;
@@ -314,7 +323,7 @@ small{
 .form_container_modify_info{
     background: #db7272;
     width: 550px;
-    height: 880px;
+    height: 900px;
     max-height: 900px;
     position: relative;
     text-align: center;
@@ -340,7 +349,7 @@ small{
 /* container campi username e password */
 .form_container_modify_info form{
     width: 550px;
-    height: 810px;
+    height: 830px;
     max-width: 600px;
     margin-top: -80px;
     padding: 0 20px;
@@ -358,10 +367,72 @@ small{
     padding: 0 10px;
     border: 1px solid #ccc;
 }
+/* ------------------------------- MODIFY_PAGE ----------------------------------------------------------- */
+.modify_user_page{
+    padding: 50px 0;
+    background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
+}
+
+.form_container_modify_user_page{
+    background: #db7272;
+    width: 550px;
+    height: 722px;
+    max-height: 900px;
+    position: relative;
+    text-align: center;
+    padding: 20px 0;
+    margin: 50px auto; /* distanza dal bordo alto */
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.1);
+    overflow: scroll;
+    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.form_container_modify_user_page span{
+    font-weight: bold;
+    color: #555;
+    display: inline-block;
+}
+
+.form-btn{
+    display: inline-block;
+}
+
+/* container campi username e password */
+.form_container_modify_user_page form{
+    width: 550px;
+    height: 651,5px;
+    max-width: 600px;
+    margin-top: -80px;
+    padding: 0 20px;
+    position: absolute;
+    top: 150px;
+    transition: transform 1s;
+    background: white;
+}
+
+.form_container_modify_user_page input, #id_regione{
+    width: 300px;
+    height: 30px;
+    margin-left: 80px;
+    margin-top: 10px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
+
 /* ------------------------------- REGISTRATION_PAGE ----------------------------------------------------------- */
 .registration_page{
     padding: 50px 0;
     background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
+}
+#col-sm-10 #id_regione, #id_provincia{
+    width: 300px;
+    height: 30px;
+    margin-left: 80px;
+    margin-top: 10px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
 }
 
 /* schermata registration */
@@ -379,8 +450,8 @@ small{
     overflow: auto;
     overflow-y: auto;
     overflow-x: hidden;
-
 }
+
 /* scritte Register User e Register Shop */
 .form-container span{
     font-weight: bold;
@@ -490,6 +561,10 @@ form a{
     text-align: center;
     color: #0d4488;
 }
+
+#gray_no_quantity{
+    filter: grayscale(100%);
+}
 /* ---------------------------------- SEARCH ----------------------------------------------------------- */
 #no_search_result{
     margin-top: -20px;
@@ -534,6 +609,17 @@ form a{
     display: block;
     padding: 10px;
     margin-top: 20px;
+}
+
+.single-product #email{
+    width: 250px;
+    height: 40px;
+    margin-top: -40px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    font-size: 20px;
+    margin-right: 10px;
+    border: 1px solid #ff523b;
 }
 
 .single-product input{

@@ -21,7 +21,7 @@ urlpatterns = [
 
     path('shop_registration', views.shop_registration, name='shop_registration'),
     path('modify_profile', views.modify_profile, name='modify_profile'),
-
+    path('<int:user_profile>/modify_shop', views.modify_shop, name='modify_shop'),
     # path('<int:oid>/insert_user_info', views.insert_user_info, name='insert_user_info'),
     path('<int:oid>/prova_passaggio_interi', views.prova_passaggio_interi, name='prova_passaggio_interi'),
     path('insert_user_info', views.insert_user_info, name='insert_user_info'),
@@ -29,7 +29,8 @@ urlpatterns = [
     # path('show_distance_shops', views.show_distance_shops, name='show_distance_shops'),
     # path('show_distance_shops', views.show_distance_shops, name='show_distance_shops'),
 
-
+    path('home_for_user', views.home_for_user, name='home_for_user'),
+    path('home_for_shop', views.home_for_shop, name='home_for_shop'),
     # path('prova_registrazione', views.prova_registrazione, name='prova_registrazione'),
 
     # /utenti/logout/

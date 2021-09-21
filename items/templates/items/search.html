@@ -27,19 +27,30 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+    {% block menu_id %}
+    <li><a href="{% url 'users:home_for_user'%}">Home</a></li>
+    {% endblock %}
+
+    {% block cart %}
+    <a href="{% url 'items:go_to_cart' %}"class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">{% if all_items == 0 %}0{% endif %}{% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}</span>
+        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
+    </a>
+    {% endblock %}
+
     {% block item_page %}
     <main>
         <div class="container">
             <div class="container text-center">
                 {% if user.user is not None %}
-                    <h2 id="title">Welcome Shop: {{ user.user }}</h2>
+                    <h2 id="title">Welcome: {{ user }}</h2>
                 {% endif %}
             </div>
     <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
         <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
             <div class="small-container">
                 <form class="d-flex" method="get" action="{% url 'items:search'%}">
-
+                    {% csrf_token %}
                     <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>
                 </form>
@@ -58,13 +69,35 @@
                             <a href="{% url 'items:modify_item' item_selected_id=item.id%}" class="fa fa-pencil" aria-hidden="true"></a>
                             <a href="{% url 'items:delete_item' item_selected_id=item.id%}" class="fa fa-times" aria-hidden="true"></a>
                         </div>
+                        {% if item.quantity > 0 %}
                         <img src="{{ item.image.url }}" class="card-img-top" alt="...">
+                        {% endif %}
+                        {% if item.quantity == 0 %}
+                        <img id="gray_no_quantity" src="{{ item.image.url }}" class="card-img-top" alt="...">
+                        {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ item.name }}</h5>
-                            <p class="card-text">{{ item.price }}€</p>
-                            <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Acquista</a>
-                            <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
-
+                            <p class="lead">
+                              {% if item.discount_price %}
+                              <span class="mr-1">
+                                <del>${{ item.price }}</del>
+                              </span>
+                              <span>${{ item.discount_price }}</span>
+                              {% else %}
+                              <span>${{ item.price }}</span>
+                              {% endif %}
+                            </p>
+                            <p class="card-text">{{ item.category }}</p>
+                                {% if item.quantity <= 0 %}
+                                <h5>{{ item.quantity }}</h5>
+                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
+                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
+                                {% endif %}
+                                {% if item.quantity > 0 %}
+                                <h5>{{ item.quantity }}</h5>
+                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Acquista</a>
+                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
+                                {% endif %}
                         </div>
                     </div>
                 </div>

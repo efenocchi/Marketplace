@@ -25,7 +25,7 @@
 <body>
 
 <!----------------------------------------- COMMON-MENU ---------------------------------------->
-    <div class="header">
+<div class="header">
         <div class="container">
             <div class="navbar">
                 <div class="logo">
@@ -34,6 +34,8 @@
                 <nav>
                     <ul id="MenuItems">
                             {% block menu_id %}
+                                {% block logout %}
+                                {% endblock %}
                             {% endblock %}
 <!--                        <li><a href="{% url 'index' %}">Home</a></li>-->
 <!--                        <li><a href="{% url 'users:login_all' %}">Iscriviti o Accedi</a></li> &lt;!&ndash; chiamo la pagina col nome specificato nel campo name in urls.py di main &ndash;&gt;-->
@@ -41,6 +43,8 @@
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </nav>
+                {% block cart %}
+                {% endblock %}
 <!--                <a href="{% url 'empty_cart' %}"><img src="{% static 'images/cart.png'%}" width="30px" height="30px"></a>-->
                 <img src="{% static 'images/menu.png'%}" class="menu_icon" onclick="menutoggle()">
             </div>
@@ -49,6 +53,19 @@
             {% endblock %}
         </div>
     </div>
+            <div>
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show {{ message.tags }}" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+            </div>
+<!------------------------ MODIFY_PROFILE.HTML-MODIFY PROFILE ----------------------------------------->
+    {% block modify_profile %}
+    {% endblock %}
 <!----------------------------------------- HOME.HTML-GALLERY ----------------------------------------->
     {% block gallery %}
     {% endblock %}
@@ -87,6 +104,9 @@
     {% endblock %}
 <!----------------------------------------- ADD_TO_CART.HTML-ADD_TO_CART -------------------------------------------->
     {% block add_to_cart %}
+    {% endblock %}
+<!----------------------------------------- CHECKOUT.HTML-CHECKOUT -------------------------------------------->
+    {% block checkout %}
     {% endblock %}
 <!----------------------------------------- SHOW_ITEM_REVIEWS -------------------------------------------->
     {% block show_item_reviews %}
@@ -146,6 +166,10 @@
         </div>
     </div>
 <!----------------------------------------- Js ToggleMenu ---------------------------------------->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+
    <script>
        var MenuItems = document.getElementById("MenuItems");
 
@@ -156,6 +180,21 @@
          else MenuItems.style.maxHeight = "0px";
        }
 
+        var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+        var alertTrigger = document.getElementById('liveAlertBtn')
+
+        function alert(message, type) {
+          var wrapper = document.createElement('div')
+          wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+
+          alertPlaceholder.append(wrapper)
+        }
+
+        if (alertTrigger) {
+          alertTrigger.addEventListener('click', function () {
+            alert('Nice, you triggered this alert message!', 'success')
+          })
+        }
    </script>
 </body>
 </html>

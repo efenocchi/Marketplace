@@ -17,6 +17,8 @@ urlpatterns = [
 
     path('<int:shop_selected_id>/show_feedback_shop', views.show_feedback_shop, name='show_feedback_shop'),
 
+    path('checkout', views.checkout, name='checkout'),
+
     path('<int:item_selected_id>/', views.buy_page, name='buy_page'),
 
     #/annunci/#annuncio/modifica/
@@ -28,7 +30,13 @@ urlpatterns = [
     #/annunci/#annuncio/add_to_cart/
     path('<int:item_selected_id>/add_to_cart', views.add_to_cart, name='add_to_cart'),
 
+    path('go_to_cart', views.go_to_cart, name='go_to_cart'),
+
     path('<int:item_selected_id>/remove_single_item_from_cart', views.remove_single_item_from_cart, name='remove_single_item_from_cart'),
+
+    path('<int:item_selected_id>/remove_entire_item_from_cart', views.remove_entire_item_from_cart, name='remove_entire_item_from_cart'),
+
+    path('view_order', views.view_order, name='view_order'),
 
     path('search/', views.search, name='search'),
 ]

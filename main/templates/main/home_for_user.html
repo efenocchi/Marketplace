@@ -8,7 +8,7 @@
     {% extends 'main/base.html' %}
 
     <!-- ridefinisco title -->
-    <title>{% block title %}Ecommerce Webside Design{% endblock %}</title>
+    <title>{% block title %}Home_For_Shop{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -30,11 +30,59 @@
 
 <!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
     {% block menu_id %}
-        <li><a href="{% url 'users:login_all' %}">Iscriviti o Accedi</a></li>
+        <li><a href="{% url 'users:modify_profile' %}">User Info</a></li>
+        <li><a href="{% url 'items:item_page'%}">Item Page User</a></li>
+        <li><a href="{% url 'items:view_order' %}">View Order</a></li>
+        {% block logout %}
+        <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">Logout for {{user_profile}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">Do you really want to logout?</div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel2">Logout succesfull</h5>
+              </div>
+              <div class="modal-body">{{user_profile}} you are succesfully logout</div>
+              <div class="modal-footer">
+                <a href="{% url 'users:logout_user' %}"type="button" class="btn primary">Ok</a>
+              </div>
+            </div>
+          </div>
+        </div>
+<li><a data-bs-toggle="modal" href="#exampleModalToggle" role="button">Logout</a></li>
+        {% endblock %}
     {% endblock %}
 
+    {% block cart %}
+    <a href="{% url 'items:go_to_cart' %}"class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">{% if all_items == 0 %}0{% endif %}{% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}</span>
+        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
+    </a>
+    {% endblock %}
+
+    {% block modify_profile %}
+    {% endblock %}
 <!----------------------------------------- MENU ---------------------------------------->
     {% block first_row %}
+    <div class="container text-center">
+        {% if user_profile is not None %}
+        <h2 id="title">Welcome User: {{ user_profile }}</h2>
+        <h2 id="title">your indirizzo:{{ user_profile.indirizzo }}</h2>
+        {% endif %}
+    </div>
     <div class="row">
         <div class="col-2">
             <h1>Give Your Workout<br>A New Style!</h1>

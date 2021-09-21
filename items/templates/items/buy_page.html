@@ -27,6 +27,24 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+    {% block menu_id %}
+    <li><a href="{% url 'users:home_for_user' %}">Home</a></li>
+    <li><a href="{% url 'items:view_order' %}">View Order</a></li>
+    {% endblock %}
+
+    {% block cart %}
+    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">
+            {% if all_items.ordered != 1 %}
+                {% if all_items == 0 %}0{% endif %}
+                {% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}
+            {% endif %}
+            {% if all_items.ordered == 1 %}0{% endif %}
+        </span>
+        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
+    </a>
+    {% endblock %}
+
     {% block buy_page %}
     <div class="small-container single-product">
         <div class="row">
@@ -48,9 +66,19 @@
                 </div>
             </div>
             <div class="col-gallery">
-                <p>Home / {{ item_selected.category }}</p>
+                <p>Home / {{user}} {{ item_selected.category }}</p>
                 <h1>{{ item_selected.name }}</h1>
-                <h4>{{ item_selected.price }}€</h4>
+                <h1>{{ item_selected.quantity }}</h1>
+                <p class="lead">
+                  {% if item_selected.discount_price %}
+                  <span class="mr-1">
+                    <del>${{ item_selected.price }}</del>
+                  </span>
+                  <span>${{ item_selected.discount_price }}</span>
+                  {% else %}
+                  <span>${{ item_selected.price }}</span>
+                  {% endif %}
+                </p>
                 <select>
                     <option>Select Size</option>
                     <option>XXL</option>
@@ -59,8 +87,17 @@
                     <option>Medium</option>
                     <option>Small</option>
                 </select>
-                <input type="number" id= "quantity" value="1">
-                <a href="{% url 'items:add_to_cart' item_selected_id=item_selected.id %}" class="btn">Add To Cart</a>
+                <input type="number" value="1">
+                {% if item_selected.quantity == 0 %}
+                <a href="{% url 'items:go_to_cart' %}" class="btn">Go To Cart</a>
+                <br>
+                <input type="email" id="email" placeholder="Insert your mail">
+                <a class="btn_small">Enter Mail</a>
+                {% endif %}
+                {% if item_selected.quantity > 0 %}
+                <a href="{% url 'items:add_to_cart' item_selected_id=item_selected.id%}" class="btn">Add To Cart</a>
+                <a href="{% url 'items:go_to_cart' %}" class="btn">Go To Cart</a>
+                {% endif %}
                 <h3>Description</h3>
                 <br>
                 <p>{{ item_selected.description }}</p>
@@ -91,6 +128,23 @@
         SmallImg[3].onclick = function()
         {
             productImg.src = SmallImg[3].src;
+        }
+
+
+        var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
+        var alertTrigger = document.getElementById('liveAlertBtn')
+
+        function alert(message, type) {
+          var wrapper = document.createElement('div')
+          wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+
+          alertPlaceholder.append(wrapper)
+        }
+
+        if (alertTrigger) {
+          alertTrigger.addEventListener('click', function () {
+            alert('Nice, you triggered this alert message!', 'success')
+          })
         }
 
     </script>

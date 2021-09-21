@@ -1,8 +1,10 @@
 import threading
-
+from math import radians, sin, cos, atan2, sqrt
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
+from items.models import Order
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 # Create your views here.
@@ -16,6 +18,7 @@ from .models import GeneralUser
 from . import models
 from . import forms
 import requests
+
 
 
 def index(request):
@@ -100,7 +103,6 @@ def normal_user_registration(request):
 
     form = UserForm(request.POST or None, oauth_user=0)
     # normalform = NormalUserForm(request.POST or None, request.FILES or None)
-
     # form validi e utenti con lo stesso username non si sono già registrati
     if form.is_valid() and \
             not User.objects.filter(username=form.cleaned_data['username']).exists():
@@ -184,8 +186,12 @@ def insert_shop_info(request):
             shop_profile.foto_profilo = None
 
         set_shop_info(shop_profile, shopform)
-        return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
-                            ' che abita in via: ' + shop_profile.indirizzo)
+        print(user_profile)
+
+        context={"user_profile": shop_profile}
+        return render(request, 'main/home_for_shop.html', context)
+        #return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
+                           # ' che abita in via: ' + shop_profile.indirizzo)
         # return HttpResponseRedirect(reverse('users:prova_passaggio_interi', kwargs={'oid':request.user.pk}))
     else:
         print("normal form NON validi")
@@ -240,8 +246,19 @@ def insert_user_info(request):
             general_user.foto_profilo = None
 
         set_user_info(general_user, normalform)
-        return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
-                            ' che abita in via: ' + general_user.indirizzo)
+        order_qs = Order.objects.filter(
+            user=request.user,
+            ordered=False
+        )
+
+        if order_qs.exists():
+            order = Order.objects.get(user=request.user, ordered=False)
+        else:
+            order = 0
+        context={"user_profile": general_user,"all_items":order}
+        return render(request, 'main/home_for_user.html', context)
+        #return HttpResponse("Login effettuato con successo dall'utente: " + request.user.username +
+         #                   ' che abita in via: ' + general_user.indirizzo)
         # return HttpResponseRedirect(reverse('users:prova_passaggio_interi', kwargs={'oid':request.user.pk}))
     else:
         print("normal form NON validi")
@@ -253,6 +270,112 @@ def insert_user_info(request):
     # return render(request, 'users/'+ str(oid) +'/insert_info.html', context)
     return render(request, 'users/insert_info.html', context)
 
+def home_for_user(request):
+
+    user_profile = GeneralUser.objects.get(user=request.user)
+    print(user_profile)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = Order.objects.get(user=request.user, ordered=False)
+    else:
+        order = 0
+    context = {
+        "user_profile": user_profile,
+        "all_items": order
+    }
+
+    return render(request, 'main/home_for_user.html', context)
+
+def home_for_shop(request,user_profile):
+
+    user_profile = GeneralUser.objects.get(user=request.user)
+    context={}
+    context["user_profile"] = user_profile
+    return render(request, 'main/home_for_shop.html', context)
+# else:
+#     raise Http404
+
+
+# if nega_accesso_senza_profilo(request):
+#     return HttpResponseRedirect(reverse('utenti:scelta_profilo_oauth'))
+
+# context = {'base_template': 'main/base.html'}
+# oaut_user = False
+# if int(oid) == int(request.user.pk):
+#     user_profile = User.objects.filter(id=oid).first()
+#     if user_profile.has_usable_password():
+#         form = UserForm(data=request.POST or None, instance=request.user, oauth_user=0)
+#     else:
+#         form = UserForm(data=request.POST or None, instance=request.user, oauth_user=1)
+#         oaut_user = True
+#
+#     profile = Profile.objects.filter(user=user_profile.pk).first()
+#
+#     if not profile.pet_sitter:
+#         profile_form = UtenteNormaleForm(data=request.POST or None, instance=profile, files=request.FILES)
+#     else:
+#         profile_form = UtentePetSitterForm(data=request.POST or None, instance=profile, files=request.FILES)
+#
+#     if form.is_valid() and profile_form.is_valid():
+#
+#         if not oaut_user:
+#             if form.cleaned_data['password'] != form.cleaned_data['conferma_password']:
+#                 context.update({'form': form})
+#                 context.update({'profileForm': profile_form})
+#                 context.update({'error_message': 'Errore: le due password inserite non corrispondono'})
+#
+#                 return render(request, 'utenti/modifica_profilo.html', context)
+#
+#         profile.latitudine, profile.longitudine = calcola_lat_lon(request, profile)
+#
+#         user = form.save(commit=False)
+#         if not oaut_user:
+#             password = form.cleaned_data['password']
+#             user.set_password(password)
+#         form.save()
+#         profile_form.save()
+#         if not oaut_user:
+#             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+#
+#         if user is not None:
+#             if user.is_active:
+#                 if not oaut_user:
+#                     login(request, user)
+#                 return HttpResponseRedirect(reverse('main:index'))
+#     else:
+#         try:
+#             if User.objects.exclude(pk=request.user.id).get(username=form['username'].value()):
+#                 context.update({'form': form})
+#                 context.update({'profileForm': profile_form})
+#                 context['user_profile'] = profile
+#
+#                 return render(request, 'utenti/modifica_profilo.html', context)
+#         except User.DoesNotExist:
+#             # Nessun utente trovato con questo username --> username valido
+#             pass
+#
+#         if oaut_user:
+#             form = UserForm(instance=request.user, oauth_user=1)
+#         else:
+#             form = UserForm(instance=request.user, oauth_user=0)
+#
+#         if not profile.pet_sitter:
+#             profile_form = UtenteNormaleForm(instance=profile)
+#         else:
+#             profile_form = UtentePetSitterForm(instance=profile)
+#
+#     context.update({'form': form})
+#     context.update({'profileForm': profile_form})
+#     context['user_profile'] = profile
+#
+#     return render(request, 'utenti/modifica_profilo.html', context)
+#
+# else:
+#     raise Http404
 
 @login_required(login_url='/users/login')
 def logout_user(request):
@@ -271,7 +394,10 @@ def logout_user(request):
     username = request.user.username
     logout(request)
     # return HttpResponseRedirect(reverse('main:index'))
-    return HttpResponse("Logout di " + username + " effettuato con successo")
+
+    messages.success(request,"Logout di " + username + " effettuato con successo" )
+    return render(request, 'main/home.html')
+    #return HttpResponse("Logout di " + username + " effettuato con successo")
 
 
 def compute_position(profile):
@@ -367,6 +493,40 @@ def modify_profile(request):
 
     return render(request, 'users/modify_profile.html', context)
 
+@login_required(login_url='/users/login')
+def modify_shop(request,user_profile):
+    user = GeneralUser.objects.get(user=request.user)
+    user_basic = User.objects.get(pk=request.user.pk)
+    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
+    # if form.is_valid() and \
+    #         not User.objects.filter(username=form.cleaned_data['username']).exists():
+    #     shop = form.save(commit=False)
+    #     username = form.cleaned_data['username']
+    #     password = form.cleaned_data['password']
+    #     shop.set_password(password)
+    #     shop.save()
+
+    if user.login_negozio:
+        form = ShopProfileForm(request.POST or None, instance=user)
+    else:
+        form = NormalUserForm(request.POST or None, instance=user)
+
+    if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
+        set_shop_info(user, form)
+
+        return HttpResponseRedirect(reverse('index'))
+
+    elif form.is_valid() and not user.login_negozio:
+        set_user_info(user, form)
+        return HttpResponseRedirect(reverse('index'))
+
+    context = {
+        "form_for_username": form_for_username,
+        "form": form,
+        "user_profile":user,
+    }
+
+    return render(request, 'users/modify_shop.html', context)
 
 def set_shop_info(shop_profile, shopform):
     """
@@ -385,13 +545,12 @@ def set_shop_info(shop_profile, shopform):
     if shop_profile.indirizzo != shopform.cleaned_data['indirizzo'] or \
             shop_profile.citta != shopform.cleaned_data['citta'] or \
             shop_profile.codice_postale != shopform.cleaned_data['codice_postale']:
-        print("diverso")
+
         shop_profile.indirizzo = shopform.cleaned_data['indirizzo']
         shop_profile.citta = shopform.cleaned_data['citta']
         shop_profile.codice_postale = shopform.cleaned_data['codice_postale']
         shop_profile.latitudine, shop_profile.longitudine = compute_position(shop_profile)
 
-    print("Non diverso?")
     shop_profile.regione = shopform.cleaned_data['regione']
     shop_profile.provincia = shopform.cleaned_data['provincia']
     shop_profile.telefono = shopform.cleaned_data['telefono']
@@ -411,6 +570,7 @@ def set_user_info(general_user, normalform):
     if general_user.indirizzo != normalform.cleaned_data['indirizzo'] or \
             general_user.citta != normalform.cleaned_data['citta'] or \
             general_user.codice_postale != normalform.cleaned_data['codice_postale']:
+
         general_user.stato = 'Italia'
         general_user.indirizzo = normalform.cleaned_data['indirizzo']
         general_user.citta = normalform.cleaned_data['citta']
@@ -427,3 +587,18 @@ def set_user_info(general_user, normalform):
     general_user.descrizione = normalform.cleaned_data['descrizione']
 
     general_user.save()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

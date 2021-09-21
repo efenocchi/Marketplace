@@ -9,7 +9,7 @@
     </div>
 {% endfor %}
 
-{% for field in profileForm %}
+{% for field in form_user_or_shop %}
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <span class="text-danger small">{{ field.errors }}</span>
@@ -20,4 +20,3 @@
     </div>
 
 {% endfor %}
-
