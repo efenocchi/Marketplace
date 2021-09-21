@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Button, Image, TextInput, ToastAndroid } from 'react-native';
 import CustomHeader from '../components/Header';
 import Card from '../components/Card';
 import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native-gesture-handler';
@@ -22,11 +22,15 @@ export default class Login extends Component {
         fetch('http://10.110.215.142:5000/api/users/find/' + this.state.username + '/?format=json')
         .then((user_response) => user_response.json())
         .then((user_responseJson) => {
-            global.user_id = user_responseJson[0].user.id;
-            global.is_shop = user_responseJson[0].login_negozio;
+
+            global.user_id = user_responseJson['results'][0]['user']['id'];
+            global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === 'true');
+            console.log(global.user_id)
+            console.log(global.login_negozio)
         })
         .catch((error) =>{
-        this.fetchUserId();
+        console.error(error);
+        // this.fetchUserId();
         });
     }
 
@@ -41,6 +45,7 @@ export default class Login extends Component {
               body: JSON.stringify({
                 username: this.state.username,
                 password: this.state.password,
+
               }),
             })
             .then(res => res.json())
@@ -50,6 +55,9 @@ export default class Login extends Component {
                     global.logged_in = true;
                     global.username = this.state.username;
                     this.fetchUserId();
+
+                    ToastAndroid.show("Bentornato, " + global.username, ToastAndroid.SHORT);
+
 
                     this.clearFields();
                     this.props.navigation.goBack(null);
@@ -61,7 +69,7 @@ export default class Login extends Component {
               callback(obj)
             })
             .catch((error) => {
-                this.loginExecute;
+                // this.loginExecute;
             })
     }
 

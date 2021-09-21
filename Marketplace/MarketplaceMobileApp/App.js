@@ -5,11 +5,13 @@ import { createAppContainer } from 'react-navigation';
 import Drawer from './components/DrawerNavigator';
 import * as Font from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator, DrawerItems, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import Login from './Pages/Login';
-
+import 'react-native-gesture-handler';
 // const AppContainer = createAppContainer(Drawer);
-const Stack = createNativeStackNavigator();
+const Stack = createDrawerNavigator();
+
 
 
 function HomeScreen({ navigation }) {
@@ -77,6 +79,5 @@ export default class App extends React.Component {
     </NavigationContainer>
     );
   }
-
 
 }
