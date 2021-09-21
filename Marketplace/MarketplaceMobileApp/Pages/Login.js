@@ -19,11 +19,11 @@ class Login extends Component {
     }
 
     fetchUserId() {
-        fetch('http://2.224.160.133.xip.io/api/utenti/cerca/' + this.state.username + '/?format=json')
+        fetch('http://10.110.215.142:5000/api/users/find/' + this.state.username + '/?format=json')
         .then((user_response) => user_response.json())
         .then((user_responseJson) => {
             global.user_id = user_responseJson[0].user.id;
-            global.is_petsitter = user_responseJson[0].pet_sitter;
+            global.is_shop = user_responseJson[0].login_negozio;
         })
         .catch((error) =>{
         this.fetchUserId();
@@ -31,7 +31,7 @@ class Login extends Component {
     }
 
     loginExecute = () => {
-        fetch('http://2.224.160.133.xip.io/api/rest-auth/login/',
+        fetch('http://10.110.215.142:5000/api/rest-auth/login/',
             {
               method: 'POST',
               headers: {
@@ -88,7 +88,7 @@ class Login extends Component {
                     <Text style={styles.title}>
                         Log in
                     </Text>
-                    <View style={styles.rightcontainer}></View>
+                    <View style={styles.rightcontainer}/>
                 </View>
 
                 <ScrollView showsVerticalScrollIndicator={false}>
@@ -124,11 +124,11 @@ class Login extends Component {
                                     </View>
                                 </View>
 
-                                <View style={{paddingTop: 10}}></View>
+                                <View style={{paddingTop: 10}}/>
                                 <Text style={{color: 'red'}}>{this.state.error_message}</Text>
-                                <View style={{paddingTop: 10}}></View>
-                                <View style={{borderBottomColor: 'black', borderBottomWidth: 1, width: width - (width * 10 / 100)}}></View>
-                                <View style={{paddingTop: 25}}></View>
+                                <View style={{paddingTop: 10}}/>
+                                <View style={{borderBottomColor: 'black', borderBottomWidth: 1, width: width - (width * 10 / 100)}}/>
+                                <View style={{paddingTop: 25}}/>
 
                                 <View style={{flexDirection: 'row'}}>
                                     <View>

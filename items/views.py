@@ -16,8 +16,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render
 
 from users.models import GeneralUser
-from .models import \
-    Item  # importo il modello così che possa utilizzalo, andrà a pescare gli Item dal db e conservarli in una variabile
+from .models import Item  # importo il modello così che possa utilizzalo, andrà a pescare gli Item dal db e conservarli in una variabile
 from .forms import ItemForm
 from django.utils import timezone
 from django.core.mail import send_mail

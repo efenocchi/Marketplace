@@ -1,64 +1,52 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from "react";
 import { StyleSheet, Text, View,TouchableNativeFeedback} from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import Drawer from './components/DrawerNavigator';
 
 
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Open up App.js to start working on your App!</Text>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
+const AppContainer = createAppContainer(Drawer);
 
-const App = () => {
-  const [rippleColor, setRippleColor] = useState(randomHexColor());
-  const [rippleOverflow, setRippleOverflow] = useState(false);
-  return (
-    <View style={styles.container}>
-      <TouchableNativeFeedback
-        onPress={() => {
-          setRippleColor(randomHexColor());
-          setRippleOverflow(!rippleOverflow);
-          alert('Hai schiacciato il bottone');
-        }}
-        background={TouchableNativeFeedback.Ripple(rippleColor, rippleOverflow)}
-      >
-        <View style={styles.touchable}>
-          <Text style={styles.text}>TouchableNativeFeedback</Text>
-        </View>
-      </TouchableNativeFeedback>
-    </View>
-  );
-};
+export default class App extends React.Component {
 
-const randomHexColor = () => {
-  return "#000000".replace(/0/g, function() {
-    return (~~(Math.random() * 16)).toString(16);
-  });
-};
+  constructor() {
+    super();
+/*  IMPORTANTE:
+    per mostrare le variabili locali anche nei prossimi file:
+    1) cliccare con ctrl + tasto sinistro del mouse su global
+    2) passare da: "declare var global: typeof globalThis;" --> "declare const global: any;"
+*/
+    global.logged_in = false;
+    global.login_negozio = false;
+    global.user_key = "-1";
+    global.username = "";
+    global.user_id = -1;
+    global.provincia = "AG";
+    global.regione = "Abruzzo";
+  }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    paddingTop: StatusBar.currentHeight,
-    backgroundColor: "#ecf0f1",
-    padding: 8
-  },
-  touchable: { flex: 0.5, borderColor: "black", borderWidth: 1 },
-  text: { alignSelf: "center" }
-});
+  state = {
+    fontLoaded: false,
+  };
 
-export default App;
+  async componentDidMount() {
+    await Font.loadAsync({
+      'satisfy': require('./assets/fonts/satisfy.ttf'),
+      'typold-medium': require('./assets/fonts/typold-medium.otf')
+    });
 
+    this.setState({ fontLoaded: true });
+  }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
+  render () {
+    if (!this.state.fontLoaded) {
+      return (
+        <View></View>
+      );
+    }
+
+    return (
+      <AppContainer navigation={this.props.navigation}/>
+    );
+  }
+}

@@ -286,30 +286,38 @@ def compute_position(profile):
     """
     mykey = '5EIZ4tvrnyP3cOOMXpKoGlQ0bo92YoM3'
 
-    get_latlong = requests.get('https://www.mapquestapi.com/geocoding/v1/address?'
-                               + 'key=5EIZ4tvrnyP3cOOMXpKoGlQ0bo92YoM3&location=' + profile.indirizzo.replace("/", "")
+    parameters_get = {
+        "key": mykey,
+        "location": profile.indirizzo.replace("/", "")
                                + ',' + profile.citta.replace("/", "") + ',' + profile.stato.replace("/", "") +
-                               ',' + profile.codice_postale.replace("/", ""))
+                               ',' + profile.codice_postale.replace("/", ""),
 
-    response_get_JSON = get_latlong.json()
+    }
+    print(parameters_get["location"])
+    response_get = requests.get("https://www.mapquestapi.com/geocoding/v1/address", params=parameters_get)
+    response_get_JSON = response_get.json()
 
     possibili_indirizzi = len(response_get_JSON['results'][0]['locations'])
     postalCode = profile.codice_postale
     postalCode_1 = str(int(postalCode)+1)
     postalCode_0 = str(int(postalCode)-1)
 
-
+    print(possibili_indirizzi)
     # se trovo il valore corrispondente al cap lo ritorno, altrimenti ne ritorno uno anche se non corretto
     for i in range(possibili_indirizzi):
         if response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode:
+            print("ritornato")
             return response_get_JSON['results'][0]['locations'][i]['latLng']["lat"], \
                    response_get_JSON['results'][0]['locations'][i]['latLng']["lng"]
 
     # cerco l'indirizzo inerente a un CAP con una approssimazione di un valore, es dato 41125 cerco 41124 e 41123
     for i in range(possibili_indirizzi):
+        print("vado nel for")
+        print (response_get_JSON['results'][0]['locations'][i]['postalCode'])
         if response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode or \
                 response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode_1 or \
                 response_get_JSON['results'][0]['locations'][i]['postalCode'] == postalCode_0:
+            print("ritornato dal for")
             return response_get_JSON['results'][0]['locations'][i]['latLng']["lat"], \
                    response_get_JSON['results'][0]['locations'][i]['latLng']["lng"]
 
