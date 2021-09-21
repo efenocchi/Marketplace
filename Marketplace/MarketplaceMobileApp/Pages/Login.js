@@ -109,7 +109,8 @@ export default class Login extends Component {
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
                                                 ref={input => { this.txtUsername = input }}
-                                                onChangeText={(value) => this.setState({username: value})} />
+                                                onChangeText={(value) => this.setState({username: value})}
+                                            />
                                         </View>
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95} secureTextEntry={true}

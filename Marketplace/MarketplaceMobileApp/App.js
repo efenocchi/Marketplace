@@ -54,11 +54,10 @@ export default class App extends React.Component {
       fontLoaded: false,
     };
 
-     Font.loadAsync({
+    Font.loadAsync({
       'satisfy': require('./assets/fonts/satisfy.ttf'),
       'typold-medium': require('./assets/fonts/typold-medium.otf')
     }).then( global.state.fontLoaded = true)
-
   } ;
 
 
@@ -73,7 +72,6 @@ export default class App extends React.Component {
       <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={NotCharged} />
         <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>

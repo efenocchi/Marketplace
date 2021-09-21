@@ -484,7 +484,8 @@ def modify_profile(request):
             if shop_or_user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect(reverse('index'))
+                    # return render(request, 'main/home_for_user.html')  # pagina principale del sito
+                    return HttpResponseRedirect(reverse('users:home_for_user'))
 
     context = {
         "form": form,
