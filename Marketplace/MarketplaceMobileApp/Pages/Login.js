@@ -24,9 +24,10 @@ export default class Login extends Component {
         .then((user_responseJson) => {
 
             global.user_id = user_responseJson['results'][0]['user']['id'];
-            global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === 'true');
+            global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === true);
             console.log(global.user_id)
             console.log(global.login_negozio)
+
         })
         .catch((error) =>{
         console.error(error);
