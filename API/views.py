@@ -3,10 +3,11 @@ from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
 from users.models import GeneralUser
-from API.serializers import (CompleteUserData)
+from API.serializers import CompleteUserData, CompleteNormalUserData
+from .permissions import *
 
 
-class userInfoLogin(generics.RetrieveAPIView):
+class UserInfoLogin(generics.RetrieveAPIView):
     """
     Questa view restituisce la lista completa degli utenti registrati
     """
@@ -21,7 +22,7 @@ class userInfoLogin(generics.RetrieveAPIView):
         return GeneralUser.objects.get(user=oid)
 
 
-class findUser(generics.ListAPIView):
+class FindUser(generics.ListAPIView):
     serializer_class = CompleteUserData
 
     def get_queryset(self):
@@ -43,3 +44,14 @@ class findUser(generics.ListAPIView):
                 profili.append(p)
             return profili
 
+
+class RegisterNormalUserFromMobilePhone(generics.RetrieveUpdateAPIView):
+    '''
+    registra un utente dal telefono cellulare
+    '''
+    permission_classes = [IsSameUser, IsUserLogged]
+    # permission_classes = [IsSameUser]
+    serializer_class = CompleteNormalUserData
+
+    def get_object(self):
+        return GeneralUser.objects.get_or_create(user=self.request.user)[0]

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, Image, TextInput, ToastAndroid } from 'react-native';
+import {View, Text, StyleSheet, Button, Image, TextInput, ToastAndroid, Platform} from 'react-native';
 import CustomHeader from '../components/Header';
 import Card from '../components/Card';
 import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
 import { IconButton } from 'react-native-paper';
 const {width, height} = Dimensions.get('window');
+import Toast from 'react-native-root-toast';
 
 export default class Login extends Component {
 
@@ -56,8 +57,19 @@ export default class Login extends Component {
                     global.logged_in = true;
                     global.username = this.state.username;
                     this.fetchUserId();
+                    // if (Platform.OS == 'android'){
+                    //     Toast.show("Bentornato, " + global.username, Toast.SHORT);
+                    // }
 
-                    ToastAndroid.show("Bentornato, " + global.username, ToastAndroid.SHORT);
+                     Toast.show("Bentornato, " + global.username, {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM,
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                        delay: 0,
+                    });
+
 
 
                     this.clearFields();
@@ -151,7 +163,10 @@ export default class Login extends Component {
                                         <View style={styles.bottomButton}>
                                             <Button title="Registrati" onPress={() => {
                                                 this.clearFields();
-                                                this.props.navigation.navigate('Registrazione');}}/>
+                                                this.props.navigation.navigate('Registration');}}
+
+                                                // this.props.navigation.goBack();}}
+                                            />
                                         </View>
                                     </View>
                                 </View>
@@ -159,7 +174,9 @@ export default class Login extends Component {
                         </Card>
                     </View>
                 </ScrollView>
+
             </View>
+
         );
     }
 }
