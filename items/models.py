@@ -13,23 +13,15 @@ CATEGORY_CHOICES = (
     ('Motori', 'Motori'),
 )
 
-#LABEL_CHOICES = (
-#   ('P', 'primary'),
-#   ('S', 'secondary'),
-#   ('D', 'danger')
-#)
-
 class Item(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     name = models.CharField(max_length=100) #title
     price = models.FloatField(default=0)
     discount_price = models.FloatField(blank=True, null=True)
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=20)
-   # label = models.CharField(choices=LABEL_CHOICES, max_length=1)
     description = models.TextField()
     quantity = models.IntegerField(default=1)
     image = models.FileField(null=True, default='', blank=True)
-    #quantity_available = models.IntegerField(null=True, default=1)
 
     def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
         if self.image:

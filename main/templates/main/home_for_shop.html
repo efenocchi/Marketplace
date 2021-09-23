@@ -30,8 +30,8 @@
 
 <!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
     {% block menu_id %}
-        <li><a href="{% url 'items:add_item' %}">Add item</a></li>
-        <li><a href="{% url 'users:modify_shop' user_profile=user_profile.id %}">Shop Info</a></li>
+        <li><a href="{% url 'items:insert_item' %}">Add item</a></li>
+        <li><a href="{% url 'users:modify_shop' %}">Shop Info</a></li>
     {% block logout %}
         <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
           <div class="modal-dialog modal-dialog-centered">
@@ -42,7 +42,7 @@
               </div>
               <div class="modal-body">Do you really want to logout?</div>
               <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Yes</button>
+                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" data-bs-dismiss="modal">Yes</button>&ensp;
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">No</button>
               </div>
             </div>
@@ -244,3 +244,5 @@
     {% endblock %}
 
 <!----------------------------------------- END SITE ---------------------------------------->
+</body>
+</html>

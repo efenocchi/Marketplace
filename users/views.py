@@ -290,7 +290,7 @@ def home_for_user(request):
 
     return render(request, 'main/home_for_user.html', context)
 
-def home_for_shop(request,user_profile):
+def home_for_shop(request):
 
     user_profile = GeneralUser.objects.get(user=request.user)
     context={}
@@ -484,8 +484,11 @@ def modify_profile(request):
             if shop_or_user is not None:
                 if user.is_active:
                     login(request, user)
-                    # return render(request, 'main/home_for_user.html')  # pagina principale del sito
-                    return HttpResponseRedirect(reverse('users:home_for_user'))
+                    context = {
+                        "form": form,
+                        "form_user_or_shop": form_user_or_shop,
+                    }
+                    return render(request, 'users/modify_profile.html', context)
 
     context = {
         "form": form,
@@ -495,7 +498,7 @@ def modify_profile(request):
     return render(request, 'users/modify_profile.html', context)
 
 @login_required(login_url='/users/login')
-def modify_shop(request,user_profile):
+def modify_shop(request):
     user = GeneralUser.objects.get(user=request.user)
     user_basic = User.objects.get(pk=request.user.pk)
     form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
@@ -514,12 +517,21 @@ def modify_shop(request,user_profile):
 
     if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
         set_shop_info(user, form)
-
-        return HttpResponseRedirect(reverse('index'))
+        context = {
+            "form_for_username": form_for_username,
+            "form": form,
+            "user_profile": user,
+        }
+        return render(request, 'users/modify_shop.html', context)
 
     elif form.is_valid() and not user.login_negozio:
         set_user_info(user, form)
-        return HttpResponseRedirect(reverse('index'))
+        context = {
+            "form_for_username": form_for_username,
+            "form": form,
+            "user_profile": user,
+        }
+        return render(request, 'users/modify_shop.html', context)
 
     context = {
         "form_for_username": form_for_username,

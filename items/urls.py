@@ -7,7 +7,7 @@ urlpatterns = [
 
     path('', views.item_page, name='item_page'),
 
-    path('add_item', views.add_item, name='add_item'),
+    path('insert_item', views.insert_item, name='insert_item'),
 
     path('send_email', views.send_email, name='send_email'),
 

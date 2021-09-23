@@ -29,7 +29,7 @@
 <body>
 
     {% block menu_id %}
-    <li><a href="{% url 'users:home_for_shop' user_profile=user_profile.id %}">Home</a></li>
+    <li><a href="{% url 'users:home_for_shop' %}">Home</a></li>
     {% endblock %}
 
     {% block modify_profile %}
@@ -42,9 +42,9 @@
                       <div class="form-btn">
                           <span>Modify Shop Info</span>
                       </div>
-                      <form method="post" action="{% url 'users:home_for_shop' user_profile=user_profile.id %}"enctype="multipart/form-data">
+                      <form method="post" action="{% url 'users:modify_shop' %}"enctype="multipart/form-data">
                           {% csrf_token %}
-                          {% include 'users/base_modifica_utente.html' %}
+                          {% include 'users/base_modifica_negozio.html' %}
                           <button type="submit" class="btn" value="Submit">Submit</button>
                       </form>
                       <script type="text/javascript" src="{% static 'user_form_validator.js' %}"></script>
