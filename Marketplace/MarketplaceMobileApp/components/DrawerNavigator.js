@@ -7,6 +7,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import Login from "../Pages/Login";
 import React, { useState } from "react";
 import {Button, Text, View} from "react-native";
+import NormalUserRegistration from "../Pages/NormalUserRegistration";
+import ShopRegistration from "../Pages/ShopRegistration";
+import {createStackNavigator} from "@react-navigation/stack";
 
 
 
@@ -24,7 +27,7 @@ export function HomeScreen({ navigation }) {
 }
 
 const Stack = createDrawerNavigator();
-
+const Stack2 = createStackNavigator();
 function MyDrawer() {
     return (
 
@@ -34,10 +37,9 @@ function MyDrawer() {
         <Stack.Screen name="Home2" component={HomeScreen2} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} options={{headerShown: false}}/>
-
-
       </Stack.Navigator>
 </NavigationContainer>
+
     );
 
 };

@@ -30,7 +30,11 @@
 
 <!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
     {% block menu_id %}
-        <li><a href="{% url 'users:modify_profile' %}">User Info</a></li>
+<!--        <li><a href="{% url 'users:modify_profile' %}">User Info</a></li>-->
+         <li> <a href="{% url 'users:modify_profile' %}">
+            <span class="badge bg-danger bg-secondary"></span>
+            <img src="{% static 'images/edit-profile-icon.jpg'%}" width="30px" height="30px">
+        </a></li>
         <li><a href="{% url 'items:item_page'%}">Item Page User</a></li>
         <li><a href="{% url 'items:view_order' %}">View Order</a></li>
         {% block logout %}
