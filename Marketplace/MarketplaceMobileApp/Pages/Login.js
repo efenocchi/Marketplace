@@ -74,7 +74,8 @@ export default class Login extends Component {
 
 
                     this.clearFields();
-                    this.props.navigation.goBack(null);
+
+                    // this.props.navigation.goBack(null);
                 } else {
                     this.setState({error_message: "Errore: username o password errati."});
                 }
