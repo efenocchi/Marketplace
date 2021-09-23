@@ -49,7 +49,7 @@
                       <div class="form-btn">
                           <span>Modify User Info</span>
                       </div>
-                      <form method="post" action="{% url 'users:home_for_user' %}"enctype="multipart/form-data">
+                      <form method="post" action="{% url 'users:modify_profile' %}"enctype="multipart/form-data">
                           {% csrf_token %}
                           {% include 'users/base_modifica_utente.html' %}
                           <button type="submit" class="btn" value="Submit">Submit</button>

@@ -77,26 +77,28 @@ p{
 /* bottone Explore Now */
 .btn{
     display: inline-block;
-    background: red;
-    color: white;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
     padding: 8px 30px;
     margin: 30px 0;
-    border-radius: 30px;
+    border-radius: 10px;
+    color: black;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
 
 .btn_small{
     display: inline-block;
-    background: red;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
     color: white;
     padding: 8px 30px;
     border-radius: 30px;
+    color: black;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
-
 /* transizione bottone da rosso a blu */
 .btn:hover{
-    background: blue;
+    background: #ea420f;
 }
 
 /* colore sfondo */
@@ -295,7 +297,7 @@ small{
 }
 
 .form_container_login input{
-    width: 300px;
+    width: 302px;
     height: 30px;
     margin-right: 55px;
     margin-left: 30px;
@@ -312,6 +314,14 @@ small{
 #check_terms_text{
     margin-left: 20px;
     margin-top: -30px;
+}
+
+/* ---------------------------------- LOGOUT ----------------------------------------------------------- */
+.modal-body{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: black;
 }
 /* ---------------------------------- INSERT_INFO - INSERT_SHOP_INFO --------------------------------------------------- */
 .insert_login_page{
@@ -376,7 +386,7 @@ small{
 .form_container_modify_user_page{
     background: #db7272;
     width: 550px;
-    height: 722px;
+    height: 900px;
     max-height: 900px;
     position: relative;
     text-align: center;
@@ -395,14 +405,10 @@ small{
     display: inline-block;
 }
 
-.form-btn{
-    display: inline-block;
-}
-
 /* container campi username e password */
 .form_container_modify_user_page form{
     width: 550px;
-    height: 651,5px;
+    height: 830px;
     max-width: 600px;
     margin-top: -80px;
     padding: 0 20px;
@@ -420,7 +426,59 @@ small{
     padding: 0 10px;
     border: 1px solid #ccc;
 }
+/* ------------------------------- INSERT_ITEM_PAGE ----------------------------------------------------------- */
+.form_container_insert_item{
+    background: #db7272;
+    width: 550px;
+    height: 880px;
+    max-height: 900px;
+    position: relative;
+    text-align: center;
+    padding: 20px 0;
+    margin: 50px auto; /* distanza dal bordo alto */
+    box-shadow: 0 0 20px 0px rgba(0,0,0,0.1);
+    overflow: scroll;
+    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
+.form_container_insert_item span{
+    font-weight: bold;
+    color: #555;
+    display: inline-block;
+}
+
+/* container campi username e password */
+.form_container_insert_item form{
+    width: 550px;
+    height: 810px;
+    max-width: 600px;
+    margin-top: -80px;
+    padding: 0 20px;
+    position: absolute;
+    top: 150px;
+    transition: transform 1s;
+    background: white;
+}
+
+.form_container_insert_item input, #id_category, #id_image{
+    width: 300px;
+    height: 34px;
+    margin-left: 80px;
+    margin-top: 10px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
+
+.form_container_insert_item #id_description{
+    width: 300px;
+    height: 50px;
+    margin-left: 80px;
+    margin-top: 10px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
 /* ------------------------------- REGISTRATION_PAGE ----------------------------------------------------------- */
 .registration_page{
     padding: 50px 0;
@@ -462,10 +520,6 @@ small{
     display: inline-block;
 }
 
-.form-btn{
-    display: inline-block;
-}
-
 /* container campi username e password */
 .form-container form{
     width: 500px;
@@ -479,7 +533,7 @@ small{
 }
 
 .form-container input{
-    width: 300px;
+    width: 297px;
     height: 30px;
     margin-left: 80px;
     margin-top: 10px;
@@ -552,8 +606,17 @@ form a{
 #search_button{
     width: 150px;
     margin-top: 10px;
-    border:none;
     cursor: pointer;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    border-radius: 10px;
+    border: black;
+    color: black;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
+
+.btn:hover, #search_button:hover{
+    background: #ea420f;
 }
 
 #title{
@@ -573,7 +636,7 @@ form a{
 /* ---------------------------------- BUY_PAGE ----------------------------------------------------------- */
 .container-item{
     background: pink;
-    max-width: auto;
+    /*max-width: auto;*/
     padding: 20px 20px 20px 20px;
 }
 
@@ -631,8 +694,10 @@ form a{
     border: 1px solid #ff523b;
 }
 
-input:focus{
+input:focus, #search:focus{
     outline: none;
+    border-color: #e77600;
+    box-shadow: 0 0 3px 2px rgb(228 121 17);
 }
 
 .single-product .fa{
@@ -730,7 +795,7 @@ ul{
     border: none;
     background: #b5b5b5;
     height: 1px;
-    margin 20px 0;
+    margin: 20px 0;
 }
 
 .copyright{

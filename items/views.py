@@ -43,18 +43,14 @@ def search(request):
     indici = show_distance_shops(request, item_searched)
 
     items_ordered = list()
-    for id_item in indici:
-        items_ordered.append(item_searched.get(id=id_item))
+
+    if indici is not None:
+        for id_item in indici:
+            items_ordered.append(item_searched.get(id=id_item))
+
 
     print("è una lista", type(items_ordered))
     print("tipo di struttura", type(item_searched))
-
-    context = {
-        'item_searched': items_ordered,
-        'word_searched': word_searched
-    }
-
-    return render(request, 'items/search.html', context)
     context = {}
     context['item_searched'] = item_searched
     context['word_searched'] = word_searched
@@ -78,7 +74,7 @@ def send_email(request):
 
 @login_required(login_url='/users/login')
 @user_passes_test(isShop)
-def add_item(request):
+def insert_item(request):
     """
     Permette all'utente di inserire un nuovo item.
 
@@ -538,15 +534,20 @@ def show_distance_shops(request, items_available, ascending=True):
         distanze.append(r * c)
         items_pk.append(item.pk)
 
-    # Ordina in modo crescente o decrescente sulle distanze
-    if ascending:
-        distanze_negozi, indici = (list(t) for t in zip(*sorted(zip(distanze, indici))))
-        _, items_pk = (list(t) for t in zip(*sorted(zip(distanze, items_pk))))
-        _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters))))
+    if len(indici) > 0:
+        # Ordina in modo crescente o decrescente sulle distanze
+        if ascending:
+            distanze_negozi, indici = (list(t) for t in zip(*sorted(zip(distanze, indici))))
+            _, items_pk = (list(t) for t in zip(*sorted(zip(distanze, items_pk))))
+            _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters))))
+        else:
+            distanze_negozi, indici = (list(t) for t in zip(*sorted(zip(distanze, indici), reverse=True)))
+            _, items_pk = (list(t) for t in zip(*sorted(zip(distanze, items_pk), reverse=True)))
+            _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters), reverse=True)))
+
     else:
-        distanze_negozi, indici = (list(t) for t in zip(*sorted(zip(distanze, indici), reverse=True)))
-        _, items_pk = (list(t) for t in zip(*sorted(zip(distanze, items_pk), reverse=True)))
-        _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters), reverse=True)))
+        return None
+
 
     # return indici
     print("distanze", distanze_negozi)

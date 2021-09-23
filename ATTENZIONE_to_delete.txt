@@ -14,3 +14,8 @@ items.Item.image: (fields.E210) Cannot use ImageField because Pillow is not inst
 -----------------------------------------------------------------------------------------------------------------
 gestione accessi multipli client-side
 -----------------------------------------------------------------------------------------------------------------
+REACT-NATIVE:
+1)ICON
+yarn add react-native-vector-icons
+import Icon from 'react-native-vector-icons/FontAwesome';
+yarn start
