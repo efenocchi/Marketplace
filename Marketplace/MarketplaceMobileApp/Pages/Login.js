@@ -7,6 +7,9 @@ import { Dimensions } from 'react-native';
 import { IconButton } from 'react-native-paper';
 const {width, height} = Dimensions.get('window');
 import Toast from 'react-native-root-toast';
+import {ToastContainer} from 'react-native-root-toast';
+import {RootSiblingParent} from "react-native-root-siblings";
+
 
 export default class Login extends Component {
 
@@ -57,11 +60,10 @@ export default class Login extends Component {
                     global.logged_in = true;
                     global.username = this.state.username;
                     this.fetchUserId();
-                    // if (Platform.OS == 'android'){
-                    //     Toast.show("Bentornato, " + global.username, Toast.SHORT);
-                    // }
 
-                     Toast.show("Bentornato, " + global.username, {
+                    // ToastAndroid.show("Bentornato, " , Toast.SHORT);
+
+                    Toast.show("Bentornato, c", {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
                         shadow: true,
@@ -69,7 +71,6 @@ export default class Login extends Component {
                         hideOnPress: true,
                         delay: 0,
                     });
-
 
 
                     this.clearFields();
@@ -163,7 +164,7 @@ export default class Login extends Component {
                                         <View style={styles.bottomButton}>
                                             <Button title="Registrati" onPress={() => {
                                                 this.clearFields();
-                                                this.props.navigation.navigate('Registration');}}
+                                                this.props.navigation.navigate('RegistrationStackNavigator');}}
 
                                                 // this.props.navigation.goBack();}}
                                             />

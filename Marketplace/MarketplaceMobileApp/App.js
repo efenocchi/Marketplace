@@ -15,6 +15,9 @@ import 'react-native-gesture-handler';
 import HomeScreen2 from "./Pages/HomeScreen2";
 import Registration from "./Pages/Registration";
 import RegistrationStackNavigator from "./components/RegistrationStackNavigator";
+import {RootSiblingParent} from 'react-native-root-siblings'
+
+
 
 // const AppContainer = createAppContainer(Drawer);
 
@@ -77,6 +80,12 @@ export default class App extends React.Component {
 
 
   render () {
+
+            <RootSiblingParent>
+                <App />
+            </RootSiblingParent>
+
+
     if (!global.state.fontLoaded) {
       return (
         NotCharged()
@@ -90,7 +99,7 @@ export default class App extends React.Component {
         <Stack.Screen name="Login" component={Login} />
         {/*<Stack.Screen name="Registration" component={Registration}/>*/}
         <Stack.Screen
-          name="Registration"
+          name="RegistrationStackNavigator"
           component={RegistrationStackNavigator}
 
         />

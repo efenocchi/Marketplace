@@ -37,9 +37,9 @@ class NormalUserRegistration extends Component {
         .then((user_response) => user_response.json())
         .then((user_responseJson) => {
             global.user_id = user_responseJson['results'][0]['user']['id'];
-            global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === true);
         })
         .catch((error) =>{
+            console.error(error)
         // this.fetchUserId();
         });
     }
@@ -74,7 +74,7 @@ class NormalUserRegistration extends Component {
                     .then((res) => {
                         if (res.key != null) {
                             global.user_key = res.key;
-                            global.logged_in = true;
+                            global.logged_in = false;
                             global.username = this.state.username;
                             this.fetchUserId();
                             this.RegisterNormalUser();
@@ -99,6 +99,8 @@ class NormalUserRegistration extends Component {
     }
 
     RegisterNormalUser = () => {
+        global.login_negozio = false
+
         fetch('http://10.110.215.142:5000/api/users/register/normaluser/',
         {
         method: 'PUT',
@@ -120,7 +122,6 @@ class NormalUserRegistration extends Component {
             citta: this.state.citta,
             provincia: global.provincia,
             regione: global.regione,
-            login_negozio: global.login_negozio,
             // telefono: this.state.telefono,
             codice_postale: this.state.codice_postale,
             // foto_profilo: null,
@@ -131,11 +132,11 @@ class NormalUserRegistration extends Component {
         })
         .then(res => res.json())
         .then((res) => {
-            console.log("ECCOCIIIII")
+            console.log("Registrazione NormalUser")
             console.log(res.user.id)
             if (res.user.id != null) {
                 this.clearFields();
-                this.props.navigation.navigate("Registration");
+                this.props.navigation.navigate("Home2");
             } else {
                 this.setState({error_message: "Errore: " + JSON.stringify(res)});
             }
@@ -143,12 +144,12 @@ class NormalUserRegistration extends Component {
         .catch((error) => {
             this.setState({error_message: "Errore: " + error});
             console.error(error);
-            console.error("errore nel registrare un normal user");
-            console.log("this.state.indirizzo",this.state.indirizzo)
-            console.log("this.state.citta",this.state.citta)
-            console.log("global.provincia",global.provincia)
-            console.log("global.regione",global.regione)
-            console.log("global.login_negozio",global.login_negozio)
+            console.error("C'è stato un errore nella registrazione, riprovare");
+            // console.log("this.state.indirizzo",this.state.indirizzo)
+            // console.log("this.state.citta",this.state.citta)
+            // console.log("global.provincia",global.provincia)
+            // console.log("global.regione",global.regione)
+            // console.log("global.login_negozio",global.login_negozio)
 
 
             // this.RegisterNormalUser;
