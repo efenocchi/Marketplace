@@ -386,8 +386,8 @@ small{
 .form_container_modify_user_page{
     background: #db7272;
     width: 550px;
-    height: 900px;
-    max-height: 900px;
+    height: 990px;
+    max-height: 990px;
     position: relative;
     text-align: center;
     padding: 20px 0;
@@ -408,7 +408,7 @@ small{
 /* container campi username e password */
 .form_container_modify_user_page form{
     width: 550px;
-    height: 830px;
+    height: 920px;
     max-width: 600px;
     margin-top: -80px;
     padding: 0 20px;
