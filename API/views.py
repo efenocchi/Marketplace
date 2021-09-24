@@ -61,7 +61,7 @@ class RegisterNormalUserFromMobilePhone(generics.RetrieveUpdateAPIView):
 
 class RegisterShopUserFromMobilePhone(generics.RetrieveUpdateAPIView):
     '''
-        registra un utente dal telefono cellulare
+    registra un utente dal telefono cellulare
     permission_classes: Returns a boolean denoting whether the current user has permission to execute the decorated view
     '''
     permission_classes = [IsSameUser, IsUserLogged]
