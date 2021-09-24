@@ -11,6 +11,13 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url='/utenti/login/')
 def show_item_reviewed(request, item_selected_id, order_item_id):
+    """
+    Se clicco su un oggetto già recensito posso visualizzare la recensione precedentemente lasciata
+    :param request:
+    :param item_selected_id:
+    :param order_item_id:
+    :return:
+    """
     order = Order.objects.get(items=order_item_id)
     item = Item.objects.get(id=item_selected_id)
     review = ReviewItem.objects.get(writer=request.user,order= order, item=item)
@@ -26,6 +33,13 @@ def show_item_reviewed(request, item_selected_id, order_item_id):
 
 @login_required(login_url='/utenti/login/')
 def add_review_item(request, item_selected_id, order_item_id):
+    """
+    Una volta selezionato l'oggetto che voglio recensire mi viene caricata la pagina e posso effettuare la recensione
+    :param request:
+    :param item_selected_id:
+    :param order_item_id:
+    :return:
+    """
     review_form = ReviewItemForm(request.POST or None, request.FILES or None, reviewed=False)
 
     if review_form.is_valid():
@@ -58,6 +72,11 @@ def add_review_item(request, item_selected_id, order_item_id):
 
 @login_required(login_url='/utenti/login/')
 def show_items_to_review(request):
+    """
+    Mostra gli oggetti che ho comprato
+    :param request:
+    :return:
+    """
     order_item = OrderItem.objects.filter(user=request.user)
 
     context = {
