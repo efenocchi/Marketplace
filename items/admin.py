@@ -8,11 +8,11 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ("pk", "user", "item", "ordered", "quantity")
+    list_display = ("pk", "user", "item", "ordered", "quantity", "review_done")
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("pk", "user", "ref_code", "review_dona")
+    list_display = ("pk", "user", "ref_code")
 
 
 

@@ -10,13 +10,28 @@ from django.contrib.auth.decorators import login_required
 
 
 @login_required(login_url='/utenti/login/')
-def add_review_item(request, item_selected_id, order_item_id):
+def show_item_reviewed(request, item_selected_id, order_item_id):
+    order = Order.objects.get(items=order_item_id)
+    item = Item.objects.get(id=item_selected_id)
+    review = ReviewItem.objects.get(writer=request.user,order= order, item=item)
+    review_form = ReviewItemForm(request.POST or None, request.FILES or None, instance=review, reviewed=True)
+    context = {
+        'review_form': review_form,
+        'item_selected_id': item_selected_id,
+        'order_item_id': order_item_id
+    }
 
-    review_form = ReviewItemForm(request.POST or None, request.FILES or None)
+    return render(request, 'review/show_item_reviewed.html', context)
+
+
+@login_required(login_url='/utenti/login/')
+def add_review_item(request, item_selected_id, order_item_id):
+    review_form = ReviewItemForm(request.POST or None, request.FILES or None, reviewed=False)
 
     if review_form.is_valid():
         order = Order.objects.get(items=order_item_id)
         item = Item.objects.get(id=item_selected_id)
+        order_item = OrderItem.objects.get(id=order_item_id)
 
         # # ripulisco il nome dell'oggetto
         # oggetto_scelto = review_form.cleaned_data['order_item']
@@ -28,6 +43,8 @@ def add_review_item(request, item_selected_id, order_item_id):
         review.description = review_form.cleaned_data['description']
         review.rating = review_form.cleaned_data['rating']
         review.save()
+        order_item.review_done = True
+        order_item.save()
 
         return HttpResponseRedirect(reverse('index'))
 
@@ -41,7 +58,6 @@ def add_review_item(request, item_selected_id, order_item_id):
 
 @login_required(login_url='/utenti/login/')
 def show_items_to_review(request):
-
     order_item = OrderItem.objects.filter(user=request.user)
 
     context = {

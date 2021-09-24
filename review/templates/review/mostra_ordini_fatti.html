@@ -74,9 +74,20 @@
                               <span>€ {{ single_order.item.price }}</span>
                             </p>
                             <h5>Quantità acquistate: {{ single_order.quantity }}</h5>
+                            {% if single_order.review_done %}
+                            <p  style="color:green">Recensione effettuata</p>
                             <p class="card-text">{{ single_order.item.category }}</p>
-
+                            <a href="{% url 'review:show_item_reviewed' item_selected_id=single_order.item.id order_item_id=single_order.id%}" class="btn btn-primary">Guarda la recensione</a>
+                            {% else %}
+                            <p  style="color:red">Recensione da lasciare</p>
+                            <p class="card-text">{{ single_order.item.category }}</p>
                             <a href="{% url 'review:add_review_item' item_selected_id=single_order.item.id order_item_id=single_order.id%}" class="btn btn-primary">Lascia una recensione</a>
+
+                            {% endif %}
+
+
+
+
 
 
                         </div>

@@ -37,10 +37,11 @@ class Item(models.Model):
 
 
 class OrderItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)
+    review_done = models.BooleanField(default=False)
 
     def __str__(self):
         return self.item.name
@@ -74,7 +75,7 @@ class Order(models.Model):
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     number_order = models.IntegerField(default=0)
-    review_dona = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.user.username

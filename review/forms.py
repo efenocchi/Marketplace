@@ -18,7 +18,13 @@ class ReviewItemForm(ModelForm):
             'rating'
         ]
 
-
+    def __init__(self, *args, **kwargs):
+        reviewed = kwargs.pop('reviewed')
+        super(ReviewItemForm, self).__init__(*args, **kwargs)
+        if reviewed:
+            self.fields['title_of_comment'].widget.attrs['readonly'] = True
+            self.fields['description'].widget.attrs['readonly'] = True
+            self.fields['rating'].widget.attrs['readonly'] = True
 
 
 class ReviewShopForm(ModelForm):
