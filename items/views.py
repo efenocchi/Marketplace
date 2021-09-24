@@ -26,10 +26,8 @@ from django.core.mail import send_mail
 
 @login_required(login_url='/users/login')
 def search(request):
-    user=request.user
-    print(user)
     word_searched= request.GET.get('search')
-    item_searched = Item.objects.filter(name__contains=word_searched)
+    item_searched = Item.objects.filter(name__contains=word_searched, user=request.user,)
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False
@@ -40,8 +38,17 @@ def search(request):
 
     else:
         order = 0
-    indici = show_distance_shops(request, item_searched)
+    print(item_searched)
 
+    if item_searched.count() == 0:
+        context = {}
+        context['item_searched'] = item_searched
+        context['word_searched'] = word_searched
+        context['user'] = request.user
+        context["all_items"] = order
+        return render(request, 'items/search.html', context)
+
+    indici = show_distance_shops(request, item_searched)
     items_ordered = list()
 
     if indici is not None:
@@ -54,7 +61,7 @@ def search(request):
     context = {}
     context['item_searched'] = item_searched
     context['word_searched'] = word_searched
-    context['user'] = user
+    context['user'] = request.user
     context["all_items"] = order
     return render(request, 'items/search.html',context)
 
@@ -92,16 +99,21 @@ def insert_item(request):
         item = Item.objects.create(user=request.user)
         item.name = form.cleaned_data['name']
         item.price = form.cleaned_data['price']
+        item.discount_price = form.cleaned_data['discount_price']
         item.category = form.cleaned_data['category']
+        item.quantity = form.cleaned_data['quantity']
         item.description = form.cleaned_data['description']
-        # item.image = form.cleaned_data['image']
+        item.image = form.cleaned_data['image']
 
         try:
             item.image = request.FILES['image']
         except Exception:
             item.image = item.item_pic_or_default()
         item.save()
-        return HttpResponseRedirect(reverse('items:item_page'))
+        context = {
+            "form": form,
+        }
+        return render(request, 'items/insert_item.html', context)
 
     context = {
         "form": form,
@@ -180,7 +192,7 @@ def item_page(request):
     else:
         # se sono un negozio
         context['all_items'] = item_shop
-        return render(request, 'items/item_page.html', context)
+        return render(request, 'items/item_page_shop.html', context)
         # return HttpResponse("sono un negozio e devo visualizzare un'altra schermata" + request.user.username)
 
 @login_required(login_url='/users/login')
@@ -211,6 +223,7 @@ def buy_page(request, item_selected_id):
 def modify_item(request, item_selected_id):
     print(request)
 
+@login_required(login_url='/users/login')
 def delete_item(request, item_selected_id):
     """
     [Modifica] Usare Ajax per eliminare gli oggetti
@@ -221,22 +234,22 @@ def delete_item(request, item_selected_id):
     # if nega_accesso_senza_profilo(request):
     #   return HttpResponseRedirect(reverse('utenti:scelta_profilo_oauth'))
 
-    item_to_delete = Item.objects.filter(id=item_selected_id).first()
+    item_to_delete = Item.objects.filter(user=request.user,id=item_selected_id).first()
+    print(item_to_delete)
 
-    if item_to_delete is not None:  # and annuncio.user == request.user:
-        Item.objects.filter(id=item_selected_id).first().image.delete(save=True)
+    if item_to_delete is not None and item_to_delete.user == request.user:
+        Item.objects.filter(id=item_selected_id).first().delete()
         # if not annuncio.annuncio_petsitter:
         #   userprofile = Profile.objects.filter(user=request.user).first()
         #  userprofile.pet_coins = userprofile.pet_coins + item_to_delete.pet_coins
-        # userprofile.save()
 
-        Item.objects.filter(id=item_selected_id).delete()
-        all_items = Item.objects.all()
-
+        all_items = Item.objects.filter(user=request.user)
+        print(item_to_delete)
+        print(all_items)
         context = {}
         context = {"all_items": all_items}
 
-        return render(request, 'items/item_page.html', context)
+        return render(request, 'items/item_page_shop.html', context)
 
     raise Http404
 

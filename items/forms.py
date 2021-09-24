@@ -7,10 +7,12 @@ MIME_TYPES = ['image/jpeg', 'image/png']
 class ItemForm(forms.ModelForm):
     required_css_class = 'required'
     name = forms.CharField(max_length=95)
-    price = forms.IntegerField()
+    price = forms.FloatField()
+    discount_price = forms.FloatField(required=True)
     choice_category = (('Abbigliamento', 'Abbigliamento'), ('Tecnologia', 'Tecnologia'), ('Sport', 'Sport'),
                        ('Casa', 'Casa'), ('Motori', 'Motori'))
     category = forms.ChoiceField(choices=choice_category)
+    quantity = forms.IntegerField()
     description = forms.CharField(widget=forms.Textarea)
     #data_inizio = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'])
     #data_fine = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'])

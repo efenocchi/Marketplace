@@ -8,7 +8,7 @@
     {% extends 'main/base.html' %}
 
     <!-- ridefinisco title -->
-    <title>{% block title %}Item_Page{% endblock %}</title>
+    <title>{% block title %}Item_Page_Shop{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -28,15 +28,7 @@
 </head>
 <body>
     {% block menu_id %}
-    <li><a href="{% url 'users:home_for_user' %}">Home</a></li>
-    <li><a href="{% url 'items:view_order' %}">View Order</a></li>
-    {% endblock %}
-
-    {% block cart %}
-    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
-        <span class="badge bg-danger bg-secondary">{% if all_items_cart == 0 %}0{% endif %}{% if all_items_cart.get_final_quantity >= 0%}{{ all_items_cart.get_final_quantity}}{% endif %}</span>
-        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
-    </a>
+    <li><a href="{% url 'users:home_for_shop' %}">Home</a></li>
     {% endblock %}
 
     {% block item_page %}
@@ -62,6 +54,10 @@
             {% for item in all_items %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
+                        <div class="modify-delete">
+                            <a href="{% url 'items:modify_item' item_selected_id=item.id%}" class="fa fa-pencil" aria-hidden="true"></a>
+                            <a href="{% url 'items:delete_item' item_selected_id=item.id%}" class="fa fa-times" aria-hidden="true"></a>
+                        </div>
                         {% if item.quantity > 0 %}
                             <img src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% else %}
