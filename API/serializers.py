@@ -336,5 +336,6 @@ class CompleteShopUserData(serializers.ModelSerializer):
         # print(instance.user)
         # print("self.context['request']", self.context['request'])
         # updatePositionLatLong(instance.user, self.context['request'])
+
         updatePositionLatLong(instance.user)
         return instance

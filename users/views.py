@@ -270,6 +270,7 @@ def insert_user_info(request):
     # return render(request, 'users/'+ str(oid) +'/insert_info.html', context)
     return render(request, 'users/insert_info.html', context)
 
+
 def home_for_user(request):
 
     user_profile = GeneralUser.objects.get(user=request.user)

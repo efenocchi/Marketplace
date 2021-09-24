@@ -40,7 +40,7 @@
         <div class="container-item">
             <div class="row-2">
 
-                <form id="RegFormUser" action="{% url 'review:add_review_item' item_selected_id=item.id%}" method="post">
+                <form id="RegFormUser" action="{% url 'review:add_review_item' item_selected_id=item_selected_id order_item_id=order_item_id%}" method="post">
                     {% for field in review_form %}
                         {% csrf_token %}
                         <div class="form-group">
@@ -51,7 +51,10 @@
                         <div class="col-sm-10" > {{ field }}</div>
                         </div>
                     {% endfor %}
+
                     <button type="submit" class="btn">Aggiungi Recensione</button>
+
+
                  </form>
             </div>
         </div>

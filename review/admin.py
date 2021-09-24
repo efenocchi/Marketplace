@@ -7,7 +7,7 @@ from .models import ReviewItem, ReviewShop, ReviewCustomer
 
 
 class ReviewItemAdmin(admin.ModelAdmin):
-    list_display = ("pk", "writer", "receiver", "title_of_comment", "description", "rating")
+    list_display = ("pk", "writer", "order", "item", "title_of_comment", "description", "rating")
 
 
 class ReviewShopAdmin(admin.ModelAdmin):

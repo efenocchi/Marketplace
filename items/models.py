@@ -28,7 +28,7 @@ class Item(models.Model):
             return settings.MEDIA_URL + str(self.image)
 
         return default_path
-    #faccio in modo che tutti i file quando li aggiungo abbiano il nome=name
+    # faccio in modo che tutti i file quando li aggiungo abbiano il nome=name
     # def __str__(self):
     #     return self.name
 
@@ -36,11 +36,10 @@ class Item(models.Model):
         return self.name
 
 
-
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    ordered = models.BooleanField(default=False)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
@@ -66,6 +65,7 @@ class OrderItem(models.Model):
     def get_quantity(self):
         return self.quantity
 
+
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     ref_code = models.CharField(max_length=20, blank=True, null=True)
@@ -74,6 +74,7 @@ class Order(models.Model):
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     number_order = models.IntegerField(default=0)
+    review_dona = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username

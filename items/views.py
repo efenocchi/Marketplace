@@ -296,7 +296,7 @@ def add_to_cart(request, item_selected_id):
         order = order_qs[0]
 
         if order.items.filter(item__id=item_selected_id).exists():
-            if(item_selected.quantity > order_item.quantity):
+            if item_selected.quantity > order_item.quantity:
                 order_item.quantity += 1
                 order_item.save()
                 messages.info(request, "This item quantity was updated")
@@ -616,6 +616,8 @@ def computeTime(request, item_selected_id):
         'locations':
             complete_parameters
     }
+
+# [modifica] dare un controllo sulla latitudine e longitudine giuste
 
     # ritorna il tempo in secondi
     response = requests.post(

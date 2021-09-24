@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from items.models import Item
+from items.models import Item, Order, OrderItem
 
 
 # Create your models here.
@@ -18,11 +18,13 @@ class Transaction(models.Model):
 
 class ReviewItem(models.Model):
     """
-    Il writer può essere solo un utente (acquirente o negozio)
+    Il writer può essere un utente acquirente o un negozio
     """
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='writer_item')
-    receiver = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='receiver_item')
-
+    # receiver = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='receiver_item')
+    # order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     title_of_comment = models.CharField(max_length=100)
     description = models.CharField(max_length=250)
     rating = models.IntegerField(default=5)
