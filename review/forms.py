@@ -32,7 +32,7 @@ class ReviewShopForm(ModelForm):
     required_css_class = 'required'
 
     class Meta:
-        model = models.ReviewItem
+        model = models.ReviewShop
         fields = [
             'title_of_comment',
             'description',
@@ -45,9 +45,17 @@ class ReviewCustomerForm(ModelForm):
     required_css_class = 'required'
 
     class Meta:
-        model = models.ReviewItem
+        model = models.ReviewCustomer
         fields = [
             'title_of_comment',
             'description',
             'rating'
         ]
+
+    def __init__(self, *args, **kwargs):
+        reviewed = kwargs.pop('reviewed')
+        super(ReviewCustomerForm, self).__init__(*args, **kwargs)
+        if reviewed:
+            self.fields['title_of_comment'].widget.attrs['readonly'] = True
+            self.fields['description'].widget.attrs['readonly'] = True
+            self.fields['rating'].widget.attrs['readonly'] = True

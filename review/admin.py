@@ -15,7 +15,10 @@ class ReviewShopAdmin(admin.ModelAdmin):
 
 
 class ReviewCustomerAdmin(admin.ModelAdmin):
-    list_display = ("pk", "writer", "receiver", "title_of_comment", "description", "rating")
+    list_display = ("pk", "writer", "receiver", "title_of_comment", "order", "description", "rating")
+
+    # def get_ref_code(self, instance):
+    #     return instance.get_ref_code()
 
 
 # Faccio in modo di visualizzare nella schermata di admin gli Item

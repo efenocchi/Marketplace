@@ -69,6 +69,7 @@ class ReviewCustomer(models.Model):
     """
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='writer_customer')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver_customer')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
     # transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='shop_to_user')
     rating = models.IntegerField(default=5)

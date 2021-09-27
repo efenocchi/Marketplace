@@ -55,6 +55,7 @@ def search(request):
         for id_item in indici:
             items_ordered.append(item_searched.get(id=id_item))
 
+    # [mofifica] mettere gli elementi ritornati in base alla distanza (guardare codice vecchio)
 
     print("è una lista", type(items_ordered))
     print("tipo di struttura", type(item_searched))
@@ -301,6 +302,7 @@ def add_to_cart(request, item_selected_id):
         user=request.user,
         ordered=False
     )
+
     #ORDER E' L'INSIEME DI ITEM CHE COMPONGONO L'ORDINE DELL'UTENTE
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     print(order_qs)

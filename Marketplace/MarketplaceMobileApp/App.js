@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from "react";
+import React, {Component, useState} from "react";
 import { StyleSheet, Button, Text, View,TouchableNativeFeedback} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import Drawer from './components/DrawerNavigator';
 import * as Font from 'expo-font';
+import HomeScreen2 from "./Pages/HomeScreen2";
 
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerItems, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
@@ -14,18 +15,53 @@ import 'react-native-gesture-handler';
 // import Registration from "./Pages/Registration";
 
 import {RootSiblingParent} from 'react-native-root-siblings'
+import {NavigationContainer} from "@react-navigation/native";
 
 
 // const AppContainer = createAppContainer(Drawer);
 
 
+// export function HomeScreen({ navigation }) {
+//
+//   return (
+//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+//       <Text>Home Screen</Text>
+//       <Button
+//         title="Go to Login"
+//         onPress={() => navigation.navigate('Home2', {user_id: 'parametro passato2'})}
+//         // onPress={() => navigation.navigate('Home2')}
+//       />
+//     </View>
+//   );
+// }
 
 
 
+export class HomeScreen extends Component {
+   constructor(props){
+        super(props);
+        this.state ={
+            username: "",
+            password: "",
+            error_message: ""
+        }
+    }
+   render(){
+     const { params } = this.props.navigation.state;
+    const user_id = params ? params.user_id: null;
 
+     return(
+         <Text> {params}</Text>
+      //    <Button
+      //   title="Go to Login"
+      //   onPress={() => navigation.navigate('Home2', {user_id: 'parametro passato2'})}
+      //   // onPress={() => navigation.navigate('Home2')}
+      // />
 
+     );
 
-
+   }
+}
 
 function NotCharged() {
   const bodyText = "Non è stato caricato il Font";
@@ -66,10 +102,11 @@ export default class App extends React.Component {
 
 
   render () {
-
-            <RootSiblingParent>
-                <App />
-            </RootSiblingParent>
+    const Stack = createDrawerNavigator();
+            //
+            // <RootSiblingParent>
+            //     <App />
+            // </RootSiblingParent>
 
 
     if (!global.state.fontLoaded) {
@@ -79,15 +116,15 @@ export default class App extends React.Component {
     }
     return (
 
-            <Drawer/>
-    //   <NavigationContainer>
-    //   <Stack.Navigator initialRouteName="Home">
-    //     <Stack.Screen name="Home" component={HomeScreen} />
-    //     <Stack.Screen name="Home2" component={HomeScreen2} />
-    //     <Stack.Screen name="Login" component={Login} />
-    //     <Stack.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+            // <Drawer/>
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home2">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home2" component={HomeScreen2} />
+        <Stack.Screen name="Login" component={Login} />
+        {/*<Stack.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} />*/}
+      </Stack.Navigator>
+    </NavigationContainer>
     );
   }
 

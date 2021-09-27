@@ -36,11 +36,13 @@
 
 <!--    FUNZIONI E NOMI DI FUNZIONI SOTTOSTANTI IN HTML DA CONTROLLARE [MODIFICA] -->
 
-    <h5>Inserisci oggetto</h5>
+    <h5>Lasciare una recensione per l'utente: {{receiver}}</h5>
+    <h5>Transazione numero: {{order.ref_code}}</h5>
+
         <div class="container-item">
             <div class="row-2">
 
-                <form id="RegFormUser" action="{% url 'review:add_review_item' item_selected_id=item.id%}" method="post">
+                <form id="RegFormUser" action="{% url 'review:add_review_customer' order_id=order.id customer_id=receiver.id%}" method="post">
                     {% for field in review_form %}
                         {% csrf_token %}
                         <div class="form-group">
@@ -57,6 +59,6 @@
         </div>
 
 {% endblock %}
-{% block add_review_customer %}
+
 </body>
 </html>

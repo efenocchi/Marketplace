@@ -8,14 +8,11 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ("pk", "user", "item", "ordered", "quantity", "review_done")
+    list_display = ("pk", "user", "item", "ordered", "quantity", "review_item_done")
 
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("pk", "user", "ref_code")
-
-
-
 
 
 admin.site.register(Item, ItemAdmin)
