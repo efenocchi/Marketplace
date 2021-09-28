@@ -11,15 +11,15 @@ class UserInfoLogin(generics.RetrieveAPIView):
     """
     Questa view restituisce la lista completa degli utenti registrati
     """
-#     serializer_class = CompleteUserData
-#
-#     def get_object(self):
-#         """
-#         Modifico il query set in modo da ottenere l'utente con l'id
-#         prelevato dall'url
-#         """
-#         oid = self.kwargs['pk']
-#         return GeneralUser.objects.get(user=oid)
+    serializer_class = CompleteUserData
+
+    def get_object(self):
+        """
+        Modifico il query set in modo da ottenere l'utente con l'id
+        prelevato dall'url
+        """
+        oid = self.kwargs['pk']
+        return GeneralUser.objects.get(user=oid)
 
 
 class FindUser(generics.ListAPIView):
