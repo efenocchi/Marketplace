@@ -5,7 +5,8 @@ import { createAppContainer } from 'react-navigation';
 import Drawer from './components/DrawerNavigator';
 import * as Font from 'expo-font';
 import HomeScreen2 from "./Pages/HomeScreen2";
-
+import {NavigationActions as navigation} from "react-navigation";
+import RegistrationStackNavigator from "./components/RegistrationStackNavigator";
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator, DrawerItems, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import Login from './Pages/Login';
@@ -38,6 +39,8 @@ import {NavigationContainer} from "@react-navigation/native";
 
 
 export class HomeScreen extends Component {
+
+    username = null;
    constructor(props){
         super(props);
         this.state ={
@@ -46,17 +49,21 @@ export class HomeScreen extends Component {
             error_message: ""
         }
     }
+
+
+
    render(){
-     const { params } = this.props.navigation.state;
-    const user_id = params ? params.user_id: null;
+    //  const { params } = this.props.navigation.state;
+    // const user_id = params ? params.user_id: null;
 
      return(
-         <Text> {params}</Text>
-      //    <Button
-      //   title="Go to Login"
-      //   onPress={() => navigation.navigate('Home2', {user_id: 'parametro passato2'})}
-      //   // onPress={() => navigation.navigate('Home2')}
-      // />
+
+
+         <Button
+        title="Go to Home2"
+        onPress={() => this.props.navigation.navigate('Home2', {user_id: 'parametro passato1'})}
+        // onPress={() => navigation.navigate('Home2')}
+      />
 
      );
 
@@ -114,18 +121,18 @@ export default class App extends React.Component {
         NotCharged()
       );
     }
-    return (
+      return (
 
-            // <Drawer/>
-      <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home2">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Home2" component={HomeScreen2} />
-        <Stack.Screen name="Login" component={Login} />
-        {/*<Stack.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} />*/}
-      </Stack.Navigator>
-    </NavigationContainer>
-    );
+          <Drawer/>
+      //     <NavigationContainer>
+      //         <Stack.Navigator initialRouteName="Home">
+      //             <Stack.Screen name="Home" component={HomeScreen} />
+      //             <Stack.Screen name="Home2" component={HomeScreen2} />
+      //             <Stack.Screen name="Login" component={Login} />
+      //             <Stack.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} />
+      //         </Stack.Navigator>
+      //     </NavigationContainer>
+      );
   }
 
 }

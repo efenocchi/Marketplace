@@ -7,8 +7,10 @@ import Card from '../components/Card';
 const {width, height} = Dimensions.get('window');
 
 export default class Registration extends Component {
-
+    name = ""
     render() {
+        // this.name = this.props.route.params.user_id
+
         return (
             <View style={styles.screen}>
                 <CustomHeader parent={this.props} />
@@ -47,7 +49,7 @@ export default class Registration extends Component {
 
                                 <View>
                                     <View style={styles.bottomButton}>
-                                        <Button title="Log in" onPress={() => this.props.navigation.navigate('Login')}/>
+                                        <Button title="Login" onPress={() => this.props.navigation.navigate('Login')}/>
                                     </View>
                                 </View>
                             </View>

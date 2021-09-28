@@ -11,7 +11,10 @@ import {ToastContainer} from 'react-native-root-toast';
 import {RootSiblingParent} from "react-native-root-siblings";
 
 
+
+
 export default class Login extends Component {
+    name=""
 
     constructor(props){
         super(props);
@@ -22,6 +25,7 @@ export default class Login extends Component {
         }
     }
 
+
     fetchUserId() {
         fetch('http://10.110.215.142:5000/api/users/find/' + this.state.username + '/?format=json')
         .then((user_response) => user_response.json())
@@ -29,17 +33,28 @@ export default class Login extends Component {
 
             global.user_id = user_responseJson['results'][0]['user']['id'];
             global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === true);
+            console.log("sto stampando l'id dal fetch")
             console.log(global.user_id)
             console.log(global.login_negozio)
+            // this.props.navigation.reset({
+            // routes: [{ name: "UserStackNavigator" }]
+            // });
+            this.props.navigation.navigate('UserStackNavigator');
 
         })
         .catch((error) =>{
         console.error(error);
         // this.fetchUserId();
         });
+
+
     }
 
+    changeScreen = () => {
+        console.log("sono in changeScreen")
+    }
     loginExecute = () => {
+
         fetch('http://10.110.215.142:5000/api/rest-auth/login/',
             {
               method: 'POST',
@@ -60,7 +75,7 @@ export default class Login extends Component {
                     global.logged_in = true;
                     global.username = this.state.username;
                     this.fetchUserId();
-
+                    this.changeScreen();
                     // ToastAndroid.show("Bentornato, " , Toast.SHORT);
 
                     Toast.show("Bentornato, c", {
@@ -71,11 +86,14 @@ export default class Login extends Component {
                         hideOnPress: true,
                         delay: 0,
                     });
+                    this.props.navigation.navigate('UserStackNavigator');
+                    console.log("sto stampando l'id dopo il login")
+                    console.log(global.user_id)
 
 
-                    this.clearFields();
+                    // this.clearFields();
+                    // this.props.navigation.navigate('RegistrationStackNavigator');
 
-                    // this.props.navigation.goBack(null);
                 } else {
                     this.setState({error_message: "Errore: username o password errati."});
                 }
@@ -86,6 +104,8 @@ export default class Login extends Component {
             .catch((error) => {
                 // this.loginExecute;
             })
+
+        // this.props.navigation.navigate('UserStackNavigator', {user_id: global.user_id});
     }
 
     clearFields = () => {
@@ -97,6 +117,7 @@ export default class Login extends Component {
     }
 
     render() {
+
         return (
 
             <View style={styles.screen}>
@@ -142,6 +163,7 @@ export default class Login extends Component {
                                         </View>
                                     </View>
                                 </View>
+
                                 <View style={styles.controlli}>
                                     <View style={styles.buttonview}>
                                         <Button title="Accedi" onPress={ this.loginExecute } />
@@ -165,7 +187,10 @@ export default class Login extends Component {
                                         <View style={styles.bottomButton}>
                                             <Button title="Registrati" onPress={() => {
                                                 this.clearFields();
-                                                this.props.navigation.navigate('RegistrationStackNavigator');}}
+                                                // this.props.navigation.navigate('RegistrationStackNavigator');}}
+                                                // this.props.navigation.navigate('RegistrationStackNavigator', {user_id: 'parametro passato1'});}}
+                                                this.props.navigation.navigate('UserStackNavigator', {user_id: global.user_id});
+                                            }}
 
                                                 // this.props.navigation.goBack();}}
                                             />

@@ -28,6 +28,7 @@ class ReviewItem(models.Model):
     title_of_comment = models.CharField(max_length=100)
     description = models.CharField(max_length=250)
     rating = models.IntegerField(default=5)
+    altro = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         verbose_name = 'ReviewItem'

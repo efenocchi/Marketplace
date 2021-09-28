@@ -79,8 +79,10 @@ class Order(models.Model):
     number_order = models.IntegerField(default=0)
     review_customer_done = models.BooleanField(default=False)
 
+
     def __str__(self):
         return self.user.username
+        # return self.ref_code
 
     def get_ref_code(self):
         return self.ref_code
