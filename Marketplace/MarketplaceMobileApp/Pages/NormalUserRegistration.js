@@ -65,7 +65,7 @@ class NormalUserRegistration extends Component {
                     },
                     body: JSON.stringify({
                         username: this.state.username,
-                        email: this.state.email,
+                        // email: this.state.email,
                         password1: this.state.password,
                         password2: this.state.conferma_password
                     }),

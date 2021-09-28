@@ -93,6 +93,106 @@ class CompleteUserData(serializers.ModelSerializer):
                   # "media_voti",
                   ]
 
+    def validate_indirizzo(self,data):
+        # controllo indirizzo
+        if not re.match("^[A-Za-z0-9/ 'èòàùì]+$", data):
+            raise serializers.ValidationError(
+                _('Errore: l\'indirizzo può contenere solo lettere, numeri e /.'))
+        if not (3 <= len(data) <= 50):
+            raise serializers.ValidationError(
+                _('Errore: l\'indirizzo deve avere lunghezza fra 3 e 50 caratteri.'))
+        return data
+
+    def validate_citta(self, data):
+        # controllo citta
+        if not re.match("^[A-Za-z 'èòàùì]+$", data):
+            raise serializers.ValidationError(
+                _('Errore: il campo città può contenere solo lettere.'))
+        if not (3 <= len(data) <= 50):
+            raise serializers.ValidationError(
+                _('Errore: la città deve avere lunghezza fra 3 e 50 caratteri.'))
+        return data
+
+    def validate_telefono(self, data):
+        # controllo telefono
+        if not re.match("^[0-9]+$", data):
+            raise serializers.ValidationError(
+                _('Errore: il telefono può contenere solo numeri.'))
+        if not (3 <= len(data) <= 30):
+            raise serializers.ValidationError(
+                _('Errore: il telefono deve avere lunghezza fra 3 e 30 caratteri.'))
+        return data
+
+    def validate_foto_profilo(self,data):
+        files = data
+
+        if files is not None:
+            file_size = files.size
+            limit_MB = 5
+            if file_size > limit_MB * 1024 * 1024:
+                raise serializers.ValidationError("La dimensione massima per le immagini è %s MB" % limit_MB)
+
+            file_type = magic.from_buffer(files.read(), mime=True)
+            if file_type not in MIME_TYPES:
+                raise serializers.ValidationError(_("file non supportato."))
+            return files
+        return None
+
+    def validate_descrizione(self, data):
+        # controllo descrizione
+        if not re.match("^[A-Za-z0-9., 'èòàùì]+$", data):
+            raise serializers.ValidationError(
+                _('Errore: il campo descrizione può contenere solo lettere, numeri, punti, virgole e spazi.'))
+        if not (1 <= len(data) <= 245):
+            raise serializers.ValidationError(
+                _('Errore: il campo descrizione deve avere lunghezza fra 1 e 245 caratteri.'))
+        return data
+
+    def validate_eta(self, data):
+        # controllo eta
+        if not re.match("^[0-9]+$", str(data)):
+            raise serializers.ValidationError(_('Errore: l\'età può contenere solo numeri.'))
+        if not (0 <= int(data) <= 100):
+            raise serializers.ValidationError(_('Errore: l\'età deve essere compresa fra 0 e 100.'))
+        return data
+
+    # def get_media_voti_utente(self,profilo):
+    #     # user = Profile.__class__.objects.get(user=self.instance)
+    #     return calcolaMediaVotiUtente(profilo)
+    #
+    # def get_numero_recensioni_utente(self,profilo):
+    #     # user = Profile.__class__.objects.get(user=self.instance)
+    #     return calcolaNumeroVotiUtente(profilo)
+
+    def update(self, instance, validated_data):
+
+        dati_utente = validated_data.pop('user')
+        utente_richiedente = GeneralUser.objects.get(user=instance.user)
+        # username, first_name, last_name, email
+        instance.user.username = dati_utente['username']
+        instance.user.set_password(dati_utente['password'])
+        # instance.user.first_name = dati_utente['first_name']
+        # instance.user.last_name = dati_utente['last_name']
+        # instance.user.email = dati_utente['email']
+
+        instance.indirizzo = validated_data['indirizzo']
+        instance.citta =  validated_data['citta']
+        instance.regione =  validated_data['regione']
+        instance.provincia =  validated_data['provincia']
+        # instance.descrizione = validated_data['descrizione']
+
+        if not utente_richiedente.login_negozio:
+            instance.login_negozio = False
+
+        else:
+            instance.pet_sitter=True
+            instance.telefono = validated_data['telefono']
+
+        instance.user.save()
+        instance.save()
+        updatePositionLatLong(instance.user)
+        return instance
+
 
 class CompletaDatiDjangoUser(serializers.ModelSerializer):
     class Meta:

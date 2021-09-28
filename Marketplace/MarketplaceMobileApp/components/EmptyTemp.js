@@ -21,7 +21,7 @@ export default class EmptyTemp extends Component {
 
         return (
 
-                <Text>Bentornato {global.username}</Text>
+                <Text>Bentornato {global.user_id}</Text>
 
         );
 

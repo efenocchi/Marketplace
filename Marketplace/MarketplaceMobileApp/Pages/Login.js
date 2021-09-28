@@ -33,6 +33,8 @@ export default class Login extends Component {
 
             global.user_id = user_responseJson['results'][0]['user']['id'];
             global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === true);
+            global.provincia = user_responseJson['results'][0]['provincia']
+            global.regione = user_responseJson['results'][0]['regione']
             console.log("sto stampando l'id dal fetch")
             console.log(global.user_id)
             console.log(global.login_negozio)
@@ -78,7 +80,7 @@ export default class Login extends Component {
                     this.changeScreen();
                     // ToastAndroid.show("Bentornato, " , Toast.SHORT);
 
-                    Toast.show("Bentornato, c", {
+                    Toast.show("Bentornato " + global.username, {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
                         shadow: true,

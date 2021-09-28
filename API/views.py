@@ -5,6 +5,7 @@ from rest_framework import generics
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData
 from .permissions import *
+from django.contrib.auth import logout
 
 
 class UserInfoLogin(generics.RetrieveAPIView):
@@ -22,7 +23,29 @@ class UserInfoLogin(generics.RetrieveAPIView):
         return GeneralUser.objects.get(user=oid)
 
 
+# selfUserInfoLogin
+class ModifyInfoLoginUser(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Restituisco le info del profilo dell'utente loggato.
+    Con questa funzione vengono modificate le informazioni di un utente
+    """
+    permission_classes = [IsSameUser, IsUserLogged]
+    serializer_class = CompleteUserData
+
+    def get_object(self):
+        return GeneralUser.objects.get(user=self.request.user)
+
+    def perform_destroy(self, instance):
+        profile_to_modify = User.objects.get(id=instance.user.id)
+        profile_to_modify.is_active = False
+        profile_to_modify.save()
+        logout(self.request)
+
+
 class FindUser(generics.ListAPIView):
+    """
+    Trova un utente GeneralUser e ritorna tutte le sue info (utente negozio o acquirente)
+    """
     serializer_class = CompleteUserData
 
     def get_queryset(self):

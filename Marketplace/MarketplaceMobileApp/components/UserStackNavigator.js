@@ -2,6 +2,8 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EmptyTemp from "./EmptyTemp";
+import UserInfoModify from "../Pages/UserInfoModify";
+
 import HomeStackNavigator from "./HomeStackNavigator";
 
 const Tab = createBottomTabNavigator();
@@ -9,10 +11,11 @@ const Tab = createBottomTabNavigator();
 export default function UserStackNavigator() {
   return (
       <Tab.Navigator options={{headerShown: false}} screenOptions={{
-          gestureEnabled: false,
+
           showLabel: false,
           InactiveTintColor: '#e47911',
           activeTintColor: '#e47911',
+          gestureEnabled: false,
       }}>
 
         <Tab.Screen component={HomeStackNavigator}
@@ -24,8 +27,8 @@ export default function UserStackNavigator() {
                     }}
         />
 
-        <Tab.Screen component={EmptyTemp}
-                    name="UserIfo"
+        <Tab.Screen component={UserInfoModify}
+                    name="UserInfo"
                     options={{
                         tabBarIcon: ({color}) => (
                             <Entypo name="user" color={color} size={25}/>
