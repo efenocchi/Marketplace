@@ -86,7 +86,7 @@ export default class Login extends Component {
                         hideOnPress: true,
                         delay: 0,
                     });
-                    this.props.navigation.navigate('UserStackNavigator');
+                    // this.props.navigation.navigate('UserStackNavigator');
                     console.log("sto stampando l'id dopo il login")
                     console.log(global.user_id)
 
@@ -189,7 +189,7 @@ export default class Login extends Component {
                                                 this.clearFields();
                                                 // this.props.navigation.navigate('RegistrationStackNavigator');}}
                                                 // this.props.navigation.navigate('RegistrationStackNavigator', {user_id: 'parametro passato1'});}}
-                                                this.props.navigation.navigate('UserStackNavigator', {user_id: global.user_id});
+                                                this.props.navigation.navigate('RegistrationStackNavigator');
                                             }}
 
                                                 // this.props.navigation.goBack();}}

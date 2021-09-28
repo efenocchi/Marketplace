@@ -15,7 +15,7 @@ export default function RegistrationStackNavigator() {
     // this.name = this.props.route.params.user_id
 
 
-        console.log( this.props.route.params.user_id)
+
         return (
 
             <Stack.Navigator initialRouteName="Registration">

@@ -9,7 +9,7 @@ const {width, height} = Dimensions.get('window');
 export default class Registration extends Component {
     name = ""
     render() {
-        // this.name = this.props.route.params.user_id
+
 
         return (
             <View style={styles.screen}>

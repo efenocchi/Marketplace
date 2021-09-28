@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EmptyTemp from "./EmptyTemp";
-// import HomeStackNavigator from "./HomeStackNavigator";
+import HomeStackNavigator from "./HomeStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,14 +15,14 @@ export default function UserStackNavigator() {
           activeTintColor: '#e47911',
       }}>
 
-        {/*<Tab.Screen component={HomeStackNavigator}*/}
-        {/*            name="Home" // nome in alto della pagina*/}
-        {/*            options={{*/}
-        {/*                tabBarIcon: ({color}) => (*/}
-        {/*                    <Entypo name="home" color={color} size={25}/>*/}
-        {/*                ),*/}
-        {/*            }}*/}
-        {/*/>*/}
+        <Tab.Screen component={HomeStackNavigator}
+                    name="Home" // nome in alto della pagina
+                    options={{
+                        tabBarIcon: ({color}) => (
+                            <Entypo name="home" color={color} size={25}/>
+                        ),
+                    }}
+        />
 
         <Tab.Screen component={EmptyTemp}
                     name="UserIfo"
