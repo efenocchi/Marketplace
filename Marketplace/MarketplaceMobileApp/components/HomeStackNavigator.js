@@ -8,7 +8,8 @@ const Stack = createStackNavigator();
 export default function HomeStackNavigator()  {
   return (
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen
+
+         <Stack.Screen
             component={ItemList}
             name="ItemList"
             options={{title:'ItemList'}}
@@ -18,6 +19,7 @@ export default function HomeStackNavigator()  {
             component={ItemDetailPage}
             name="ItemDetailPage"
         />
+
       </Stack.Navigator>
   );
 }

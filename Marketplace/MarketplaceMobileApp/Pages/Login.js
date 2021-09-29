@@ -35,13 +35,14 @@ export default class Login extends Component {
             global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === true);
             global.provincia = user_responseJson['results'][0]['provincia']
             global.regione = user_responseJson['results'][0]['regione']
+            console.log(user_responseJson)
             console.log("sto stampando l'id dal fetch")
             console.log(global.user_id)
             console.log(global.login_negozio)
-            // this.props.navigation.reset({
-            // routes: [{ name: "UserStackNavigator" }]
-            // });
-            this.props.navigation.navigate('UserStackNavigator');
+            this.props.navigation.reset({
+            routes: [{ name: "UserStackNavigator" }]
+            });
+            // this.props.navigation.navigate('UserStackNavigator');
 
         })
         .catch((error) =>{
@@ -280,4 +281,3 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end'
     }
 });
-

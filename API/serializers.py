@@ -6,6 +6,8 @@ from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
+
+from review.models import ReviewCustomer
 from users.models import GeneralUser
 from users.views import compute_position
 
@@ -38,6 +40,56 @@ class UserSerializer(serializers.ModelSerializer):
                 'validators': [UnicodeUsernameValidator()],
             }
         }
+
+        def validate_username(self, data):
+            if not re.match("^[A-Za-z0-9]+$", data):
+                return serializers.ValidationError(
+                    _('Errore: lo username può contenere solo lettere e numeri.'))
+            if not (3 <= len(data) <= 30):
+                return serializers.ValidationError(
+                    _('Errore: lo username deve avere lunghezza fra 3 e 30 caratteri.'))
+            return data['username']
+
+        def validate_password(self, data):
+            # controllo password
+            if not re.match("^[A-Za-z0-9èòàùì]+$", data):
+                raise serializers.ValidationError(
+                    _('Errore: la password può contenere solo lettere minuscole, maiuscole e numeri.'))
+            if not (3 <= len(data) <= 20):
+                raise serializers.ValidationError(
+                    _('Errore: la password deve avere lunghezza fra 3 e 20 caratteri.'))
+            return data
+
+        def validate_conferma_password(self, data):
+            if not re.match("^[A-Za-z0-9èòàùì]+$", data):
+                raise serializers.ValidationError(
+                    _('Errore: la conferma password può contenere solo lettere minuscole, maiuscole e numeri.'))
+            if not (3 <= len(data) <= 20):
+                raise serializers.ValidationError(
+                    _('Errore: la conferma password deve avere lunghezza fra 3 e 20 caratteri.'))
+            return data
+
+        def validate_first_name(self,data):
+            if not re.match("^[A-Za-z 'èòàùì]+$", data):
+                raise serializers.ValidationError(_('Errore: il nome può contenere solo lettere.'))
+            if not (1 <= len(data) <= 30):
+                raise ValidationError(_('Errore: il nome deve avere lunghezza fra 1 e 30 caratteri.'))
+            return data
+
+        def validate_last_name(self,data):
+            # controllo cognome
+            if not re.match("^[A-Za-z 'èòàùì]+$", data):
+                raise serializers.ValidationError(_('Errore: il cognome può contenere solo lettere.'))
+            if not (1 <= len(data) <= 30):
+                raise serializers.ValidationError(_('Errore: il cognome deve avere lunghezza fra 1 e 30 caratteri.'))
+            return data
+
+        def validate_email(self,data):
+            # controllo email
+            if not (5 <= len(data) <= 50):
+                raise serializers.ValidationError(_('Errore: la mail deve essere compresa gra 5 e 50 caratteri.'))
+            return data
+
 
 
 class CompleteShopData(serializers.ModelSerializer):
@@ -439,3 +491,27 @@ class CompleteShopUserData(serializers.ModelSerializer):
 
         updatePositionLatLong(instance.user)
         return instance
+
+
+class ReviewUserSerializer(serializers.ModelSerializer):
+    writer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    receiver = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    order = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+
+    class Meta:
+        model = ReviewCustomer
+        fields ='__all__'
+
+    def validate_title_of_comment(self, data):
+        if not re.match("^[A-Za-z0-9 .,'èòàùì]+$", data):
+            raise serializers.ValidationError(_('Errore: il titolo può contenere solo lettere, numeri e spazi.'))
+        if not (1 <= len(data) <= 95):
+            raise serializers.ValidationError(_('Errore: il titolo deve avere lunghezza fra 1 e 95 caratteri.'))
+        return data
+
+    def validate_description(self, data):
+        # controllo descrizione
+        if not re.match("^[A-Za-z0-9 ,.'èòàùì]+$", data):
+            raise serializers.ValidationError(_('Errore: la descrizione può contenere solo lettere, '
+                                               'numeri, punti, virgole e spazi.'))
+        return data

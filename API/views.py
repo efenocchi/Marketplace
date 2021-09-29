@@ -2,8 +2,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
+from review.models import ReviewCustomer
 from users.models import GeneralUser
-from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData
+from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewUserSerializer
 from .permissions import *
 from django.contrib.auth import logout
 
@@ -93,3 +94,21 @@ class RegisterShopUserFromMobilePhone(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return GeneralUser.objects.get_or_create(user=self.request.user)[0]
+
+
+class ReturnReviewUser(generics.ListAPIView):
+    serializer_class = ReviewUserSerializer
+
+    def get_queryset(self):
+        oid = self.kwargs['pk']
+        try:
+            print(oid)
+            user_customer = GeneralUser.objects.get(id=oid)
+            print("user_customer",user_customer)
+            print("user_customer.user", user_customer.indirizzo)
+
+        except Exception:
+            raise Exception("Utente recensito non trovato")
+        review = ReviewCustomer.objects.filter(receiver=user_customer.user)
+        print("list(review)", list(review))
+        return list(review)

@@ -28,9 +28,9 @@ class ItemList extends Component {
         );
     }
 
-    componentWillUnmount() {
-        this.willFocusSubscription.remove();
-    }
+    // componentWillUnmount() {
+    //     this.willFocusSubscription.remove();
+    // }
 
     /* FACCIO IL FETCH DELL'UTENTE */
     fetchProfile() {

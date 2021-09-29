@@ -13,6 +13,7 @@ import ShopRegistration from "../Pages/ShopRegistration";
 import {createStackNavigator} from "@react-navigation/stack";
 import UserStackNavigator from "./UserStackNavigator";
 import ItemList from "../Pages/ItemList";
+import provaFetch from "../Pages/provaFetch";
 
 
 export function HomeScreen({ navigation, route }) {
@@ -43,6 +44,7 @@ function DrawerNavigator() {
 
 <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="provaFetch" component={provaFetch} />
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Home2" component={HomeScreen2} />
         <Drawer.Screen name="Login" component={Login} />

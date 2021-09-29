@@ -32,15 +32,8 @@ export default class UserInfoModify extends Component {
             }
     }
 
-    // //La funzione "componentDidMount" viene chiamata dopo che il componente è montato
-    // componentDidMount() {
-    //     this.setState({ isLoading: true }, function () {
-    //
-    //     });
-    //     this.fetchProfilo();
-    // }
-    //
-        componentDidMount() {
+    //La funzione "componentDidMount" viene chiamata dopo che il componente è montato
+    componentDidMount() {
         this.fetchProfilo();
         this.willFocusSubscription = this.props.navigation.addListener(
           'willFocus',
@@ -57,9 +50,9 @@ export default class UserInfoModify extends Component {
 
     // Effettua tutte le necessarie operazioni di pulizia in questo metodo, come la cancellazione di timer,
     // richieste di rete o sottoscrizioni precedentemente create in componentDidMount().
-    componentWillUnmount() {
-        this.willFocusSubscription.remove();
-    }
+    // componentWillUnmount() {
+    //     this.willFocusSubscription.remove();
+    // }
 
    // Vado  a prendere le info del profilo dell'id che ho settato precedentemente
    fetchProfilo() {

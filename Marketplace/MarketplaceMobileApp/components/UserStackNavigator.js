@@ -3,6 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EmptyTemp from "./EmptyTemp";
 import UserInfoModify from "../Pages/UserInfoModify";
+import ChooseUserInfo from "../Pages/ChooseUserInfo";
 
 import HomeStackNavigator from "./HomeStackNavigator";
 
@@ -27,7 +28,7 @@ export default function UserStackNavigator() {
                     }}
         />
 
-        <Tab.Screen component={UserInfoModify}
+        <Tab.Screen component={ChooseUserInfo}
                     name="UserInfo"
                     options={{
                         tabBarIcon: ({color}) => (

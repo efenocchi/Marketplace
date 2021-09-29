@@ -10,4 +10,6 @@ urlpatterns = [
     path('users/register/shopuser/', views.RegisterShopUserFromMobilePhone.as_view(), name='API-registra-negozio'),
     path('users/profile/<int:pk>/', views.UserInfoLogin.as_view(), name='API-user-info'),
     path('users/profile/', views.ModifyInfoLoginUser.as_view(), name='API-user-modify-info'),
+    path('reviews_customer/<int:pk>/', views.ReturnReviewUser.as_view(), name='API-reviews-customer'),
+
 ]
