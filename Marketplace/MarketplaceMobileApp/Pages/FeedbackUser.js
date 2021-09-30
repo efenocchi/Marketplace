@@ -9,19 +9,12 @@ export default class FeedbackUser extends Component{
     // In questa funzione verranno ritornati i feedback che un utente loggato ha ricevuto
     // Non è la funzione che ritorna le recensioni dei prodotti da acquistare
 
-    username = "Ciao"
     array_values;
-    dictionariooo = {
-      key1: "value1",
-      key2: "value2"
-      // etc.
-    };
     constructor(props){
         super(props);
         this.state ={
             isLoading: true,
         }
-
     }
 
     componentDidMount() {
@@ -62,7 +55,7 @@ export default class FeedbackUser extends Component{
            })
            .catch((error) => {
                console.error(error)
-               this.fetchRecensioni();
+               // this.fetchRecensioni();
            });
    }
 
@@ -93,11 +86,6 @@ export default class FeedbackUser extends Component{
         console.log(this.array_values)
         console.log("fine caricamento")
 
-
-        const result = Object.keys(this.state.dataSource).map(key => ({[key]: this.state.dataSource[key]}));
-        // console.log(result);
-        const array = Object.values( this.state.dataSource[0] );
-
         return (
             <View style={styles.screen}>
 
@@ -109,7 +97,7 @@ export default class FeedbackUser extends Component{
                             <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
                         </View>
                         <Text style={styles.title}>
-                            Recensioni di {global.username}
+                            Recensioni Ricevute
                         </Text>
                         <View style={styles.rightcontainer}></View>
                     </View>
@@ -117,20 +105,17 @@ export default class FeedbackUser extends Component{
                 <View style={styles.flatlistview}>
                     <FlatList
                         style={{flex: 1}}
-                        // data={this.state.dataSource}
-                        // data={data2}
-                        // data={this.dictionariooo}
                         // data={[['ciao','ciao2','ciao3'],['risposta1','risposta2']]}
                         data={this.array_values}
 
                         renderItem={({item, index}) =>
                             <Card style={styles.inputContainer}>
                                 <View style={styles.data}>
-                                    <Text style={styles.recensioneTitle} numberOfLines={0}>Titolo: {item[5]}</Text>
-                                    <Text style={styles.recensioneTitle} numberOfLines={1}>Descrizione: {item[0]}</Text>
-                                    <Text style={styles.recensioneTitle} numberOfLines={2}>Ricevuta da: {item[6]}</Text>
+                                    <Text style={styles.feedbackTitle} numberOfLines={0}>Titolo: {item[5]}</Text>
+                                    <Text style={styles.feedbackTitle} numberOfLines={1}>Descrizione: {item[0]}</Text>
+                                    <Text style={styles.feedbackTitle} numberOfLines={2}>Ricevuta da: {item[6]}</Text>
 
-                                    <Text style={styles.recensioneSubtitle}></Text>
+                                    <Text style={styles.feedbackCustomer}></Text>
                                     <View style={styles.textInline}>
                                         <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>Valutazione: </Text>
                                         <Text>{item[3]}</Text>
@@ -180,12 +165,12 @@ const styles = StyleSheet.create({
         minWidth: '96%',
         flexDirection: 'row'
     },
-    recensioneTitle: {
+    feedbackTitle: {
         fontSize: 18,
         fontWeight: 'bold',
         width: width - width / 2.6
     },
-    recensioneSubtitle: {
+    feedbackCustomer: {
         width: width - width / 2.6
     },
     data: {
@@ -201,3 +186,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     }
 });
+

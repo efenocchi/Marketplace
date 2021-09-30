@@ -1,10 +1,14 @@
+import re
+
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
+from items.models import Order, OrderItem, Item
 from review.models import ReviewCustomer
 from users.models import GeneralUser
-from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewUserSerializer
+from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
+    OrderCustomerSerializer, OrderItemSerializer, ItemSerializer
 from .permissions import *
 from django.contrib.auth import logout
 
@@ -96,15 +100,15 @@ class RegisterShopUserFromMobilePhone(generics.RetrieveUpdateAPIView):
         return GeneralUser.objects.get_or_create(user=self.request.user)[0]
 
 
-class ReturnReviewUser(generics.ListAPIView):
-    serializer_class = ReviewUserSerializer
+class ReturnReviewCustomer(generics.ListAPIView):
+    serializer_class = ReviewCustomerSerializer
 
     def get_queryset(self):
         oid = self.kwargs['pk']
         try:
             print(oid)
             user_customer = GeneralUser.objects.get(id=oid)
-            print("user_customer",user_customer)
+            print("user_customer", user_customer)
             print("user_customer.user", user_customer.indirizzo)
 
         except Exception:
@@ -112,3 +116,69 @@ class ReturnReviewUser(generics.ListAPIView):
         review = ReviewCustomer.objects.filter(receiver=user_customer.user)
         print("list(review)", list(review))
         return list(review)
+
+
+class ReturnOrderCustomer(generics.ListAPIView):
+    """
+    Ritorno tutti gli oggetti che ho acquistato
+    """
+    serializer_class = OrderCustomerSerializer
+
+    def get_queryset(self):
+        oid = self.kwargs['pk']
+        try:
+            print(oid)
+            user_customer = GeneralUser.objects.get(id=oid)
+
+        except Exception:
+            raise Exception("Utente recensito non trovato")
+        orders = Order.objects.filter(user=user_customer.user)
+        print("list(review)", list(orders))
+        return list(orders)
+
+
+class ReturnOrderItems(generics.ListAPIView):
+    """
+    L'utente passa tramite url i valori degli order items che desidera visualizzare ed essi gli vengono ritornati
+    """
+    serializer_class = OrderItemSerializer
+
+    def get_queryset(self):
+        order_items_id = self.kwargs['order_items_id'] # Lista degli id degli order items che voglio
+        try:
+            order_items_id = order_items_id.split(',') # da stringa a lista
+            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
+
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        print("list(review)", list(order_items))
+
+        return list(order_items)
+
+
+class ReturnItemsFromOrderItems(generics.ListAPIView):
+    """
+    Ritorno ogni item collegato ad un order items
+    Questa funzione riceve una lista di id di order items
+    """
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        order_items_id = self.kwargs['order_items_id'] # Lista degli id degli order items che voglio
+        items = []
+        try:
+            order_items_id = order_items_id.split(',') # da stringa a lista
+            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
+            for single_item in order_items:
+                item = Item.objects.get(id=single_item.item.id) # prendo gli oggetti dei vari order item
+                items.append(item)
+                print("item", item)
+            print(items)
+
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        print("list(review)", list(order_items))
+
+        return items

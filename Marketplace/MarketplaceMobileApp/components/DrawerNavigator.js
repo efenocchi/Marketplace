@@ -14,6 +14,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import UserStackNavigator from "./UserStackNavigator";
 import ItemList from "../Pages/ItemList";
 import provaFetch from "../Pages/provaFetch";
+import OrdersPlaced from "../Pages/OrdersPlaced";
 
 
 export function HomeScreen({ navigation, route }) {
@@ -44,9 +45,13 @@ function DrawerNavigator() {
 
 <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
+        {/*Usati solo per prove*/}
         <Drawer.Screen name="provaFetch" component={provaFetch} />
-        <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Home2" component={HomeScreen2} />
+        <Drawer.Screen name="OrdersPlaced" component={OrdersPlaced} />
+
+
+        <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Login" component={Login} />
         <Drawer.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} options={{headerShown: false}}/>
         <Drawer.Screen name="UserStackNavigator" screenOptions={{ gestureEnabled: false }} component={UserStackNavigator} options={{headerShown: false, swipeEnabled: false}}/>

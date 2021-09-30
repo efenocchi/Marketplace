@@ -4,6 +4,8 @@ import {createStackNavigator} from "@react-navigation/stack";
 import UserInfoModify from "./UserInfoModify"
 import OrdersPlaced from "./OrdersPlaced"
 import FeedbackUser from "./FeedbackUser"
+import CheckItemsBought from "./CheckItemsBought"
+import ReadOrLeaveFeedBackItem from "./ReadOrLeaveFeedBackItem"
 
 
 
@@ -15,7 +17,7 @@ export class ChooseUserInfoList extends Component{
             <View>
                 <Button
                 title="Ordini effettuati"
-                // onPress={() => this.props.navigation.navigate('OrdersPlaced')}
+                onPress={() => this.props.navigation.navigate('OrdersPlaced')}
                 />
             </View>
             <View>
@@ -47,10 +49,16 @@ export default class ChooseUserInfo extends Component {
             <Stack.Navigator initialRouteName="ChooseUserInfoList">
                 <Stack.Screen name="ChooseUserInfoList" component={ChooseUserInfoList}/>
                 <Stack.Screen name="UserInfoModify" component={UserInfoModify}/>
-                {/*<Stack.Screen name="OrdersPlaced" component={OrdersPlaced}/>*/}
+                <Stack.Screen name="OrdersPlaced" component={OrdersPlaced}/>
                 <Stack.Screen name="FeedbackUser" component={FeedbackUser}/>
-            </Stack.Navigator>
 
+                {/*Controllo gli oggetti che ho acquistato dopo aver cliccato su un ordine già effettuato
+                Se voglio posso lasciare una recensione a quello che ho acquistato*/}
+                <Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>
+
+                {/*<Stack.Screen name="ReadOrLeaveFeedBackItem" component={ReadOrLeaveFeedBackItem}/>*/}
+
+            </Stack.Navigator>
 
         );
     }

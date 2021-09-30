@@ -55,7 +55,7 @@ def search(request):
         for id_item in indici:
             items_ordered.append(item_searched.get(id=id_item))
 
-    # [mofifica] mettere gli elementi ritornati in base alla distanza (guardare codice vecchio)
+    # [modifica] mettere gli elementi ritornati in base alla distanza (guardare codice vecchio)
 
     print("è una lista", type(items_ordered))
     print("tipo di struttura", type(item_searched))
@@ -484,6 +484,7 @@ def isUser(user):
 @login_required(login_url='/users/login')
 @user_passes_test(isUser)
 def show_distance_shops(request, items_available, ascending=True):
+
     """
     Ordina gli annunci per distanza geografica secondo la selezione fatta dall'utente.
     Il calcolo risultante permette di considerare la distanza tra due punti espressa in km.

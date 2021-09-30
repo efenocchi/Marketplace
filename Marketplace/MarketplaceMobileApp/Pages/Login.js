@@ -39,10 +39,10 @@ export default class Login extends Component {
             console.log("sto stampando l'id dal fetch")
             console.log(global.user_id)
             console.log(global.login_negozio)
-            this.props.navigation.reset({
-            routes: [{ name: "UserStackNavigator" }]
-            });
-            // this.props.navigation.navigate('UserStackNavigator');
+            // this.props.navigation.reset({
+            // routes: [{ name: "UserStackNavigator" }]
+            // });
+            this.props.navigation.navigate('UserStackNavigator');
 
         })
         .catch((error) =>{

@@ -7,6 +7,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
+from items.models import Order, OrderItem, Item
 from review.models import ReviewCustomer
 from users.models import GeneralUser
 from users.views import compute_position
@@ -493,7 +494,7 @@ class CompleteShopUserData(serializers.ModelSerializer):
         return instance
 
 
-class ReviewUserSerializer(serializers.ModelSerializer):
+class ReviewCustomerSerializer(serializers.ModelSerializer):
     writer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
     receiver = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
     order = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
@@ -515,3 +516,32 @@ class ReviewUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(_('Errore: la descrizione può contenere solo lettere, '
                                                'numeri, punti, virgole e spazi.'))
         return data
+
+
+class OrderCustomerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Order
+        fields ='__all__'
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderItem
+        fields ='__all__'
+
+
+# class ItemSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Item
+#         fields ='__all__'
+
+class ItemSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+    class Meta:
+        model = Item
+        fields = "__all__"
+        read_only_fields = ("id",)
+        ordering = ['name']
