@@ -56,7 +56,7 @@ export default class ChooseUserInfo extends Component {
                 Se voglio posso lasciare una recensione a quello che ho acquistato*/}
                 <Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>
 
-                {/*<Stack.Screen name="ReadOrLeaveFeedBackItem" component={ReadOrLeaveFeedBackItem}/>*/}
+                <Stack.Screen name="ReadOrLeaveFeedBackItem" component={ReadOrLeaveFeedBackItem}/>
 
             </Stack.Navigator>
 

@@ -15,4 +15,7 @@ urlpatterns = [
     path('order_items_ref_code/<str:order_items_id>/', views.ReturnOrderItems.as_view(), name='API-orderitems-customer'),
     path('items_from_orderitems/<str:order_items_id>/', views.ReturnItemsFromOrderItems.as_view(), name='API-items-from-orderitemscustomer'),
 
+    path('get_review_item/<str:order_item_id>/<str:item_selected_id>/', views.GetSingleReviewItem.as_view(), name='API-get-review-item-order'),
+    path('leave_review_item/<str:order_item_id>/<str:item_selected_id>/', views.CreateReviewItem.as_view(), name='API-leave-review-item'),
+
 ]

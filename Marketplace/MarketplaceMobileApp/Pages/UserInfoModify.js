@@ -61,15 +61,15 @@ export default class UserInfoModify extends Component {
         .then((response) => response.json())
         .then((responseJson) => {
             this.setState({
-                isLoading: false,
                 username: responseJson.user.username,
+                indirizzo: responseJson.indirizzo,
                 // nome: responseJson.user.first_name,
                 // cognome: responseJson.user.last_name,
                 // email: responseJson.user.email,
                 // sesso: responseJson.sesso,
-                indirizzo: responseJson.indirizzo,
                 citta: responseJson.citta,
                 codice_postale: responseJson.codice_postale,
+                isLoading: false,
 
             // telefono: responseJson.telefono,
             // data_nascita: responseJson.data_nascita,
@@ -81,9 +81,9 @@ export default class UserInfoModify extends Component {
             global.regione = responseJson.regione;
 
 
-             if (global.login_negozio == true) {
-            this.setState({
-                telefono: responseJson.telefono,
+            if (global.login_negozio === true) {
+                this.setState({
+                    telefono: responseJson.telefono,
             }, function(){
 
             });

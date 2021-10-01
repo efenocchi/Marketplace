@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 def show_item_reviewed(request, item_selected_id, order_item_id):
     """
     Se clicco su un oggetto già recensito posso visualizzare la recensione precedentemente lasciata
+    N.B. dato l'order item id, l'order ottenuto sarà sempre uno perchè l'order item è univoco (vedi database da admin)
     :param request:
     :param item_selected_id:
     :param order_item_id:
@@ -65,10 +66,12 @@ def add_review_item(request, item_selected_id, order_item_id):
     review_form = ReviewItemForm(request.POST or None, request.FILES or None, reviewed=False)
 
     if review_form.is_valid():
+
         order = Order.objects.get(items=order_item_id)
         item = Item.objects.get(id=item_selected_id)
         order_item = OrderItem.objects.get(id=order_item_id)
 
+        print(order)
         # # ripulisco il nome dell'oggetto
         # oggetto_scelto = review_form.cleaned_data['order_item']
         # x = oggetto_scelto.find("of")

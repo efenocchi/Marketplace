@@ -90,7 +90,7 @@ export default class OrdersPlaced extends Component{
                             <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
                         </View>
                         <Text style={styles.title}>
-                            Oggetti acquistati
+                            Prenotazioni Effettuate
                         </Text>
                         <View style={styles.rightcontainer}></View>
                     </View>

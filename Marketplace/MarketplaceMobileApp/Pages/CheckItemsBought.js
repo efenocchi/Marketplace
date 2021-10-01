@@ -15,7 +15,6 @@ export default class CheckItemsBought extends Component{
             isLoading1: true,
             isLoading2: true,
         }
-
     }
 
     componentDidMount() {
@@ -34,7 +33,7 @@ export default class CheckItemsBought extends Component{
 
 
     fetchOrderItems() {
-       // Return the order items related with the ref_code clicked before (not all the objects bought)
+       // Return the items related with the order_items (not all the objects bought)
         fetch('http://10.110.215.142:5000/api/order_items_ref_code/' + this.order_items + '/?format=json')
 
            .then((response) => response.json())
@@ -88,7 +87,7 @@ export default class CheckItemsBought extends Component{
            )
        }
 
-           this.array_values = Array(this.state.number_orderitems_and_items).fill().map(() => Array(9).fill())
+           this.array_values = Array(this.state.number_orderitems_and_items).fill().map(() => Array(11).fill())
            for (var i in this.state.dataSourceOrderItems) {
                this.array_values[i][0] = this.state.dataSourceOrderItems[i]["quantity"] // quantità acquistata
                this.array_values[i][1] = this.state.dataSourceOrderItems[i]["review_item_done"]  // dice se l'oggetto è stato recensito da questo utente relativo a questo ordine
@@ -99,6 +98,9 @@ export default class CheckItemsBought extends Component{
                this.array_values[i][6] = this.state.dataSourceItems[i]["price"]
                this.array_values[i][7] = this.state.dataSourceItems[i]["discount_price"]
                this.array_values[i][8] = this.state.dataSourceItems[i]["image"] // Immagine dell'oggetto
+               this.array_values[i][9] = this.state.dataSourceOrderItems[i]["id"] // id order items, mi serve nella prossima pagina
+               this.array_values[i][10] = this.state.dataSourceItems[i]["id"] // id item to review
+
            }
            console.log("Stampo il primo")
            console.log(this.array_values)
@@ -127,7 +129,7 @@ export default class CheckItemsBought extends Component{
 
                            renderItem={({item, index}) =>
                             <TouchableOpacity key={item.id} onPress={() => this.props.navigation.navigate('ReadOrLeaveFeedBackItem',
-                                {review_left: item[1]})}>
+                                {review_left: item[1], id_order_item: item[9], id_item:item[10]})}>
                                <Card style={styles.inputContainer}>
 
                                    <View style={styles.data}>

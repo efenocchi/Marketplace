@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from items.models import Order, OrderItem, Item
-from review.models import ReviewCustomer
+from review.models import ReviewCustomer, ReviewItem
 from users.models import GeneralUser
 from users.views import compute_position
 
@@ -70,14 +70,14 @@ class UserSerializer(serializers.ModelSerializer):
                     _('Errore: la conferma password deve avere lunghezza fra 3 e 20 caratteri.'))
             return data
 
-        def validate_first_name(self,data):
+        def validate_first_name(self, data):
             if not re.match("^[A-Za-z 'èòàùì]+$", data):
                 raise serializers.ValidationError(_('Errore: il nome può contenere solo lettere.'))
             if not (1 <= len(data) <= 30):
                 raise ValidationError(_('Errore: il nome deve avere lunghezza fra 1 e 30 caratteri.'))
             return data
 
-        def validate_last_name(self,data):
+        def validate_last_name(self, data):
             # controllo cognome
             if not re.match("^[A-Za-z 'èòàùì]+$", data):
                 raise serializers.ValidationError(_('Errore: il cognome può contenere solo lettere.'))
@@ -85,12 +85,11 @@ class UserSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(_('Errore: il cognome deve avere lunghezza fra 1 e 30 caratteri.'))
             return data
 
-        def validate_email(self,data):
+        def validate_email(self, data):
             # controllo email
             if not (5 <= len(data) <= 50):
                 raise serializers.ValidationError(_('Errore: la mail deve essere compresa gra 5 e 50 caratteri.'))
             return data
-
 
 
 class CompleteShopData(serializers.ModelSerializer):
@@ -146,7 +145,7 @@ class CompleteUserData(serializers.ModelSerializer):
                   # "media_voti",
                   ]
 
-    def validate_indirizzo(self,data):
+    def validate_indirizzo(self, data):
         # controllo indirizzo
         if not re.match("^[A-Za-z0-9/ 'èòàùì]+$", data):
             raise serializers.ValidationError(
@@ -176,7 +175,7 @@ class CompleteUserData(serializers.ModelSerializer):
                 _('Errore: il telefono deve avere lunghezza fra 3 e 30 caratteri.'))
         return data
 
-    def validate_foto_profilo(self,data):
+    def validate_foto_profilo(self, data):
         files = data
 
         if files is not None:
@@ -229,16 +228,16 @@ class CompleteUserData(serializers.ModelSerializer):
         # instance.user.email = dati_utente['email']
 
         instance.indirizzo = validated_data['indirizzo']
-        instance.citta =  validated_data['citta']
-        instance.regione =  validated_data['regione']
-        instance.provincia =  validated_data['provincia']
+        instance.citta = validated_data['citta']
+        instance.regione = validated_data['regione']
+        instance.provincia = validated_data['provincia']
         # instance.descrizione = validated_data['descrizione']
 
         if not utente_richiedente.login_negozio:
             instance.login_negozio = False
 
         else:
-            instance.pet_sitter=True
+            instance.pet_sitter = True
             instance.telefono = validated_data['telefono']
 
         instance.user.save()
@@ -372,7 +371,7 @@ class CompleteNormalUserData(serializers.ModelSerializer):
         instance.provincia = validated_data['provincia']
         instance.login_negozio = False
         instance.codice_postale = validated_data['codice_postale']
-        instance.stato = 'Italia' # [modifica] in un secondo momento andrà scelto dall'utente
+        instance.stato = 'Italia'  # [modifica] in un secondo momento andrà scelto dall'utente
         # instance.telefono =validated_data['telefono']
         # instance.eta = validated_data['eta']
         # instance.caratteristiche = validated_data['caratteristiche']
@@ -480,8 +479,8 @@ class CompleteShopUserData(serializers.ModelSerializer):
         instance.provincia = validated_data['provincia']
         instance.login_negozio = True
         instance.codice_postale = validated_data['codice_postale']
-        instance.stato = 'Italia' # [modifica] in un secondo momento andrà scelto dall'utente
-        instance.telefono =validated_data['telefono']
+        instance.stato = 'Italia'  # [modifica] in un secondo momento andrà scelto dall'utente
+        instance.telefono = validated_data['telefono']
         # instance.eta = validated_data['eta']
         # instance.caratteristiche = validated_data['caratteristiche']
         instance.user.save()
@@ -501,7 +500,7 @@ class ReviewCustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReviewCustomer
-        fields ='__all__'
+        fields = '__all__'
 
     def validate_title_of_comment(self, data):
         if not re.match("^[A-Za-z0-9 .,'èòàùì]+$", data):
@@ -514,22 +513,20 @@ class ReviewCustomerSerializer(serializers.ModelSerializer):
         # controllo descrizione
         if not re.match("^[A-Za-z0-9 ,.'èòàùì]+$", data):
             raise serializers.ValidationError(_('Errore: la descrizione può contenere solo lettere, '
-                                               'numeri, punti, virgole e spazi.'))
+                                                'numeri, punti, virgole e spazi.'))
         return data
 
 
 class OrderCustomerSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Order
-        fields ='__all__'
+        fields = '__all__'
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = OrderItem
-        fields ='__all__'
+        fields = '__all__'
 
 
 # class ItemSerializer(serializers.ModelSerializer):
@@ -540,8 +537,19 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
+
     class Meta:
         model = Item
         fields = "__all__"
         read_only_fields = ("id",)
         ordering = ['name']
+
+
+class ReviewItemSerializer(serializers.ModelSerializer):
+    writer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    order = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    item = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+
+    class Meta:
+        model = ReviewItem
+        fields = "__all__"

@@ -5,10 +5,10 @@ from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
 from items.models import Order, OrderItem, Item
-from review.models import ReviewCustomer
+from review.models import ReviewCustomer, ReviewItem
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
-    OrderCustomerSerializer, OrderItemSerializer, ItemSerializer
+    OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer
 from .permissions import *
 from django.contrib.auth import logout
 
@@ -144,10 +144,10 @@ class ReturnOrderItems(generics.ListAPIView):
     serializer_class = OrderItemSerializer
 
     def get_queryset(self):
-        order_items_id = self.kwargs['order_items_id'] # Lista degli id degli order items che voglio
+        order_items_id = self.kwargs['order_items_id']  # Lista degli id degli order items che voglio
         try:
-            order_items_id = order_items_id.split(',') # da stringa a lista
-            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
+            order_items_id = order_items_id.split(',')  # da stringa a lista
+            order_items = OrderItem.objects.filter(id__in=order_items_id)  # take the items order
 
         except Exception:
             raise Exception("Oggetto non trovato")
@@ -182,3 +182,59 @@ class ReturnItemsFromOrderItems(generics.ListAPIView):
         print("list(review)", list(order_items))
 
         return items
+
+
+class GetSingleReviewItem(generics.RetrieveUpdateAPIView):
+    """
+    Return the review that an user has already left to one item.
+    If the user hasn't already left the review the review will be left.
+    """
+    permission_classes = [IsSameUser, IsUserLogged]
+    serializer_class = ReviewItemSerializer
+
+    def get_object(self):
+        order_item_id = self.kwargs['order_item_id']
+        item_selected_id = self.kwargs['item_selected_id']
+        try:
+            order = Order.objects.get(items=order_item_id)
+        except Exception:
+            raise Exception("Ordine non trovato")
+        try:
+            item = Item.objects.get(id=item_selected_id)
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        return ReviewItem.objects.get(writer=self.request.user, item=item, order=order)
+
+
+class CreateReviewItem(generics.CreateAPIView):
+    """
+    Create a review for the selected item
+    """
+    permission_classes = [IsUserLogged]
+    serializer_class = ReviewItemSerializer
+
+    def perform_create(self, serializer):
+        order_item_id = self.kwargs['order_item_id']
+        item_selected_id = self.kwargs['item_selected_id']
+
+        try:
+            order = Order.objects.get(items=order_item_id)
+        except Exception:
+            raise Exception("Ordine non trovato")
+        try:
+            item = Item.objects.get(id=item_selected_id)
+        except Exception:
+            raise Exception("Oggetto non trovato")
+        try:
+            order_item = OrderItem.objects.get(id=order_item_id)
+        except Exception:
+            raise Exception("Singolo ordine non trovato")
+
+        if order_item.review_item_done:
+            raise PermissionDenied("hai già recensito l'oggetto")
+
+        order_item.review_item_done = True
+        order_item.save()
+
+        serializer.save(writer=self.request.user, order=order, item=item)

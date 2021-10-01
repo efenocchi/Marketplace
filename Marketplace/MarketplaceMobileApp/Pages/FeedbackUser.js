@@ -18,7 +18,7 @@ export default class FeedbackUser extends Component{
     }
 
     componentDidMount() {
-        this.fetchRecensioni();
+        // this.fetchRecensioni();
         this.willFocusSubscription = this.props.navigation.addListener(
           'willFocus',
           () => {
