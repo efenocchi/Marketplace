@@ -1,39 +1,28 @@
 import React, {Component} from 'react';
 import {
-    ActivityIndicator,
     Dimensions,
     FlatList,
     Image,
     Text,
     View,
-    StyleSheet,
-    YellowBox
+    StyleSheet, ActivityIndicator,
 } from "react-native";
-import CardItem from "../components/CardItem";
-import CustomHeader from "../components/Header";
-import {IconButton} from "react-native-paper";
 import Card from "../components/Card";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import {NavigationActions as navigation} from "react-navigation";
-import {useNavigation} from "@react-navigation/native";
-import Button from "../components/Button";
-import SearchBar from "react-native-dynamic-search-bar";
 
 const {width, height} = Dimensions.get('window');
 
-class ItemList extends Component {
+class ShopItemList extends Component {
     constructor(props){
         super(props);
         this.state ={
             isLoading: true,
-            show_pickers: true,
-            //search: ""
+            show_pickers: true
         }
     }
 
     componentDidMount() {
-        this.fetchAllItems();
+        this.fetchShopItems();
         this.willFocusSubscription = this.props.navigation.addListener(
           'willFocus',
           () => {
@@ -42,35 +31,51 @@ class ItemList extends Component {
             }, function(){
 
             });
-            this.fetchAllItems();
+            this.fetchShopItems();
           }
         );
     }
-    //
+
     // componentWillUnmount() {
     // this.willFocusSubscription.remove();
     // }
 
-    fetchAllItems() {
-            return fetch('http://10.110.215.142:5000/api/items/list_all_items/?format=json')
+    fetchShopItems() {
+            return fetch('http://10.110.215.142:5000/api/items/' + global.user_id + '/shop_all_items/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
 
             this.setState({
-                isLoading: false,
                 dataSource: responseJson.results,
-                all_items: responseJson.count
+                shop_items: responseJson.count,
+                isLoading: false
             }, function(){
                 console.log(responseJson.results)
             });
             })
+
             .catch((error) =>{
             });
         }
 
     render() {
-        this.array_values = Array(this.state.all_items).fill().map(()=>Array(8).fill())
+        if(this.state.isLoading){
+            return(
+                <View style={{flex: 1, paddingTop: height / 2}}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
+
+       else if(this.state.number_items === 0){
+           return(
+              <View style={{flex: 1, paddingTop: height / 2}}>
+                   <ActivityIndicator/>
+               </View>
+           )
+       }
+        this.array_values = Array(this.state.shop_items).fill().map(()=>Array(6).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["id"]
             this.array_values[i][1] = this.state.dataSource[i]["name"]
@@ -78,58 +83,27 @@ class ItemList extends Component {
             this.array_values[i][3] = this.state.dataSource[i]["price"]
             this.array_values[i][4] = this.state.dataSource[i]["discount_price"]
             this.array_values[i][5] = this.state.dataSource[i]["image"]
-            this.array_values[i][6] = this.state.dataSource[i]["user"]["username"]
-            this.array_values[i][7] = this.state.dataSource[i]["user"]["id"]
         }
         return(
-
-
             <View style={styles.page}>
-                <SearchBar style={styles.searchbar}
-                    onPressToFocus
-                    autoFocus={false}
-                    fontColor="#c6c6c6"
-                    iconColor="#c6c6c6"
-                    shadowColor="#282828"
-                    cancelIconColor="#c6c6c6"
-                    backgroundColor="#36485f"
-                    placeholder="Search Item"
-                    width="88%"
-                    activeOpacity={.9}
-                    onChangeText={text => {
-                        this.fetchSearchItem(text);
-                    }}
-                    onPressCancel={() => {
-                        console.log("cancel");
-                    }}
-                />
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
                             <Card style={styles.card}>
                                 <Pressable style={styles.pressable} onPress={() => {
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
-                                    this.props.navigation.navigate('ItemDetailPage',
-                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4] })
-                                    ;}}>
+                                    this.props.navigation.navigate('ItemDetailPage',{id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4] });}}>
                                     <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
                                         <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
                                         <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Descrizione: {item[2]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[6]}</Text>
+                                        <Text style={styles.description} numberOfLines={3}>Descrizione: {item[2]}</Text>
                                         <Text style={styles.discountprice}>
                                           DiscountPrice: {item[4]}
                                           {
                                             <Text style={styles.price}>Price:  {item[3]}</Text>
                                           }
                                         </Text>
-                                        <Button
-                                            text={'Visita il Negozio'}
-                                            onPress={() => {console.warn('ShowShop')
-                                            this.props.navigation.navigate('ShowShop',{id_shop: item[7]});
-                                            }}
-                                        />
                                     </View>
                                 </Pressable>
                             </Card>
@@ -143,7 +117,7 @@ class ItemList extends Component {
 }
 const styles = StyleSheet.create({
   page: {
-    marginTop: -35, //10
+    marginTop: 10,
     backgroundColor: 'blue',
 
   },
@@ -164,7 +138,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
 
   },
-
   pressable: {
       flexDirection: 'row',
       borderWidth: 1,
@@ -177,60 +150,39 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-
   image: {
     flex: 2,
     height: 150,
     resizeMode: 'contain',
   },
-
   rightContainer: {
     padding: 10,
     flex: 3,
     backgroundColor: 'white',
   },
-
   title: {
     fontSize: 18,
   },
-
   price: {
     fontSize: 12,
     fontWeight: 'normal',
     textDecorationLine: 'line-through',
   },
-
   discountprice: {
     fontSize: 18,
     fontWeight: 'bold',
   },
-
   ratingsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 5,
   },
-
-  button_small: {
-    fontSize: 16,
-    backgroundColor: '#e47911',
-    marginVertical: 10,
-    height: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#a15e1b',
-
-  },
-
   star: {
     margin: 2,
   },
-
   quantityContainer: {
     margin: 5,
   }
 })
 
-export default ItemList;
+export default ShopItemList;

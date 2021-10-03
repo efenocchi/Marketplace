@@ -5,12 +5,76 @@ from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
 from items.models import Order, OrderItem, Item
-from review.models import ReviewCustomer, ReviewItem
+from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
-    OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer
+    OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer, ReviewShopSerializer
 from .permissions import *
 from django.contrib.auth import logout
+from rest_framework.views import APIView
+
+
+def foundOrdersFromCustomer(request):
+    """
+    Mostro gli ordini che sono stati effettutati dagli utenti e per ogni ordine posso dare un feedback all'utente
+    :param request:
+    :return:
+    """
+    # oggetti venduti dal negozio
+    dict = {}
+    # orders = Order.objects.filter(items=OrderItem.objects.filter(Item.objects.filter(user=request.user)))
+
+    items = Item.objects.filter(user=request.user)
+    print("tutti gli oggetti di " + request.user.username + " sono: ", items)
+    for single_item in items:
+        order_items = OrderItem.objects.filter(item=single_item)
+        print("per l'oggetto: " + single_item.name + " abbiamo i seguenti ordini: ", order_items)
+        for single_order_item in order_items:
+            orders = Order.objects.filter(items=single_order_item)
+            # if single_order_item.order_set.filter(pk=single_order_item.pk):
+            print("ecco gli ordini")
+            for single_order in orders:
+                print(single_order.ref_code)
+                list = []
+
+                if dict.get(single_order.ref_code) is not None:
+                    list = dict[single_order.ref_code]
+                    # list[0].append(dict[single_order.ref_code])
+                    list.append(single_order_item)
+                    dict.update({str(single_order.ref_code): list})
+                    print("tipo dict ", type(dict))
+                    print("cosa c'è nel dizionario", dict)
+                    stringa = single_order.ref_code
+                    print("tipo stringa ", type(stringa))
+                    print("eccoci qua", dict[stringa])
+                else:
+                    # come primo elemento metto l'order che mi servirà nel file html
+                    # gli elementi successivi sono invece i single_order
+                    list.append(single_order)
+                    list.append(single_order_item)
+                    dict.update({str(single_order.ref_code): list})
+    return dict
+
+
+class ReturnTimeUserShop(APIView):
+    """
+    Ritorna il valore di tempo che ci vuole dall'utente al negozio
+    """
+    ...
+
+
+class ReturnReviewShop(generics.ListAPIView):
+    """
+    Ritorna tutte le recensioni che un negozio ha ricevuto
+    """
+    serializer_class = ReviewShopSerializer
+
+    def get_queryset(self):
+        id_shop = self.kwargs['id_shop']
+        shop = GeneralUser.objects.get(user=id_shop)
+        review = ReviewShop.objects.filter(receiver=shop.user)
+
+        return list(review)
 
 
 class UserInfoLogin(generics.RetrieveAPIView):
@@ -100,6 +164,74 @@ class RegisterShopUserFromMobilePhone(generics.RetrieveUpdateAPIView):
         return GeneralUser.objects.get_or_create(user=self.request.user)[0]
 
 
+# Da Vale
+class ListAllItems(generics.ListAPIView):
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        print(Item.objects.all().order_by('name'))
+        queryset = Item.objects.all().order_by('name')
+        lista_query = list(queryset)
+        print(lista_query)
+        return lista_query
+
+
+class ShopAllItems(generics.ListAPIView):
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        id = self.kwargs['pk']
+        queryset = Item.objects.filter(user__id=id)
+        lista_query = list(queryset)
+        print(lista_query)
+        return lista_query
+
+
+class CartOrders(generics.ListAPIView):
+    serializer_class = OrderItemSerializer
+
+    def get_queryset(self):
+        id = self.kwargs['pk']
+        queryset = OrderItem.objects.filter(user__id=id, ordered=False)
+        lista_query = list(queryset)
+        print(lista_query)
+        return lista_query
+
+
+class IdItemsFromOrderItems(generics.ListAPIView):
+    """
+    Ritorno ogni item collegato ad un order items
+    Questa funzione riceve una lista di id di order items
+    """
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        id = self.kwargs['pk']  #prendo id dell'utente di cui voglio sapere gli order items
+        order_items = OrderItem.objects.filter(user__id=id, ordered=False)  #prendo i suoi order_items
+        order_items_id = []
+        items = []
+        print(order_items)
+        for i in order_items:    #scorro gli order_items e li metto in order_items_id
+            order_items_id.append(i.id)
+        print(order_items_id)
+        try:
+            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
+            for single_item in order_items:
+                item = Item.objects.get(id=single_item.item.id) # prendo gli item dei vari order item
+                items.append(item)
+                print("item", item)
+            print(items)
+
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        print("list(review)", list(order_items))
+
+        return items
+
+# Fine Da Vale
+
+
 class ReturnReviewCustomer(generics.ListAPIView):
     serializer_class = ReviewCustomerSerializer
 
@@ -137,6 +269,32 @@ class ReturnOrderCustomer(generics.ListAPIView):
         return list(orders)
 
 
+class ReturnOrderDoneByCustomer(generics.ListAPIView):
+    """
+    Ritorno tutti gli ordini che sono stati fatti presso il mio negozio
+    N.B. lo stesso ref_code contiene è relativo anche a oggetti acquistati in altri negozi,
+    saranno quindi filtrati
+    """
+    permission_classes = [IsSameUser, IsUserLogged]
+    serializer_class = OrderCustomerSerializer
+
+    def get_queryset(self):
+        dict_order_orderitems = foundOrdersFromCustomer(self.request)
+        list_order = []
+        print ("inizio")
+        print(dict_order_orderitems)
+        try:
+            for single_row in dict_order_orderitems:
+
+                print(type(dict_order_orderitems[single_row][0]))
+                list_order.append(dict_order_orderitems[single_row][0])  # single_row[0]: ref_code, single_row[1]: order
+
+        except Exception:
+            raise Exception("Riscontrato errore")
+        print("list_order", list_order)
+        return list_order
+
+
 class ReturnOrderItems(generics.ListAPIView):
     """
     L'utente passa tramite url i valori degli order items che desidera visualizzare ed essi gli vengono ritornati
@@ -155,6 +313,34 @@ class ReturnOrderItems(generics.ListAPIView):
         print("list(review)", list(order_items))
 
         return list(order_items)
+
+
+class ReturnItemsBooked(generics.ListAPIView):
+    """
+    Ritorno gli item che sono stati prenotati presso un negozio
+    N.B. Dati gli order item ricevuti filtro solo quelli relativi al negozio che invoca la funzione
+    """
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        order_items_id = self.kwargs['order_items_id']  # Lista degli id degli order items che voglio
+        items = []
+        try:
+            order_items_id = order_items_id.split(',')  # da stringa a lista
+            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
+            for single_item in order_items:
+                item = Item.objects.get(id=single_item.item.id) # prendo gli oggetti dei vari order item
+                if item.user == self.request.user:  # Filtro gli items
+                    items.append(item)
+                    print("item", item)
+            print(items)
+
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        print("list(review)", list(order_items))
+
+        return items
 
 
 class ReturnItemsFromOrderItems(generics.ListAPIView):
@@ -187,7 +373,7 @@ class ReturnItemsFromOrderItems(generics.ListAPIView):
 class GetSingleReviewItem(generics.RetrieveUpdateAPIView):
     """
     Return the review that an user has already left to one item.
-    If the user hasn't already left the review the review will be left.
+    If the user hasn't already left the review can be left.
     """
     permission_classes = [IsSameUser, IsUserLogged]
     serializer_class = ReviewItemSerializer
@@ -205,6 +391,24 @@ class GetSingleReviewItem(generics.RetrieveUpdateAPIView):
             raise Exception("Oggetto non trovato")
 
         return ReviewItem.objects.get(writer=self.request.user, item=item, order=order)
+
+
+class GetSingleReviewShop(generics.RetrieveUpdateAPIView):
+    """
+    Return the review that the user logged has already left to the shop.
+    If the user hasn't already left the review can be left.
+    """
+    permission_classes = [IsSameUser, IsUserLogged]
+    serializer_class = ReviewShopSerializer
+
+    def get_object(self):
+        id_shop = self.kwargs['id_shop']
+        try:
+            receiver = GeneralUser.objects.get(id=id_shop)
+        except Exception:
+            raise Exception("Negozio non valido")
+
+        return ReviewShop.objects.get(writer=self.request.user, receiver=receiver.user)
 
 
 class CreateReviewItem(generics.CreateAPIView):
@@ -238,3 +442,21 @@ class CreateReviewItem(generics.CreateAPIView):
         order_item.save()
 
         serializer.save(writer=self.request.user, order=order, item=item)
+
+
+class CreateReviewForShop(generics.CreateAPIView):
+    """
+    Create a review for the selected shop, made by the logged user
+    """
+    permission_classes = [IsUserLogged]
+    serializer_class = ReviewShopSerializer
+
+    def perform_create(self, serializer):
+        id_shop = self.kwargs['id_shop']
+
+        try:
+            shop = GeneralUser.objects.get(id=id_shop)
+        except Exception:
+            raise Exception("Negozio non valido")
+
+        serializer.save(writer=self.request.user, receiver=shop.user)

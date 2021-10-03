@@ -2,38 +2,35 @@ import React, { Component, useContext } from 'react';
 import {Button, SafeAreaView, View, StyleSheet} from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
 import UserInfoModify from "./UserInfoModify"
-import OrdersPlaced from "./OrdersPlaced"
-import FeedbackUser from "./FeedbackUser"
-import CheckItemsBought from "./CheckItemsBought"
-import ReadOrLeaveFeedbackItem from "./ReadOrLeaveFeedbackItem"
+import OrdersReceived from "./OrdersReceived"
+import CheckReservationMade from "./CheckReservationMade"
 
 
-
-export class ChooseUserInfoList extends Component{
+// Serve solo per visualizzare i bottoni con i quali si andrà nelle varie schermate
+export class ChooseShopInfoList extends Component{
     render(){
         return(
 
             <SafeAreaView style={styles.container}>
             <View>
                 <Button
-                title="Ordini effettuati"
-                onPress={() => this.props.navigation.navigate('OrdersPlaced')}
+                title="Ordini ricevuti"
+                onPress={() => this.props.navigation.navigate('OrdersReceived')}
                 />
             </View>
             <View>
                 <Button
-                title="Recensioni ricevute"
-                onPress={() => this.props.navigation.navigate('FeedbackUser')}
+                title="Valutazione negozio" //posso visualizzare le recensioni che mi hanno lasciato
+                // onPress={() => this.props.navigation.navigate('FeedbackShop')}
                 />
             </View>
             <View>
                 <Button
-                title="Modifica informazioni utente"
+                title="Modifica informazioni profilo"
                 onPress={() => this.props.navigation.navigate('UserInfoModify')}
                 />
             </View>
             </SafeAreaView>
-
 
         );
 
@@ -46,17 +43,17 @@ export default class ChooseUserInfo extends Component {
     render(){
         return(
 
-            <Stack.Navigator initialRouteName="ChooseUserInfoList">
-                <Stack.Screen name="ChooseUserInfoList" component={ChooseUserInfoList}/>
+            <Stack.Navigator initialRouteName="ChooseShopInfoList">
+                <Stack.Screen name="ChooseShopInfoList" component={ChooseShopInfoList}/>
                 <Stack.Screen name="UserInfoModify" component={UserInfoModify}/>
-                <Stack.Screen name="OrdersPlaced" component={OrdersPlaced}/>
-                <Stack.Screen name="FeedbackUser" component={FeedbackUser}/>
+                <Stack.Screen name="OrdersReceived" component={OrdersReceived}/>
+                <Stack.Screen name="CheckReservationMade" component={CheckReservationMade}/>
 
-                {/*Controllo gli oggetti che ho acquistato dopo aver cliccato su un ordine già effettuato
-                Se voglio posso lasciare una recensione a quello che ho acquistato*/}
-                <Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>
+                {/*<Stack.Screen name="FeedbackShop" component={FeedbackShop}/>*/}
 
-                <Stack.Screen name="ReadOrLeaveFeedbackItem" component={ReadOrLeaveFeedbackItem}/>
+                {/*<Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>*/}
+
+                {/*<Stack.Screen name="ReadOrLeaveFeedBackToCustomer" component={ReadOrLeaveFeedbackItem}/>*/}
 
             </Stack.Navigator>
 

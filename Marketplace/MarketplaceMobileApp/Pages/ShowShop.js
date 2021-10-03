@@ -22,43 +22,40 @@ import SearchBar from "react-native-dynamic-search-bar";
 
 const {width, height} = Dimensions.get('window');
 
-class ItemList extends Component {
+export default class ShowShop extends Component {
+    id_shop;
     constructor(props){
         super(props);
         this.state ={
-            isLoading: true,
+            isLoading1: true,
+            isLoading2: true,
             show_pickers: true,
             //search: ""
         }
     }
 
     componentDidMount() {
-        this.fetchAllItems();
-        this.willFocusSubscription = this.props.navigation.addListener(
-          'willFocus',
-          () => {
+        this.id_shop = this.props.route.params.id_shop;
+
+        Promise.all([
+            // this.fetchTime(),
+            this.fetchAllItems()
+        ]).then(([urlOneData, urlTwoData]) => {
             this.setState({
-                isLoading: true,
-            }, function(){
-
+                // mergedData: urlOneData.concat(urlTwoData)
             });
-            this.fetchAllItems();
-          }
-        );
-    }
-    //
-    // componentWillUnmount() {
-    // this.willFocusSubscription.remove();
-    // }
+        })
 
-    fetchAllItems() {
-            return fetch('http://10.110.215.142:5000/api/items/list_all_items/?format=json')
+    }
+
+    fetchTime(){
+         return fetch('http://10.110.215.142:5000/api/items/' + this.id_shop + '/shop_all_items/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
 
             this.setState({
-                isLoading: false,
+                isLoading2: false,
                 dataSource: responseJson.results,
                 all_items: responseJson.count
             }, function(){
@@ -67,10 +64,29 @@ class ItemList extends Component {
             })
             .catch((error) =>{
             });
-        }
+    }
+
+
+    fetchAllItems() {
+            return fetch('http://10.110.215.142:5000/api/items/' + this.id_shop + '/shop_all_items/?format=json')
+
+            .then((response) => response.json())
+            .then((responseJson) => {
+
+            this.setState({
+                isLoading1: false,
+                dataSource: responseJson.results,
+                all_items: responseJson.count
+            }, function(){
+                console.log(responseJson.results)
+            });
+            })
+            .catch((error) =>{
+            });
+    }
 
     render() {
-        this.array_values = Array(this.state.all_items).fill().map(()=>Array(8).fill())
+        this.array_values = Array(this.state.all_items).fill().map(()=>Array(7).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["id"]
             this.array_values[i][1] = this.state.dataSource[i]["name"]
@@ -79,7 +95,6 @@ class ItemList extends Component {
             this.array_values[i][4] = this.state.dataSource[i]["discount_price"]
             this.array_values[i][5] = this.state.dataSource[i]["image"]
             this.array_values[i][6] = this.state.dataSource[i]["user"]["username"]
-            this.array_values[i][7] = this.state.dataSource[i]["user"]["id"]
         }
         return(
 
@@ -103,6 +118,18 @@ class ItemList extends Component {
                         console.log("cancel");
                     }}
                 />
+                    <Button
+                        text={'Mostra distanza'}
+                        onPress={() => {console.warn('Mostra distanza')
+                        // this.props.navigation.navigate('ShowShop',{id_shop: item[7]});
+                        }}
+                    />
+                    <Button
+                        text={'Recensioni'}
+                        onPress={() => {
+                        this.props.navigation.navigate('LeaveShowReviewShop',{id_shop: this.id_shop});
+                        }}
+                    />
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
@@ -117,19 +144,13 @@ class ItemList extends Component {
                                         <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
                                         <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
                                         <Text style={styles.description} numberOfLines={2}>Descrizione: {item[2]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[6]}</Text>
                                         <Text style={styles.discountprice}>
                                           DiscountPrice: {item[4]}
                                           {
                                             <Text style={styles.price}>Price:  {item[3]}</Text>
                                           }
                                         </Text>
-                                        <Button
-                                            text={'Visita il Negozio'}
-                                            onPress={() => {console.warn('ShowShop')
-                                            this.props.navigation.navigate('ShowShop',{id_shop: item[7]});
-                                            }}
-                                        />
+
                                     </View>
                                 </Pressable>
                             </Card>
@@ -233,4 +254,3 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ItemList;

@@ -22,10 +22,12 @@ import SearchBar from "react-native-dynamic-search-bar";
 
 const {width, height} = Dimensions.get('window');
 
-class ItemList extends Component {
+export default class LeaveShowReviewShop extends Component {
+    id_shop;
+    review_done;
     constructor(props){
         super(props);
-        this.state ={
+        this.state = {
             isLoading: true,
             show_pickers: true,
             //search: ""
@@ -33,6 +35,7 @@ class ItemList extends Component {
     }
 
     componentDidMount() {
+        this.id_shop = this.props.route.params.id_shop;
         this.fetchAllItems();
         this.willFocusSubscription = this.props.navigation.addListener(
           'willFocus',
@@ -46,13 +49,10 @@ class ItemList extends Component {
           }
         );
     }
-    //
-    // componentWillUnmount() {
-    // this.willFocusSubscription.remove();
-    // }
+
 
     fetchAllItems() {
-            return fetch('http://10.110.215.142:5000/api/items/list_all_items/?format=json')
+            return fetch('http://10.110.215.142:5000/api/review_shop/' + this.id_shop + '/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
@@ -60,7 +60,7 @@ class ItemList extends Component {
             this.setState({
                 isLoading: false,
                 dataSource: responseJson.results,
-                all_items: responseJson.count
+                all_reviews: responseJson.count // number of review
             }, function(){
                 console.log(responseJson.results)
             });
@@ -70,19 +70,28 @@ class ItemList extends Component {
         }
 
     render() {
-        this.array_values = Array(this.state.all_items).fill().map(()=>Array(8).fill())
-        for (var i in this.state.dataSource) {
-            this.array_values[i][0] = this.state.dataSource[i]["id"]
-            this.array_values[i][1] = this.state.dataSource[i]["name"]
-            this.array_values[i][2] = this.state.dataSource[i]["description"]
-            this.array_values[i][3] = this.state.dataSource[i]["price"]
-            this.array_values[i][4] = this.state.dataSource[i]["discount_price"]
-            this.array_values[i][5] = this.state.dataSource[i]["image"]
-            this.array_values[i][6] = this.state.dataSource[i]["user"]["username"]
-            this.array_values[i][7] = this.state.dataSource[i]["user"]["id"]
-        }
-        return(
 
+        if(this.state.isLoading){
+            return(
+                <View style={{flex: 1, paddingTop: height / 2}}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
+
+        this.array_values = Array(this.state.all_reviews).fill().map(()=>Array(7).fill())
+        this.review_done = false
+        for (var i in this.state.dataSource) {
+            this.array_values[i][0] = this.state.dataSource[i]["title_of_comment"]
+            this.array_values[i][1] = this.state.dataSource[i]["description"]
+            this.array_values[i][2] = this.state.dataSource[i]["rating"]
+            this.array_values[i][3] = this.state.dataSource[i]["writer"]
+            if (this.array_values[i][3] === global.username){
+                this.review_done = true
+            }
+        }
+
+        return(
 
             <View style={styles.page}>
                 <SearchBar style={styles.searchbar}
@@ -103,35 +112,43 @@ class ItemList extends Component {
                         console.log("cancel");
                     }}
                 />
+                    {this.review_done === false && (
+                       <Button
+                        text={'Lascia una recensione'}
+                        onPress={() => {
+                            // console.warn('ShowShop')
+                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{id_shop: this.id_shop, review_left: this.review_done});
+                        }}
+                    />
+                   )}
+                    {this.review_done === true && (
+                        <Button
+                        text={'Mostra recensione lasciata'}
+                        onPress={() => {
+                            // console.warn('ShowShop')
+                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{id_shop: this.id_shop, review_left: this.review_done});
+                        }}
+                        />
+                    )}
+
+                    <Button
+                        text={'Valutazione media'}
+                        onPress={() => {console.warn('ShowShop')
+                        // this.props.navigation.navigate('',{id_shop: this.id_shop});
+                        }}
+                    />
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
                             <Card style={styles.card}>
-                                <Pressable style={styles.pressable} onPress={() => {
-                                    //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
-                                    this.props.navigation.navigate('ItemDetailPage',
-                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4] })
-                                    ;}}>
-                                    <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
-                                        <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
-                                        <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Descrizione: {item[2]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[6]}</Text>
-                                        <Text style={styles.discountprice}>
-                                          DiscountPrice: {item[4]}
-                                          {
-                                            <Text style={styles.price}>Price:  {item[3]}</Text>
-                                          }
-                                        </Text>
-                                        <Button
-                                            text={'Visita il Negozio'}
-                                            onPress={() => {console.warn('ShowShop')
-                                            this.props.navigation.navigate('ShowShop',{id_shop: item[7]});
-                                            }}
-                                        />
+                                        <Text style={styles.title} numberOfLines={1}>Titolo: {item[0]}</Text>
+                                        <Text style={styles.title} numberOfLines={1}>Descrizione: {item[1]}</Text>
+                                        <Text style={styles.title} numberOfLines={2}>Scritta da: {item[3]}</Text>
+                                        <Text style={styles.title} numberOfLines={2}>Valutazione: {item[2]}</Text>
+
                                     </View>
-                                </Pressable>
+
                             </Card>
                         }
                         keyExtractor={(item, index) => index.toString()}
@@ -233,4 +250,3 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ItemList;

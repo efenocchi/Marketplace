@@ -185,7 +185,7 @@ def add_review_customer(request, order_id, customer_id):
 
 def show_order_done_by_customer(request):
     """
-    Mostro gli ordini che sono stati effettutati dagli utenti e per ogni ordine posso dare un feedback all'utente
+    Mostro gli ordini che sono stati effettutati dagli utenti in quel negozio e per ogni ordine posso dare un feedback all'utente
     :param request:
     :return:
     """
@@ -194,7 +194,7 @@ def show_order_done_by_customer(request):
     # orders = Order.objects.filter(items=OrderItem.objects.filter(Item.objects.filter(user=request.user)))
 
     items = Item.objects.filter(user=request.user)
-    stringa="ciao"
+
     print("tutti gli oggetti di " + request.user.username + " sono: ", items)
     for single_item in items:
         order_items = OrderItem.objects.filter(item=single_item)

@@ -12,6 +12,7 @@ import NormalUserRegistration from "../Pages/NormalUserRegistration";
 import ShopRegistration from "../Pages/ShopRegistration";
 import {createStackNavigator} from "@react-navigation/stack";
 import UserStackNavigator from "./UserStackNavigator";
+import ShopStackNavigator from "./ShopStackNavigator";
 import ItemList from "../Pages/ItemList";
 import provaFetch from "../Pages/provaFetch";
 import OrdersPlaced from "../Pages/OrdersPlaced";
@@ -55,6 +56,7 @@ function DrawerNavigator() {
         <Drawer.Screen name="Login" component={Login} />
         <Drawer.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} options={{headerShown: false}}/>
         <Drawer.Screen name="UserStackNavigator" screenOptions={{ gestureEnabled: false }} component={UserStackNavigator} options={{headerShown: false, swipeEnabled: false}}/>
+        <Drawer.Screen name="ShopStackNavigator" screenOptions={{ gestureEnabled: false }} component={ShopStackNavigator} options={{headerShown: false, swipeEnabled: false}}/>
         <Drawer.Screen name="ItemList" component={ItemList} />
       </Drawer.Navigator>
 </NavigationContainer>

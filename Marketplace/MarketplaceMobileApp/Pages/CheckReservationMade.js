@@ -6,72 +6,61 @@ const {width, height} = Dimensions.get('window');
 import Card from '../components/Card';
 
 
-export default class CheckItemsBought extends Component{
+export default class CheckReservationMade extends Component{
 
     order_items;
     constructor(props){
         super(props);
         this.state ={
-            isLoading1: true,
-            isLoading2: true,
+            isLoading: true,
         }
     }
 
     componentDidMount() {
         this.order_items = this.props.route.params.order_items;
 
-        Promise.all([
-            this.fetchOrderItems(),
-            this.fetchItemsFromOrderItems()
-        ]).then(([urlOneData, urlTwoData]) => {
+        this.fetchItemsBooked();
+        this.willFocusSubscription = this.props.navigation.addListener(
+          'willFocus',
+          () => {
             this.setState({
-                // mergedData: urlOneData.concat(urlTwoData)
-            });
-        })
+                isLoading: true,
+            }, function(){
 
+            });
+
+            this.fetchItemsBooked();
+          }
+        );
     }
 
-
-    fetchOrderItems() {
-       // Return the items related with the order_items (not all the objects bought)
-        fetch('http://10.110.215.142:5000/api/order_items_ref_code/' + this.order_items + '/?format=json')
-
-           .then((response) => response.json())
-           .then((responseJson) => {
-
-               this.setState({
-                   dataSourceOrderItems: responseJson.results,
-                   number_orderitems_and_items: responseJson.count,
-                   isLoading1: false
-               }, function () {
-
-                    console.log(responseJson.results)
-               });
-           })
-           .catch((error) => {
-               console.error(error)
-               // this.fetchOrderItems();
-           });
-        ;
-   }
-
-   fetchItemsFromOrderItems() {
+   fetchItemsBooked() {
        // Return the order items related with the ref_code clicked before (not all the objects bought)
-        fetch('http://10.110.215.142:5000/api/items_from_orderitems/' + this.order_items + '/?format=json')
+        fetch('http://10.110.215.142:5000/api/items_booked/' + this.order_items + '/?format=json',
+             {
+               method: 'GET',
+               headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json',
+                   'Authorization': 'Token ' + global.user_key,
+               }
+           })
            .then((response) => response.json())
            .then((responseJson) => {
 
                this.setState({
                    dataSourceItems: responseJson.results,
-                   isLoading2: false,
+                   number_items: responseJson.count,
+                   isLoading: false,
                }, function () {
 
+                    console.log("valori ritornati degli items")
                     console.log(responseJson.results)
                });
            })
            .catch((error) => {
                console.error(error)
-               // this.fetchOrderItems();
+
            });
         ;
    }
@@ -79,18 +68,24 @@ export default class CheckItemsBought extends Component{
 
    render() {
 
-       if (this.state.isLoading1 || this.state.isLoading2) {
+       if (this.state.isLoading) {
            return (
                <View style={{flex: 1, paddingTop: height / 2}}>
                    <ActivityIndicator/>
                </View>
            )
        }
-
-           this.array_values = Array(this.state.number_orderitems_and_items).fill().map(() => Array(11).fill())
-           for (var i in this.state.dataSourceOrderItems) {
-               this.array_values[i][0] = this.state.dataSourceOrderItems[i]["quantity"] // quantità acquistata
-               this.array_values[i][1] = this.state.dataSourceOrderItems[i]["review_item_done"]  // dice se l'oggetto è stato recensito da questo utente relativo a questo ordine
+       else if(this.state.number_items === 0){
+           return(
+              <View style={{flex: 1, paddingTop: height / 2}}>
+                   <ActivityIndicator/>
+               </View>
+           )
+       }
+           this.array_values = Array(this.state.number_items).fill().map(() => Array(11).fill())
+           for (var i in this.state.dataSourceItems) {
+               this.array_values[i][0] = this.state.dataSourceItems[i]["quantity"] // quantità acquistata
+               this.array_values[i][1] = this.state.dataSourceItems[i]["review_item_done"]  // dice se l'oggetto è stato recensito da questo utente relativo a questo ordine
                this.array_values[i][2] = this.state.dataSourceItems[i]["name"]  // nome del prodotto
                this.array_values[i][3] = this.state.dataSourceItems[i]["user"]["username"]  // negozio che lo vende
                this.array_values[i][4] = this.state.dataSourceItems[i]["category"]  // categoria del prodotto
@@ -98,7 +93,7 @@ export default class CheckItemsBought extends Component{
                this.array_values[i][6] = this.state.dataSourceItems[i]["price"]
                this.array_values[i][7] = this.state.dataSourceItems[i]["discount_price"]
                this.array_values[i][8] = this.state.dataSourceItems[i]["image"] // Immagine dell'oggetto
-               this.array_values[i][9] = this.state.dataSourceOrderItems[i]["id"] // id order items, mi serve nella prossima pagina
+               this.array_values[i][9] = this.state.dataSourceItems[i]["id"] // id order items, mi serve nella prossima pagina
                this.array_values[i][10] = this.state.dataSourceItems[i]["id"] // id item to review
 
            }
@@ -128,8 +123,7 @@ export default class CheckItemsBought extends Component{
                            data={this.array_values}
 
                            renderItem={({item, index}) =>
-                            <TouchableOpacity key={item.id} onPress={() => this.props.navigation.navigate('ReadOrLeaveFeedbackItem',
-                                {review_left: item[1], id_order_item: item[9], id_item:item[10]})}>
+
                                <Card style={styles.inputContainer}>
 
                                    <View style={styles.data}>
@@ -163,7 +157,7 @@ export default class CheckItemsBought extends Component{
 
                                    </View>
                                </Card>
-                            </TouchableOpacity>
+
                            }
                            keyExtractor={(item, index) => index.toString()}
                        />

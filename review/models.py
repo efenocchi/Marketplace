@@ -48,7 +48,6 @@ class ReviewShop(models.Model):
     """
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='writer_shop')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver_shop')
-    # transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='customer_to_shop')  # custuomer or another shop
     rating = models.IntegerField(default=5)
     title_of_comment = models.CharField(max_length=100)
     description = models.CharField(max_length=250)

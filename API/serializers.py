@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from items.models import Order, OrderItem, Item
-from review.models import ReviewCustomer, ReviewItem
+from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from users.views import compute_position
 
@@ -517,15 +517,42 @@ class ReviewCustomerSerializer(serializers.ModelSerializer):
         return data
 
 
-class OrderCustomerSerializer(serializers.ModelSerializer):
+class ReviewShopSerializer(serializers.ModelSerializer):
+    writer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    receiver = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+
     class Meta:
-        model = Order
+        model = ReviewShop
         fields = '__all__'
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+
     class Meta:
         model = OrderItem
+        fields = '__all__'
+        read_only_fields = ("id",)
+
+
+# class OnlyOrderItemSerializer(serializers.ModelSerializer):
+#     """
+#     Non riporto anche user altrimenti viene riportato troppe volte
+#     """
+#
+#
+#     class Meta:
+#         model = OrderItem
+#         fields = '__all__'
+#         read_only_fields = ("id",)
+
+
+class OrderCustomerSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+    # items = OnlyOrderItemSerializer
+
+    class Meta:
+        model = Order
         fields = '__all__'
 
 
@@ -534,6 +561,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Item
 #         fields ='__all__'
+
 
 class ItemSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
@@ -553,3 +581,4 @@ class ReviewItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewItem
         fields = "__all__"
+

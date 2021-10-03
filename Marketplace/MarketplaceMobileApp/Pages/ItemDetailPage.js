@@ -1,24 +1,51 @@
-import React, {useState} from 'react';
-import {Image, Picker, ScrollView, Text, View} from "react-native";
+import React, {Component, useState} from 'react';
+import {ActivityIndicator, Dimensions, Image, Picker, ScrollView, Text, View} from "react-native";
 import {StyleSheet} from 'react-native';
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import ImageCarousel from "../components/ImageCarousel";
 import Button from "../components/Button";
 import product from "../components/product";
 
+const {width, height} = Dimensions.get('window');
 
-const ItemDetailPage = (props) => {
-    const [selectedOption, setSelectedOption] = useState('');
-    const [quantity, setQuantity] = useState(1);
+class ItemDetailPage extends Component {
 
-    const onMinus = () => {}
-    const onPlus = () => {}
-    console.log(selectedOption);
+    id;
+    name;
+    description;
+    price;
+    discountprice;
+    constructor(props){
+        super(props);
+        this.state ={
+            isLoading: true,
+        }
+    }
+
+        componentDidMount() {
+        this.id = this.props.route.params.id;
+        this.name = this.props.route.params.name;
+        this.description = this.props.route.params.description;
+        this.price = this.props.route.params.price;
+        this.discountprice = this.props.route.params.discountprice;
+
+        this.setState({
+                isLoading: false,
+            });
+    }
+
+    render(){
+        if(this.state.isLoading){
+            return(
+                <View style={{flex: 1, paddingTop: height / 2}}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
     return (
         <ScrollView style={styles.root}>
 
             {/* Name */}
-            <Text style={styles.title}>Logitech MX Master 3 Mouse Wireless Avanzato, Ricevitore Bluetooth o USB 2.4 GHz,</Text>
+            <Text style={styles.title}>{this.name}</Text>
 
             {/* Image Carousel */}
             <ImageCarousel images={product.images}/>
@@ -35,45 +62,33 @@ const ItemDetailPage = (props) => {
             <Text>Category</Text>
 
             {/* Price */}
-            <Text style={styles.price}>from 30$
+            <Text style={styles.price}>{this.price}
                 {/* Discount Price */}
-                <Text style={styles.discountprice}>10$</Text>
+                <Text style={styles.discountprice}>{this.discountprice}</Text>
             </Text>
 
             {/* Description */}
-            <Text style={styles.description} numberOfLines={10}>
-                Scorri 1000 righe in un secondo: Il nuovissimo scorrimento
-                MagSpeed è così ‎preciso e veloce da permetterti di fermarti su un singolo pixel
-                e scorrere 1000 righe al secondo e in silenzio Design ergonomico: Lavora meglio grazie a una silhouette realizzata
-                per la forma della mano. Crea e condividi in modo più ‎intuitivo con pulsanti dal layout ideale e
-                scroller da pollice Impostazioni personalizzabili: Il mouse wireless è personalizzabile in quasi tutte le app che
-                usi e ti permette di lavorare più velocemente ottimizzando le tue app preferite Più Dispositivi, Un Solo Mouse:
-                Lavora senza problemi su tre computer. Trasferisci file di testo, immagini e altri file da
-                Windows, maOS o Linux, su PC, Mac o laptop
-            </Text>
+            <Text style={styles.description} numberOfLines={10}>{this.description}</Text>
 
-            {/* Quantity */}
-            <View style={styles.rootquantity}>
-                <Pressable onPress={onMinus} style={styles.button}>
-                    <Text style={styles.buttontext}>-</Text>
-                </Pressable>
-                    <Text style={styles.buttontext}>0</Text>
-                <Pressable onPress={onPlus} style={styles.button}>
-                    <Text style={styles.buttontext}>+</Text>
-                </Pressable>
-            </View>
             {/* Button */}
             <Button
                 text={'Add To Cart'}
-                onPress={() => {console.warn('Add to cart')}}
+                onPress={() => {
+                    console.warn('Add to cart')
+                    // this.AddToCart();
+                    // this.props.navigation.navigate('RegistrationStackNavigator');
+                }}
             />
             <Button
                 text={'Go To Cart'}
-                onPress={() => {console.warn('Go to cart')}}
+                onPress={() => {console.warn('Go to cart')
+                this.props.navigation.navigate('Cart');
+                }}
             />
         </ScrollView>
     );
-};
+}
+}
 
 const styles = StyleSheet.create({
   root:{

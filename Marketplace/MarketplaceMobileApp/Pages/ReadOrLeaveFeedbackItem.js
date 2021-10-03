@@ -21,7 +21,7 @@ import {Picker} from "native-base";
 
 
 
-export default class ReadOrLeaveFeedBackItem extends Component{
+export default class ReadOrLeaveFeedbackItem extends Component{
     review_left;
     id_order_items;
     id_item;
@@ -49,12 +49,12 @@ export default class ReadOrLeaveFeedBackItem extends Component{
         }
         // devo caricare la recensione che ho lasciato per poterla visualizzare
         else{
-            this.fetchReviewLeftToShop();
+            this.fetchGetSingleReviewItem();
 
         }
     }
 
-    fetchReviewLeftToShop(){
+    fetchGetSingleReviewItem(){
        return fetch('http://10.110.215.142:5000/api/get_review_item/' + this.id_order_items + '/' + this.id_item + '/?format=json', {
            method: 'GET',
            headers: {
