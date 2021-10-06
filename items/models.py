@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 
 #CLASSE dei PRODOTTI in vendita
 from django.templatetags.static import static
@@ -13,6 +14,7 @@ CATEGORY_CHOICES = (
     ('Motori', 'Motori'),
 )
 
+
 class Item(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     name = models.CharField(max_length=100) #title
@@ -21,7 +23,7 @@ class Item(models.Model):
     category = models.CharField(choices=CATEGORY_CHOICES, max_length=20)
     description = models.TextField()
     quantity = models.IntegerField(default=1)
-    image = models.FileField(null=True, default='', blank=True)
+    image = models.ImageField(null=True, default='', blank=True)
 
     def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
         if self.image:
@@ -68,6 +70,10 @@ class OrderItem(models.Model):
         return self.quantity
 
 
+class WhoHasReviewed(models.Model):
+    writer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     ref_code = models.CharField(max_length=20, blank=True, null=True)
@@ -76,8 +82,7 @@ class Order(models.Model):
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     number_order = models.IntegerField(default=0)
-    review_customer_done = models.BooleanField(default=False)
-
+    review_customer_done = models.ManyToManyField(WhoHasReviewed)
 
     def __str__(self):
         return self.user.username

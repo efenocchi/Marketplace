@@ -27,11 +27,11 @@ export default class Login extends Component {
 
 
     fetchUserId() {
-        fetch('http://10.110.215.142:5000/api/users/find/' + this.state.username + '/?format=json')
+        fetch('http://'+ global.ip +'/api/users/find/' + this.state.username + '/?format=json')
         .then((user_response) => user_response.json())
         .then((user_responseJson) => {
 
-            global.user_id = user_responseJson['results'][0]['user']['id'];
+            global.user_id = user_responseJson['results'][0]['id'];
             global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === true);
             global.provincia = user_responseJson['results'][0]['provincia']
             global.regione = user_responseJson['results'][0]['regione']
@@ -60,7 +60,7 @@ export default class Login extends Component {
     }
     loginExecute = () => {
 
-        fetch('http://10.110.215.142:5000/api/rest-auth/login/',
+        fetch('http://'+ global.ip +'/api/rest-auth/login/',
             {
               method: 'POST',
               headers: {

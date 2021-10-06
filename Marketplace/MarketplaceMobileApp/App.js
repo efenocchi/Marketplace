@@ -96,6 +96,8 @@ export default class App extends React.Component {
     global.user_id = -1;
     global.provincia = "AG";
     global.regione = "Abruzzo";
+    global.ip = "192.168.43.99:80"; // Inserire il proprio ip e la porta in ascolto
+    global.uri = false;
     global.state = {
       fontLoaded: false,
     };
@@ -103,7 +105,7 @@ export default class App extends React.Component {
     Font.loadAsync({
       'satisfy': require('./assets/fonts/satisfy.ttf'),
       'typold-medium': require('./assets/fonts/typold-medium.otf')
-    }).then( global.state.fontLoaded = true)
+    }).then(global.state.fontLoaded = true)
   } ;
 
 

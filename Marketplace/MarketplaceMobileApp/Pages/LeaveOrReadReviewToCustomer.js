@@ -21,10 +21,10 @@ import {Picker} from "native-base";
 
 
 
-export default class ReadOrLeaveFeedbackItem extends Component{
+export default class LeaveOrReadReviewToCustomer extends Component{
+    id_user;
     review_left;
-    id_order_items;
-    id_item;
+    id_order;
 
     constructor(props){
         super(props);
@@ -37,9 +37,9 @@ export default class ReadOrLeaveFeedbackItem extends Component{
     }
 
     componentDidMount() {
+        this.id_user = this.props.route.params.id_user;
         this.review_left = this.props.route.params.review_left;
-        this.id_order_items = this.props.route.params.id_order_item;
-        this.id_item = this.props.route.params.id_item;
+        this.id_order = this.props.route.params.id_order;
 
         // Se non ho già lasciato una recensione allora non devo caricare niente dal server
         if(this.review_left === false){
@@ -49,13 +49,14 @@ export default class ReadOrLeaveFeedbackItem extends Component{
         }
         // devo caricare la recensione che ho lasciato per poterla visualizzare
         else{
-            this.fetchGetSingleReviewItem();
+            this.fetchSingleReviewLeftToCustomer();
 
         }
     }
 
-    fetchGetSingleReviewItem(){
-       return fetch('http://'+ global.ip +'/api/get_review_item/' + this.id_order_items + '/' + this.id_item + '/?format=json', {
+
+    fetchSingleReviewLeftToCustomer(){
+       return fetch('http://'+ global.ip +'/api/get_single_review_customer/' + this.id_user + '/' + this.id_order + '/?format=json', {
            method: 'GET',
            headers: {
                 'Accept': 'application/json',
@@ -86,7 +87,7 @@ export default class ReadOrLeaveFeedbackItem extends Component{
 
     LeaveReview(){
         if(this.state.title_of_comment !== "" && this.state.description !== "" && this.state.rating !== "") {
-            return fetch('http://'+ global.ip +'/api/leave_review_item/' + this.id_order_items + '/' + this.id_item + '/', {
+            return fetch('http://'+ global.ip +'/api/review_from_shop_to_customer/' + this.id_user + '/' + this.id_order + '/', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -105,7 +106,7 @@ export default class ReadOrLeaveFeedbackItem extends Component{
                 .then((responseJson) => {
                     if (responseJson.id != null) {
 
-                        this.props.navigation.navigate('OrdersPlaced');
+                        this.props.navigation.navigate('ChooseShopInfoList');
 
                     } else {
                         this.setState({error_message: JSON.stringify(responseJson)});
@@ -245,7 +246,8 @@ export default class ReadOrLeaveFeedbackItem extends Component{
                                 )}
                                 {this.review_left === true && (
                                            <Button title="Torna indietro" onPress={() => {
-                                            this.props.navigation.navigate('OrdersPlaced');}} />
+                                            this.props.navigation.navigate('OrdersReceived');
+                                           }} />
                                 )}
                                     </View>
                                 </View>

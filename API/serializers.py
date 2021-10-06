@@ -7,7 +7,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
-from items.models import Order, OrderItem, Item
+from items.models import Order, OrderItem, Item, WhoHasReviewed
 from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from users.views import compute_position
@@ -127,7 +127,8 @@ class CompleteUserData(serializers.ModelSerializer):
 
     class Meta:
         model = GeneralUser
-        fields = ["user",
+        fields = ["id",
+                  "user",
                   "indirizzo",
                   "citta",
                   "provincia",
@@ -493,7 +494,40 @@ class CompleteShopUserData(serializers.ModelSerializer):
         return instance
 
 
+class OrderSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+        read_only_fields = ("id",)
+
+
 class ReviewCustomerSerializer(serializers.ModelSerializer):
+    writer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    receiver = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    order = OrderSerializer(many=False)
+
+    class Meta:
+        model = ReviewCustomer
+        fields = '__all__'
+
+    def validate_title_of_comment(self, data):
+        if not re.match("^[A-Za-z0-9 .,'èòàùì]+$", data):
+            raise serializers.ValidationError(_('Errore: il titolo può contenere solo lettere, numeri e spazi.'))
+        if not (1 <= len(data) <= 95):
+            raise serializers.ValidationError(_('Errore: il titolo deve avere lunghezza fra 1 e 95 caratteri.'))
+        return data
+
+    def validate_description(self, data):
+        # controllo descrizione
+        if not re.match("^[A-Za-z0-9 ,.'èòàùì]+$", data):
+            raise serializers.ValidationError(_('Errore: la descrizione può contenere solo lettere, '
+                                                'numeri, punti, virgole e spazi.'))
+        return data
+
+
+class ReviewPartialCustomerSerializer(serializers.ModelSerializer):
     writer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
     receiver = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
     order = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
@@ -547,9 +581,17 @@ class OrderItemSerializer(serializers.ModelSerializer):
 #         read_only_fields = ("id",)
 
 
+class WhoHasReviewedSerializer(serializers.ModelSerializer):
+    writer = UserSerializer(many=False)
+
+    class Meta:
+        model = WhoHasReviewed
+        fields = '__all__'
+
+
 class OrderCustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
-    # items = OnlyOrderItemSerializer
+    review_customer_done = WhoHasReviewedSerializer(many=True)
 
     class Meta:
         model = Order
@@ -573,6 +615,17 @@ class ItemSerializer(serializers.ModelSerializer):
         ordering = ['name']
 
 
+class InsertItemSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    image = serializers.ImageField(default="/default_images/item_default.jpg")
+
+    class Meta:
+        model = Item
+        fields = "__all__"
+        read_only_fields = ("id",)
+        ordering = ['name']
+
+
 class ReviewItemSerializer(serializers.ModelSerializer):
     writer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
     order = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
@@ -581,4 +634,3 @@ class ReviewItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewItem
         fields = "__all__"
-

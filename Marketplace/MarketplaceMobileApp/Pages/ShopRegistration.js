@@ -11,6 +11,9 @@ import TakeRegions from '../components/TakeRegions';
 
 const {width, height} = Dimensions.get('window');
 
+
+
+
 class ShopRegistration extends Component {
 
     constructor(props){

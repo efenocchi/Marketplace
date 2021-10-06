@@ -16,6 +16,9 @@ import ShopStackNavigator from "./ShopStackNavigator";
 import ItemList from "../Pages/ItemList";
 import provaFetch from "../Pages/provaFetch";
 import OrdersPlaced from "../Pages/OrdersPlaced";
+import AddItem from "../Pages/AddItem";
+import TakeAPicture from "../Pages/TakeAPictureOrVideo";
+import UploadPhoto2 from "../Pages/UploadPhoto2";
 
 
 export function HomeScreen({ navigation, route }) {
@@ -47,7 +50,11 @@ function DrawerNavigator() {
 <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         {/*Usati solo per prove*/}
+        <Drawer.Screen name="UploadPhoto2" component={UploadPhoto2} />
+        <Drawer.Screen name="TakeAPicture" component={TakeAPicture} />
         <Drawer.Screen name="provaFetch" component={provaFetch} />
+
+        <Drawer.Screen name="AddItem" component={AddItem} />
         <Drawer.Screen name="Home2" component={HomeScreen2} />
         <Drawer.Screen name="OrdersPlaced" component={OrdersPlaced} />
 

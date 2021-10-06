@@ -33,7 +33,7 @@ export default class OrdersPlaced extends Component{
     }
 
     fetchOrders() {
-       return fetch('http://10.110.215.142:5000/api/orders_customer/' + global.user_id + '/?format=json')
+       return fetch('http://'+ global.ip +'/api/orders_customer/' + global.user_id + '/?format=json')
 
            .then((response) => response.json())
            .then((responseJson) => {
@@ -49,7 +49,6 @@ export default class OrdersPlaced extends Component{
            })
            .catch((error) => {
                console.error(error)
-               this.fetchRecensioni();
            });
    }
 
@@ -63,9 +62,6 @@ export default class OrdersPlaced extends Component{
             )
         }
         this.array_values = Array(this.state.number_orderitems).fill().map(()=>Array(7).fill())
-        // this.array_values[0][2] = 4
-        console.log(this.array_values[0][2])
-
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["ref_code"]
             this.array_values[i][1] = this.state.dataSource[i]["start_date"].slice(0,10)
@@ -76,7 +72,7 @@ export default class OrdersPlaced extends Component{
             // sarà possibile lasciare una recensione o visualizzare una recensione già effettuata per un prodotto
 
         }
-        console.log(this.array_values[0][1])
+
         console.log("fine caricamento")
 
         return (

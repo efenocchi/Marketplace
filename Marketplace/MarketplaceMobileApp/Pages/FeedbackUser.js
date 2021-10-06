@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, Image, Dimensions, ActivityIndicator, YellowBox, FlatList } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Button,
+    Image,
+    Dimensions,
+    ActivityIndicator,
+    YellowBox,
+    FlatList,
+    TouchableOpacity
+} from 'react-native';
 import { IconButton } from 'react-native-paper';
 import CustomHeader from '../components/Header';
 const {width, height} = Dimensions.get('window');
@@ -28,7 +39,7 @@ export default class FeedbackUser extends Component{
 
             });
 
-            // this.fetchRecensioni();
+            this.fetchRecensioni();
           }
         );
     }
@@ -39,7 +50,7 @@ export default class FeedbackUser extends Component{
 
 
    fetchRecensioni() {
-       return fetch('http://10.110.215.142:5000/api/reviews_customer/' + global.user_id + '/?format=json')
+       return fetch('http://'+ global.ip +'/api/reviews_customer/' + global.user_id + '/?format=json')
 
            .then((response) => response.json())
            .then((responseJson) => {
@@ -70,7 +81,7 @@ export default class FeedbackUser extends Component{
                 </View>
             )
         }
-        this.array_values = Array(this.state.number_reviews).fill().map(()=>Array(7).fill())
+        this.array_values = Array(this.state.number_reviews).fill().map(()=>Array(9).fill())
         // this.array_values[0][2] = 4
         console.log(this.array_values[0][2])
 
@@ -82,6 +93,8 @@ export default class FeedbackUser extends Component{
             this.array_values[i][4] = this.state.dataSource[i]["receiver"]  // receiver
             this.array_values[i][5] = this.state.dataSource[i]["title_of_comment"]  // title_of_comment
             this.array_values[i][6] = this.state.dataSource[i]["writer"]  // writer
+            this.array_values[i][7] = this.state.dataSource[i]["order"]["ref_code"]  // ordine per cui ho ricevuto la recensione
+            this.array_values[i][8] = this.state.dataSource[i]["order"]["items"]  // oggetti acquistati in quell'ordine (possono essere relativi a più negozi)
         }
         console.log(this.array_values)
         console.log("fine caricamento")
@@ -109,11 +122,14 @@ export default class FeedbackUser extends Component{
                         data={this.array_values}
 
                         renderItem={({item, index}) =>
+                            <TouchableOpacity key={item.id} onPress={() => this.props.navigation.navigate('ItemsRelatedToOneShopAndOneOrder',
+                                {order_items: item[8], name_shop: item[6]})}>
                             <Card style={styles.inputContainer}>
                                 <View style={styles.data}>
                                     <Text style={styles.feedbackTitle} numberOfLines={0}>Titolo: {item[5]}</Text>
                                     <Text style={styles.feedbackTitle} numberOfLines={1}>Descrizione: {item[0]}</Text>
                                     <Text style={styles.feedbackTitle} numberOfLines={2}>Ricevuta da: {item[6]}</Text>
+                                    <Text style={styles.feedbackTitle} numberOfLines={3}>Per l'ordine: {item[7]}</Text>
 
                                     <Text style={styles.feedbackCustomer}></Text>
                                     <View style={styles.textInline}>
@@ -122,6 +138,7 @@ export default class FeedbackUser extends Component{
                                     </View>
                                 </View>
                             </Card>
+                            </TouchableOpacity>
                         }
                         keyExtractor={(item, index) => index.toString()}
                     />

@@ -41,7 +41,7 @@ class ShopItemList extends Component {
     // }
 
     fetchShopItems() {
-            return fetch('http://10.110.215.142:5000/api/items/' + global.user_id + '/shop_all_items/?format=json')
+            return fetch('http://'+ global.ip +'/api/items/' + global.user_id + '/shop_all_items/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {

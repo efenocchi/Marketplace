@@ -43,7 +43,7 @@ export default class OrdersReceived extends Component{
     }
 
     fetchOrders() {
-       return fetch('http://10.110.215.142:5000/api/orders_shop/',
+       return fetch('http://'+ global.ip +'/api/orders_shop/',
            {
                method: 'GET',
                headers: {
@@ -79,16 +79,34 @@ export default class OrdersReceived extends Component{
                 </View>
             )
         }
-        this.array_values = Array(this.state.number_orderitems).fill().map(()=>Array(5).fill())
-        // this.array_values[0][2] = 4
-        console.log(this.array_values[0][2])
+        this.array_values = Array(this.state.number_orderitems).fill().map(()=>Array(7).fill())
 
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["ref_code"]
             this.array_values[i][1] = this.state.dataSource[i]["start_date"].slice(0,10)
             this.array_values[i][2] = this.state.dataSource[i]["items"]  // orderitems
-            this.array_values[i][3] = this.state.dataSource[i]["review_customer_done"]
+            this.array_values[i][3] = this.state.dataSource[i]["review_customer_done"] // Per sapere quali negozi hanno lasciato la recensione all'utente, essendoci più negozi per lo stesso reference code va controllato (si può togliere questa riga)
+
+            if (this.state.dataSource[i]["review_customer_done"].length === 0){ //nessuno ha lasciato la recensione quindi sicuramente neanche il negozio loggato
+                this.array_values[i][3] = false
+                console.log("misura 0")
+            }
+
+            else{
+                console.log("misura MAGGIORE di 0")
+                this.array_values[i][3] = false // metto falso e se lo trovo cambio in vero (cioè ho già lasciato la recensione)
+                for (let j = 0; j < this.state.dataSource[i]["review_customer_done"].length; j++){
+
+                    if (this.state.dataSource[i]["review_customer_done"][j]["writer"]["username"] === global.username){
+                         this.array_values[i][3] = true
+                    }
+                }
+            }
+            console.log("lunghezza------------------")
+            console.log(this.state.dataSource[i]["review_customer_done"].length)
             this.array_values[i][4] = this.state.dataSource[i]["user"]["username"] // Who made the order
+            this.array_values[i][5] = this.state.dataSource[i]["user"]["id"] // Id of who placed the order
+            this.array_values[i][6] = this.state.dataSource[i]["id"] // Id order
 
             // gli id degli order items relativi ad un acquisto identificato univocamente tramite uuid
             // verranno passati alla schermata successiva e verranno quindi visualizzati gli oggetti acquistati
@@ -96,8 +114,9 @@ export default class OrdersReceived extends Component{
             // sarà possibile lasciare una recensione o visualizzare una recensione già effettuata per un prodotto
 
         }
-        console.log(this.array_values[0][1])
+        console.log(this.array_values)
         console.log("fine caricamento")
+
 
         return (
             <View style={styles.screen}>
@@ -135,9 +154,11 @@ export default class OrdersReceived extends Component{
                                            <View style={styles.textInline}>
                                                <Text style={{fontWeight: 'bold', fontStyle: 'italic', color: 'green'}}>
                                                    Recensione lasciata </Text>
-                                               <View style={styles.buttonview}>
-                                                <Button title="Guarda Recensione" onPress={ "ok" } />
+                                            <View style={styles.buttonview}>
+                                                <Button title="Mostra Recensione" onPress={() => { this.props.navigation.navigate('LeaveOrReadReviewToCustomer',
+                                                  {id_user: item[5], review_left: item[3], id_order:item[6]}) }} />
                                             </View>
+
                                            </View>
 
                                        )}
@@ -145,9 +166,11 @@ export default class OrdersReceived extends Component{
                                            <View style={styles.textInline}>
                                                <Text style={{fontWeight: 'bold', fontStyle: 'italic', color: 'red'}}>
                                                    Recensione non lasciata</Text>
-                                           <View style={styles.buttonview}>
-                                                <Button title="Lascia Recensione" onPress={ "ok" } />
-                                            </View>
+                                               <View style={styles.buttonview}>
+                                                <Button title="Lascia Recensione" onPress={() => { this.props.navigation.navigate('LeaveOrReadReviewToCustomer',
+                                                  {id_user: item[5], review_left: item[3], id_order:item[6]}) }} />
+                                                </View>
+
                                            </View>
 
                                        )}

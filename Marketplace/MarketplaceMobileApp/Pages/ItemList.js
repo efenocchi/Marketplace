@@ -52,7 +52,7 @@ class ItemList extends Component {
     // }
 
     fetchAllItems() {
-            return fetch('http://10.110.215.142:5000/api/items/list_all_items/?format=json')
+            return fetch('http://'+ global.ip +'/api/items/list_all_items/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {

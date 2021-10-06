@@ -54,7 +54,7 @@ export default class LeaveOrReadReviewToShop extends Component{
 
 
     fetchSingleReviewLeftToShop(){
-       return fetch('http://10.110.215.142:5000/api/get_single_review_shop/' + this.id_shop + '/?format=json', {
+       return fetch('http://'+ global.ip +'/api/get_single_review_shop/' + this.id_shop + '/?format=json', {
            method: 'GET',
            headers: {
                 'Accept': 'application/json',
@@ -85,7 +85,7 @@ export default class LeaveOrReadReviewToShop extends Component{
 
     LeaveReview(){
         if(this.state.title_of_comment !== "" && this.state.description !== "" && this.state.rating !== "") {
-            return fetch('http://10.110.215.142:5000/api/review_from_customer_to_shop/' + this.id_shop + '/', {
+            return fetch('http://'+ global.ip +'/api/review_from_customer_to_shop/' + this.id_shop + '/', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

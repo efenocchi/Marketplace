@@ -6,9 +6,15 @@ const {width, height} = Dimensions.get('window');
 import Card from '../components/Card';
 
 
-export default class CheckItemsBought extends Component{
+export default class ItemsRelatedToOneShopAndOneOrder extends Component{
+/* Questa funzione mostra gli oggetti che sono stati acquistati da un utente presso un negozio.
+   La funzione viene chiamata dalla pagine FeedbackUser.
+   Quando l'utente riceve una recensione da un negozio (relativa a un ordine) può andare a vedere l'ordine che è
+   stato effettuato e ricordarsi il motivo della valutazione
+*/
 
     order_items;
+    name_shop;
     constructor(props){
         super(props);
         this.state ={
@@ -19,18 +25,18 @@ export default class CheckItemsBought extends Component{
 
     componentDidMount() {
         this.order_items = this.props.route.params.order_items;
+        this.name_shop = this.props.route.params.name_shop;
+
 
         Promise.all([
             this.fetchOrderItems(),
-            this.fetchItemsFromOrderItems()
+            this.fetchItemsFromOrderItemsFiltered()
         ]).then(([urlOneData, urlTwoData]) => {
             this.setState({
                 // mergedData: urlOneData.concat(urlTwoData)
             });
         })
-
     }
-
 
     fetchOrderItems() {
        // Return the items related with the order_items (not all the objects bought)
@@ -41,7 +47,7 @@ export default class CheckItemsBought extends Component{
 
                this.setState({
                    dataSourceOrderItems: responseJson.results,
-                   number_orderitems_and_items: responseJson.count,
+
                    isLoading1: false
                }, function () {
 
@@ -55,14 +61,15 @@ export default class CheckItemsBought extends Component{
         ;
    }
 
-   fetchItemsFromOrderItems() {
+    fetchItemsFromOrderItemsFiltered() {
        // Return the order items related with the ref_code clicked before (not all the objects bought)
-        fetch('http://'+ global.ip +'/api/items_from_orderitems/' + this.order_items + '/?format=json')
+        fetch('http://'+ global.ip +'/api/items_from_orderitems_filtered/' + this.order_items + '/' + this.name_shop + '/?format=json')
            .then((response) => response.json())
            .then((responseJson) => {
 
                this.setState({
                    dataSourceItems: responseJson.results,
+                   number_items: responseJson.count,
                    isLoading2: false,
                }, function () {
 
@@ -76,10 +83,9 @@ export default class CheckItemsBought extends Component{
         ;
    }
 
-
    render() {
 
-       if (this.state.isLoading1 || this.state.isLoading2) {
+    if (this.state.isLoading1 || this.state.isLoading2) {
            return (
                <View style={{flex: 1, paddingTop: height / 2}}>
                    <ActivityIndicator/>
@@ -87,8 +93,8 @@ export default class CheckItemsBought extends Component{
            )
        }
 
-           this.array_values = Array(this.state.number_orderitems_and_items).fill().map(() => Array(11).fill())
-           for (var i in this.state.dataSourceOrderItems) {
+           this.array_values = Array(this.state.number_items).fill().map(() => Array(11).fill())
+           for (var i in this.state.dataSourceItems) {
                this.array_values[i][0] = this.state.dataSourceOrderItems[i]["quantity"] // quantità acquistata
                this.array_values[i][1] = this.state.dataSourceOrderItems[i]["review_item_done"]  // dice se l'oggetto è stato recensito da questo utente relativo a questo ordine
                this.array_values[i][2] = this.state.dataSourceItems[i]["name"]  // nome del prodotto
@@ -100,8 +106,8 @@ export default class CheckItemsBought extends Component{
                this.array_values[i][8] = this.state.dataSourceItems[i]["image"] // Immagine dell'oggetto
                this.array_values[i][9] = this.state.dataSourceOrderItems[i]["id"] // id order items, mi serve nella prossima pagina
                this.array_values[i][10] = this.state.dataSourceItems[i]["id"] // id item to review
-
            }
+
            console.log("Stampo il primo")
            console.log(this.array_values)
 

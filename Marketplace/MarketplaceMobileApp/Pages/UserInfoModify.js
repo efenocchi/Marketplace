@@ -57,7 +57,7 @@ export default class UserInfoModify extends Component {
    // Vado  a prendere le info del profilo dell'id che ho settato precedentemente
    fetchProfilo() {
         const arrFinal = [];
-    return fetch('http://10.110.215.142:5000/api/users/profile/' + global.user_id + '/?format=json')
+    return fetch('http://'+ global.ip +'/api/users/profile/' + global.user_id + '/?format=json')
         .then((response) => response.json())
         .then((responseJson) => {
             this.setState({
@@ -115,7 +115,7 @@ export default class UserInfoModify extends Component {
             {
 
             if (this.state.password === this.state.conferma_password) {
-                fetch('http://10.110.215.142:5000/api/users/profile/',
+                fetch('http://'+ global.ip +'/api/users/profile/',
                 {
                 method: 'PUT',
                 headers: {
@@ -167,7 +167,7 @@ modifyShopProfile = () => {
             console.log("Sono entrato")
             if (this.state.password === this.state.conferma_password) {
                 console.log("Stesse password")
-                fetch('10.110.215.142:5000/api/users/profile/',
+                fetch('http://'+ global.ip +'/api/users/profile/',
                 {
                 method: 'PUT',
                 headers: {

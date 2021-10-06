@@ -36,7 +36,7 @@ export default class CheckReservationMade extends Component{
 
    fetchItemsBooked() {
        // Return the order items related with the ref_code clicked before (not all the objects bought)
-        fetch('http://10.110.215.142:5000/api/items_booked/' + this.order_items + '/?format=json',
+        fetch('http://'+ global.ip +'/api/items_booked/' + this.order_items + '/?format=json',
              {
                method: 'GET',
                headers: {

@@ -84,5 +84,3 @@ class ReviewCustomer(models.Model):
         return self.title_of_comment
 
 
-
-

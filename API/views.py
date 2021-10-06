@@ -4,11 +4,12 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
-from items.models import Order, OrderItem, Item
+from items.models import Order, OrderItem, Item, WhoHasReviewed
 from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
-    OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer, ReviewShopSerializer
+    OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer, ReviewShopSerializer, \
+    ReviewPartialCustomerSerializer, InsertItemSerializer
 from .permissions import *
 from django.contrib.auth import logout
 from rest_framework.views import APIView
@@ -181,7 +182,8 @@ class ShopAllItems(generics.ListAPIView):
 
     def get_queryset(self):
         id = self.kwargs['pk']
-        queryset = Item.objects.filter(user__id=id)
+        shop = GeneralUser.objects.get(id=id)
+        queryset = Item.objects.filter(user=shop.user)
         lista_query = list(queryset)
         print(lista_query)
         return lista_query
@@ -265,6 +267,7 @@ class ReturnOrderCustomer(generics.ListAPIView):
         except Exception:
             raise Exception("Utente recensito non trovato")
         orders = Order.objects.filter(user=user_customer.user)
+        print(orders)
         print("list(review)", list(orders))
         return list(orders)
 
@@ -306,6 +309,63 @@ class ReturnOrderItems(generics.ListAPIView):
         try:
             order_items_id = order_items_id.split(',')  # da stringa a lista
             order_items = OrderItem.objects.filter(id__in=order_items_id)  # take the items order
+
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        print("list(review)", list(order_items))
+
+        return list(order_items)
+
+
+# class ReturnOrderItemsAndOrderItems(generics.ListAPIView):
+#   Viene fatto tutto in un colpo, da adattare per CheckItemsBought
+#     """
+#     L'utente passa tramite url i valori degli order items che desidera visualizzare ed essi gli vengono ritornati.
+#     Vengono anche ritornate le info relative ai prodotti acquistati.
+#     In questa funzione vengono filtrati gli oggetti acquistati in un ordine relativi a un solo negozio
+#     (se in quell'ordine l'utente ha fatto acquisti in più negozi verrà ritornato un numero ridotto di prodotti)
+#     """
+#     serializer_class = OrderItemSerializer
+#
+#     def get_queryset(self):
+#         order_items_id = self.kwargs['order_items_id']  # Lista degli id degli order items che voglio
+#         id_shop = self.kwargs['id_shop']
+#         try:
+#             shop = GeneralUser.objects.get(id=id_shop)
+#             order_items_id = order_items_id.split(',')  # da stringa a lista
+#             order_items = OrderItem.objects.filter(id__in=order_items_id)  # take the items order
+#             print(order_items.item.pk)
+#             items = Item.objects.filter(id__in=order_items.item.pk, user=shop.user)
+#             order_items = OrderItem.objects.filter(item__in=items.pk)
+#
+#         except Exception:
+#             raise Exception("Oggetto non trovato")
+#
+#         print("list(review)", list(order_items))
+#
+#         return list(order_items)
+
+
+class ReturnOrderItemsAndOrderItems(generics.ListAPIView):
+    """
+    L'utente passa tramite url i valori degli order items che desidera visualizzare ed essi gli vengono ritornati.
+    Vengono anche ritornate le info relative ai prodotti acquistati.
+    In questa funzione vengono filtrati gli oggetti acquistati in un ordine relativi a un solo negozio
+    (se in quell'ordine l'utente ha fatto acquisti in più negozi verrà ritornato un numero ridotto di prodotti)
+    """
+    serializer_class = OrderItemSerializer
+
+    def get_queryset(self):
+        order_items_id = self.kwargs['order_items_id']  # Lista degli id degli order items che voglio
+        id_shop = self.kwargs['id_shop']
+        try:
+            shop = GeneralUser.objects.get(id=id_shop)
+            order_items_id = order_items_id.split(',')  # da stringa a lista
+            order_items = OrderItem.objects.filter(id__in=order_items_id)  # take the items order
+            print(order_items.item.pk)
+            items = Item.objects.filter(id__in=order_items.item.pk, user=shop.user)
+            order_items = OrderItem.objects.filter(item__in=items.pk)
 
         except Exception:
             raise Exception("Oggetto non trovato")
@@ -359,6 +419,37 @@ class ReturnItemsFromOrderItems(generics.ListAPIView):
             for single_item in order_items:
                 item = Item.objects.get(id=single_item.item.id) # prendo gli oggetti dei vari order item
                 items.append(item)
+                print("item", item)
+            print(items)
+
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        print("list(review)", list(order_items))
+
+        return items
+
+
+class ReturnItemsFromOrderItemsFiltered(generics.ListAPIView):
+    """
+    In questa funzione vengono filtrati gli oggetti acquistati in un ordine relativi a un solo negozio
+    (se in quell'ordine l'utente ha fatto acquisti in più negozi verrà ritornato un numero ridotto di prodotti)
+    """
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        order_items_id = self.kwargs['order_items_id'] # Lista degli id degli order items che voglio
+        name_shop = self.kwargs['name_shop'] # Lista degli id degli order items che voglio
+        user = User.objects.get(username=name_shop)
+        shop = GeneralUser.objects.get(user=user)
+        items = []
+        try:
+            order_items_id = order_items_id.split(',') # da stringa a lista
+            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
+            for single_item in order_items:
+                item = Item.objects.get(id=single_item.item.id) # prendo gli oggetti dei vari order item
+                if item.user == shop.user:
+                    items.append(item)
                 print("item", item)
             print(items)
 
@@ -460,3 +551,88 @@ class CreateReviewForShop(generics.CreateAPIView):
             raise Exception("Negozio non valido")
 
         serializer.save(writer=self.request.user, receiver=shop.user)
+
+
+class CreateReviewForCustomer(generics.CreateAPIView):
+    """
+    Create a review for the selected customer, given an order and the shop
+    """
+    permission_classes = [IsUserLogged]
+    serializer_class = ReviewPartialCustomerSerializer
+
+    def perform_create(self, serializer):
+        id_user = self.kwargs['id_user']
+        id_order = self.kwargs['id_order']
+        print("id_order", id_order)
+        try:
+            user = GeneralUser.objects.get(id=id_user)
+            order = Order.objects.get(id=id_order)
+            print(order)
+        except Exception:
+            raise Exception("Utente o Ordine non valido")
+
+        whohasreviewed = WhoHasReviewed.objects.get_or_create(writer=self.request.user)[0]
+        print("whohasreviewed", whohasreviewed)
+        try:
+            order.review_customer_done.add(whohasreviewed)
+            order.save()
+        except Exception:
+            raise Exception("Negozio recensore non aggiunto")
+
+        serializer.save(writer=self.request.user, receiver=user.user, order=order)
+
+
+class GetSingleReviewCustomer(generics.RetrieveUpdateAPIView):
+    """
+    Ritona la recensione che il negozio ha già lasciato all'utente per un determinato ordine prenotato
+    """
+    serializer_class = ReviewPartialCustomerSerializer
+    permission_classes = [IsUserLogged]
+
+    def get_object(self):
+        id_user = self.kwargs['id_user']
+        id_order = self.kwargs['id_order']
+        try:
+            receiver = GeneralUser.objects.get(id=id_user)
+        except Exception:
+            raise Exception("Utente non valido")
+        try:
+            order = Order.objects.get(id=id_order)
+        except Exception:
+            raise Exception("Ordine non valido")
+
+        return ReviewCustomer.objects.get(writer=self.request.user, receiver=receiver.user, order=order)
+
+
+class UploadItem(generics.CreateAPIView):
+    """
+    Upload a new item for the shop
+    """
+    permission_classes = [IsUserLogged]
+    serializer_class = ItemSerializer
+
+    def perform_create(self, serializer):
+        id_shop = self.kwargs['id_shop']
+
+        try:
+            shop = GeneralUser.objects.get(id=id_shop)
+        except Exception:
+            raise Exception("Negozio non valido")
+
+        serializer.save(writer=self.request.user, receiver=shop.user)
+
+
+class InsertNewItem(generics.CreateAPIView):
+    """
+    Create a review for the selected customer, given an order and the shop
+    """
+    permission_classes = [IsUserLogged, IsSameUser]
+    serializer_class = InsertItemSerializer
+
+    def perform_create(self, serializer):
+
+        try:
+            serializer.save(user=self.request.user)
+        except Exception:
+            raise Exception("Errore nell'aggiunta di un oggetto")
+

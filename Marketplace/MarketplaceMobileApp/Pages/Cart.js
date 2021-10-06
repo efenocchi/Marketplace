@@ -36,7 +36,7 @@ class Cart extends Component {
     }
 
        fetchCartOrders() {
-            return fetch('http://10.110.215.142:5000/api/items/' + global.user_id + '/cart_orders/?format=json')
+            return fetch('http://'+ global.ip +'/api/items/' + global.user_id + '/cart_orders/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
@@ -55,7 +55,7 @@ class Cart extends Component {
 
    fetchItemsFromOrderItems() {
        // Return the order items related with the ref_code clicked before (not all the objects bought)
-        fetch('http://10.110.215.142:5000/api/items_from_orderitems/' + global.user_id + '/?format=json')
+        fetch('http://'+ global.ip +'/api/items_from_orderitems/' + global.user_id + '/?format=json')
            .then((response) => response.json())
            .then((responseJson) => {
 

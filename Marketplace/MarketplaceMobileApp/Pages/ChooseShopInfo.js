@@ -4,6 +4,8 @@ import {createStackNavigator} from "@react-navigation/stack";
 import UserInfoModify from "./UserInfoModify"
 import OrdersReceived from "./OrdersReceived"
 import CheckReservationMade from "./CheckReservationMade"
+import LeaveOrReadReviewToCustomer from "./LeaveOrReadReviewToCustomer"
+import AddItem from "./AddItem"
 
 
 // Serve solo per visualizzare i bottoni con i quali si andrà nelle varie schermate
@@ -30,6 +32,12 @@ export class ChooseShopInfoList extends Component{
                 onPress={() => this.props.navigation.navigate('UserInfoModify')}
                 />
             </View>
+            <View>
+                <Button
+                title="Inserisci oggetto"
+                onPress={() => this.props.navigation.navigate('AddItem')}
+                />
+            </View>
             </SafeAreaView>
 
         );
@@ -48,6 +56,8 @@ export default class ChooseUserInfo extends Component {
                 <Stack.Screen name="UserInfoModify" component={UserInfoModify}/>
                 <Stack.Screen name="OrdersReceived" component={OrdersReceived}/>
                 <Stack.Screen name="CheckReservationMade" component={CheckReservationMade}/>
+                <Stack.Screen name="LeaveOrReadReviewToCustomer" component={LeaveOrReadReviewToCustomer}/>
+                <Stack.Screen name="AddItem" component={AddItem}/>
 
                 {/*<Stack.Screen name="FeedbackShop" component={FeedbackShop}/>*/}
 

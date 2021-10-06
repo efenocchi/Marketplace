@@ -6,6 +6,7 @@ import OrdersPlaced from "./OrdersPlaced"
 import FeedbackUser from "./FeedbackUser"
 import CheckItemsBought from "./CheckItemsBought"
 import ReadOrLeaveFeedbackItem from "./ReadOrLeaveFeedbackItem"
+import ItemsRelatedToOneShopAndOneOrder from "./ItemsRelatedToOneShopAndOneOrder"
 
 
 
@@ -51,6 +52,7 @@ export default class ChooseUserInfo extends Component {
                 <Stack.Screen name="UserInfoModify" component={UserInfoModify}/>
                 <Stack.Screen name="OrdersPlaced" component={OrdersPlaced}/>
                 <Stack.Screen name="FeedbackUser" component={FeedbackUser}/>
+                <Stack.Screen name="ItemsRelatedToOneShopAndOneOrder" component={ItemsRelatedToOneShopAndOneOrder}/>
 
                 {/*Controllo gli oggetti che ho acquistato dopo aver cliccato su un ordine già effettuato
                 Se voglio posso lasciare una recensione a quello che ho acquistato*/}
