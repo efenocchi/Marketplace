@@ -41,11 +41,16 @@
                       <div class="form-btn">
                           <span>Add Item Info</span>
                       </div>
-                      <form method="POST" enctype="multipart/form-data">
+                      <form id="RegFormItem" method="POST" enctype="multipart/form-data">
                           {% csrf_token %}
                           {% include 'items/base_aggiungi_item.html' %}
                           <button type="submit" class="btn" value="Submit">Submit</button>
                       </form>
+                      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+                      <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+                      <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+                      <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+                      <script type="text/javascript" src="{% static 'item_form_validator.js' %}"></script>
                   </div>
               </div>
           </div>

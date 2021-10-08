@@ -15,30 +15,12 @@ jQuery.validator.addMethod("specialcharacter", function(value, element) {
     return /^[0-9A-Za-z]*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?][0-9a-zA-Z]*$/.test(value);
 }, "Inserire almeno un carattere speciale");
 
-jQuery.validator.addMethod("username_unique", function(value) {
-    var isSuccess = false;
-
-    $.ajax({ url: "/api/check_existing_username_ajax",
-        type: "GET",
-        data: "username=" + value,
-        async: false,
-        dataType:"html",
-        success: function(msg) {
-        var returnedData = JSON.parse(msg);
-        isSuccess = returnedData["result"] === true
-    console.log(isSuccess)}
-    });
-    return isSuccess;
-}, "Username non disponibile");
-
-
 $( '#RegFormUser' ).validate({
     rules: {
         'username':{
             required: true,
             minlength: 3,
-            maxlength: 30,
-            username_unique: true
+            maxlength: 30
         },
         'email':{
             required: true,
@@ -73,10 +55,10 @@ $( '#RegFormUser' ).validate({
             maxlength: 245
         },
         'codice_postale':{
-            required: "Il campo codice postale è obbligatorio",
-            number: "Inserisci 5 numeri",
-            minlength: "Inserisci 5 numeri",
-            maxlength: "Limite di 5 numeri"
+            required: true,
+            number: true,
+            minlength: 5,
+            maxlength: 50
         }
     },
     messages:
@@ -130,8 +112,7 @@ $( '#RegFormShop' ).validate({
         'username':{
             required: true,
             minlength: 3,
-            maxlength: 30,
-            username_unique: true
+            maxlength: 30
         },
         'email':{
             required: true,
@@ -166,7 +147,7 @@ $( '#RegFormShop' ).validate({
             required: true,
             number: true,
             minlength: 9,
-            maxlength: 14
+            maxlength: 30
         },
         'descrizione':{
             required: true,
@@ -216,7 +197,7 @@ $( '#RegFormShop' ).validate({
             required: "Il campo telefono è obbligatorio",
             number: "Inserisci un numero valido",
             minlength: "Limite minimo di 9 caratteri",
-            maxlength: "Limite di 13 caratteri superato"
+            maxlength: "Limite di 30 caratteri superato"
          },
         'codice_postale':{
             required: "Il campo codice postale è obbligatorio",

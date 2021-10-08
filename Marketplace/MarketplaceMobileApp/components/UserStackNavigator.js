@@ -30,6 +30,7 @@ export default function UserStackNavigator() {
         <Tab.Screen component={ChooseUserInfo}
                     name="UserInfo"
                     options={{
+                        headerShown: false,
                         tabBarIcon: ({color}) => (
                             <Entypo name="user" color={color} size={25}/>
                         ),

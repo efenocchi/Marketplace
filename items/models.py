@@ -76,13 +76,14 @@ class WhoHasReviewed(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    ref_code = models.CharField(max_length=20, blank=True, null=True)
+    ref_code = models.CharField(max_length=40, blank=True, null=True)
     items = models.ManyToManyField(OrderItem)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     number_order = models.IntegerField(default=0)
     review_customer_done = models.ManyToManyField(WhoHasReviewed)
+    review_single_customer_done = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username

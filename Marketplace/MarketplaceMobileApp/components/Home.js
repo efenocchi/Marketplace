@@ -5,7 +5,7 @@ import styles from './styles';
 const Home = (props) => {
     return (
         <View style={styles.page}>
-            <Text style={styles.root}>Ciaone</Text>
+            <Text style={styles.root}>Ciao!!pagina home</Text>
         </View>
     );
 

@@ -62,10 +62,6 @@
             {% for single_order in order_item %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
-                        <div class="modify-delete">
-                            <a href="{% url 'items:modify_item' item_selected_id=single_order.item.id%}" class="fa fa-pencil" aria-hidden="true"></a>
-                            <a href="{% url 'items:delete_item' item_selected_id=single_order.item.id%}" class="fa fa-times" aria-hidden="true"></a>
-                        </div>
                             <img src="{{ single_order.item.image.url }}" class="card-img-top" alt="...">
 
                         <div class="card-body">

@@ -5,15 +5,15 @@ from items.models import Item, Order, OrderItem
 
 # Create your models here.
 
-class Transaction(models.Model):
-    """
-    Serve per identificare in modo univoco ogni transazione creata tra acquirente e venditore.
-    Permette di lasciare un feedback per ognuna di esse
-    """
-    id_transaction = models.CharField(max_length=100)
-    customer = models.CharField(max_length=100)
-    # per sapere se l'acquisto nel negozio è stato fatto da un altro negozio
-    customer_is_shop = models.BooleanField(default=False)
+# class Transaction(models.Model):
+#     """
+#     Serve per identificare in modo univoco ogni transazione creata tra acquirente e venditore.
+#     Permette di lasciare un feedback per ognuna di esse
+#     """
+#     id_transaction = models.CharField(max_length=100)
+#     customer = models.CharField(max_length=100)
+#     # per sapere se l'acquisto nel negozio è stato fatto da un altro negozio
+#     customer_is_shop = models.BooleanField(default=False)
 
 
 class ReviewItem(models.Model):

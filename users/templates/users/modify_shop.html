@@ -42,12 +42,16 @@
                       <div class="form-btn">
                           <span>Modify Shop Info</span>
                       </div>
-                      <form method="post" action="{% url 'users:modify_shop' %}"enctype="multipart/form-data">
+                      <form id="RegFormShop" method="post" action="{% url 'users:modify_shop' %}"enctype="multipart/form-data">
                           {% csrf_token %}
                           {% include 'users/base_modifica_negozio.html' %}
                           <button type="submit" class="btn" value="Submit">Submit</button>
                       </form>
-                      <script type="text/javascript" src="{% static 'user_form_validator.js' %}"></script>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+                        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+                        <script type="text/javascript" src="{% static 'modify_user_form_validator.js' %}"></script>
                   </div>
               </div>
           </div>

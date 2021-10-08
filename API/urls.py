@@ -1,7 +1,11 @@
 from . import views
 from django.urls import path
 app_name = 'API'
+from .views import *
 
+"""
+Per chiamare queste funzioni è necessario mettere nell'url prima la stringa http://127.0.0.1:5000/api/
+"""
 urlpatterns = [
 
     path('', views.UserInfoLogin.as_view(), name='API-user-info'),
@@ -20,6 +24,8 @@ urlpatterns = [
     path('get_review_item/<str:order_item_id>/<str:item_selected_id>/', views.GetSingleReviewItem.as_view(), name='API-get-review-item-order'),
     path('leave_review_item/<str:order_item_id>/<str:item_selected_id>/', views.CreateReviewItem.as_view(), name='API-leave-review-item'),
     # path('orderitem_item/<str:order_items_id>/<str:id_shop>/', views.ReturnOrderItemsAndOrderItems.as_view(), name='API-orderitem-item'),
+    path('check_existing_username/<str:username_to_check>/', check_existing_username),
+    path('check_existing_username_ajax/', check_existing_username_ajax),
 
 
 

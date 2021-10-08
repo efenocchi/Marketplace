@@ -19,7 +19,7 @@ import OrdersPlaced from "../Pages/OrdersPlaced";
 import AddItem from "../Pages/AddItem";
 import TakeAPicture from "../Pages/TakeAPictureOrVideo";
 import UploadPhoto2 from "../Pages/UploadPhoto2";
-
+const hiddenDrawerItems = ['NestedDrawerNavigator'];
 
 export function HomeScreen({ navigation, route }) {
 
@@ -50,18 +50,18 @@ function DrawerNavigator() {
 <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         {/*Usati solo per prove*/}
-        <Drawer.Screen name="UploadPhoto2" component={UploadPhoto2} />
-        <Drawer.Screen name="TakeAPicture" component={TakeAPicture} />
-        <Drawer.Screen name="provaFetch" component={provaFetch} />
+          <Drawer.Screen name="Login" component={Login} options={{headerShown: false}}/>
+          {/*<Drawer.Screen name="UploadPhoto2" component={UploadPhoto2} />*/}
+          {/*<Drawer.Screen name="TakeAPicture" component={TakeAPicture} />*/}
+          {/*<Drawer.Screen name="provaFetch" component={provaFetch} />*/}
 
-        <Drawer.Screen name="AddItem" component={AddItem} />
-        <Drawer.Screen name="Home2" component={HomeScreen2} />
-        <Drawer.Screen name="OrdersPlaced" component={OrdersPlaced} />
+          <Drawer.Screen name="AddItem" component={AddItem} />
+          <Drawer.Screen name="Home2" component={HomeScreen2} />
 
 
-        <Drawer.Screen name="Home" component={HomeScreen} />
-        <Drawer.Screen name="Login" component={Login} />
-        <Drawer.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} options={{headerShown: false}}/>
+          <Drawer.Screen name="Home" component={HomeScreen} />
+          <Drawer.Screen name="OrdersPlaced" component={OrdersPlaced} />
+          <Drawer.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} options={{headerShown: false}}/>
         <Drawer.Screen name="UserStackNavigator" screenOptions={{ gestureEnabled: false }} component={UserStackNavigator} options={{headerShown: false, swipeEnabled: false}}/>
         <Drawer.Screen name="ShopStackNavigator" screenOptions={{ gestureEnabled: false }} component={ShopStackNavigator} options={{headerShown: false, swipeEnabled: false}}/>
         <Drawer.Screen name="ItemList" component={ItemList} />

@@ -44,27 +44,3 @@ class GeneralUser(models.Model):
         verbose_name = 'GeneralUser'
         verbose_name_plural = 'GeneralUsers'
 
-
-# class ShopProfile(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     indirizzo = models.CharField(max_length=100)
-#     citta = models.CharField(max_length=50)
-#     provincia = models.CharField(max_length=2)
-#     regione = models.CharField(max_length=50)
-#     latitudine = models.FloatField(null=True, default=0, blank=True)
-#     longitudine = models.FloatField(null=True, default=0, blank=True)
-#     # telefono = models.CharField(max_length=20)
-#     # foto_profilo = models.FileField(null=True, default='', blank=True)
-#
-#     # descrizione stile/storia del negozio
-#     descrizione = models.CharField(max_length=250, default="", null=True)
-#
-#     login_negozio = models.BooleanField(default=True)  # per capire se il login è fatta da un utente o da un negozio
-#
-#     def __str__(self):
-#         return self.user.username
-#
-#     class Meta:
-#         verbose_name = 'ShopProfile'
-#         verbose_name_plural = 'ShopProfiles'
-

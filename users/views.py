@@ -291,6 +291,7 @@ def home_for_user(request):
 
     return render(request, 'main/home_for_user.html', context)
 
+
 def home_for_shop(request):
 
     user_profile = GeneralUser.objects.get(user=request.user)
@@ -465,16 +466,19 @@ def modify_profile(request):
         form_user_or_shop = NormalUserForm(request.POST or None, instance=shop_or_user)
 
     if form_user_or_shop.is_valid() and form.is_valid():
+
         # entro se l'username non è già presente o se è già presente e coincide con l'userneme di chi è loggato
         if not User.objects.filter(username=form.cleaned_data['username']).exists() or \
                 form.cleaned_data['username'] == request.user.username:
-
+            print("valido")
             # se non creo questo oggetto non ci sarà differenza tra i campi dell'oggetto e i form
             shop_or_user2 = GeneralUser.objects.get(user=request.user)
 
             if shop_or_user.login_negozio:
+                print("sono un negozio")
                 set_shop_info(shop_or_user2, form_user_or_shop)
             else:
+                print("Non sono un negozio")
                 set_user_info(shop_or_user2, form_user_or_shop)
 
             user_form = form.save(commit=False)
@@ -485,11 +489,11 @@ def modify_profile(request):
             if shop_or_user is not None:
                 if user.is_active:
                     login(request, user)
-                    context = {
-                        "form": form,
-                        "form_user_or_shop": form_user_or_shop,
-                    }
-                    return render(request, 'users/modify_profile.html', context)
+
+                    if shop_or_user.login_negozio:
+                        return render(request, 'main/home_for_shop.html')
+                    else:
+                        return render(request, 'main/home_for_user.html')
 
     context = {
         "form": form,
@@ -502,14 +506,7 @@ def modify_profile(request):
 def modify_shop(request):
     user = GeneralUser.objects.get(user=request.user)
     user_basic = User.objects.get(pk=request.user.pk)
-    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=1)
-    # if form.is_valid() and \
-    #         not User.objects.filter(username=form.cleaned_data['username']).exists():
-    #     shop = form.save(commit=False)
-    #     username = form.cleaned_data['username']
-    #     password = form.cleaned_data['password']
-    #     shop.set_password(password)
-    #     shop.save()
+    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=0)
 
     if user.login_negozio:
         form = ShopProfileForm(request.POST or None, instance=user)
@@ -517,6 +514,7 @@ def modify_shop(request):
         form = NormalUserForm(request.POST or None, instance=user)
 
     if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
+        print("entra1 valido")
         set_shop_info(user, form)
         context = {
             "form_for_username": form_for_username,
@@ -526,7 +524,8 @@ def modify_shop(request):
         return render(request, 'users/modify_shop.html', context)
 
     elif form.is_valid() and not user.login_negozio:
-        set_user_info(user, form)
+        print("entra1 valido")
+        set_shop_info(user, form)
         context = {
             "form_for_username": form_for_username,
             "form": form,
@@ -541,6 +540,7 @@ def modify_shop(request):
     }
 
     return render(request, 'users/modify_shop.html', context)
+
 
 def set_shop_info(shop_profile, shopform):
     """
@@ -594,25 +594,7 @@ def set_user_info(general_user, normalform):
     general_user.stato = 'Italia'
     general_user.provincia = normalform.cleaned_data['provincia']
     general_user.regione = normalform.cleaned_data['regione']
-    # general_user.telefono = normalform.cleaned_data['telefono']
-    # general_user.data_nascita = normalform.cleaned_data['data_nascita']
-    # general_user.eta = normalform.cleaned_data['eta']
-    # general_user.sesso = normalform.cleaned_data['sesso']
     general_user.descrizione = normalform.cleaned_data['descrizione']
 
     general_user.save()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

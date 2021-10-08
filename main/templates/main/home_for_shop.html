@@ -31,7 +31,8 @@
 <!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
     {% block menu_id %}
         <li><a href="{% url 'items:insert_item' %}">Add item</a></li>
-        <li><a href="{% url 'users:modify_shop' %}">Shop Info</a></li>
+        <li><a href="{% url 'users:modify_profile' %}">Shop Info</a></li>
+        <li><a href="{% url 'review:show_order_done_by_customer' %}">Recensioni Ordini</a></li>
         <li><a href="{% url 'items:item_page' %}">Item Page Shop</a></li>
     {% block logout %}
         <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">

@@ -72,7 +72,8 @@
 
                         {% if forloop.first %}
  <!--            qua posso gestire i dati degli order quindi controllo se è già stata lasciata la recensione-->
-                             {% if v.0.review_customer_done %}
+
+                             {% if v.0.review_single_customer_done %}
                                     <p  style="color:green">Recensione effettuata</p>
                         <a href="{% url 'review:show_customers_reviewed' receiver_id=v.1.user.id order_item_id=v.0.id%}" class="btn btn-primary">Mostra la recensione</a>
 

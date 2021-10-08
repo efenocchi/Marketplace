@@ -42,7 +42,7 @@
         <div class="container-item">
             <div class="row-2">
 
-                <form id="RegFormUser" action="{% url 'review:add_review_customer' order_id=order.id customer_id=receiver.id%}" method="post">
+                <form id="RegFormReview" action="{% url 'review:add_review_customer' order_id=order.id customer_id=receiver.id%}" method="post">
                     {% for field in review_form %}
                         {% csrf_token %}
                         <div class="form-group">
@@ -55,6 +55,11 @@
                     {% endfor %}
                     <button type="submit" class="btn">Aggiungi Recensione</button>
                  </form>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+                <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+                <script type="text/javascript" src="{% static 'review_form_validator.js' %}"></script>
             </div>
         </div>
 

@@ -25,6 +25,7 @@
 
     <!-- carico link a font -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
 
@@ -65,6 +66,10 @@
 
                             <button type="submit" class="btn">Register Shop</button>
                         </form>
+                        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+                        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
                         <script type="text/javascript" src="{% static 'user_form_validator.js' %}"></script>
                     </div>
                 </div>
@@ -80,15 +85,15 @@
 
 
        function register_user(){
+         RegFormUser.style.transform = "translateX(0px)";
          RegFormShop.style.transform = "translateX(402px)";
-         RegFormUser.style.transform = "translateX(402px)";
          Indicator.style.transform = "translateX(0px)";
        }
 
 
        function register_shop(){
+         RegFormUser.style.transform = "translateX(-402px)";
          RegFormShop.style.transform = "translateX(0px)";
-         RegFormUser.style.transform = "translateX(0px)";
          Indicator.style.transform = "translateX(100px)";
        }
 

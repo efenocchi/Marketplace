@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet, Button, Image, TextInput, ToastAndroid, Platform} from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Button,
+    Image,
+    TextInput,
+    ToastAndroid,
+    Platform,
+    ActivityIndicator
+} from 'react-native';
 import CustomHeader from '../components/Header';
 import Card from '../components/Card';
 import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native-gesture-handler';
@@ -23,6 +33,17 @@ export default class Login extends Component {
             password: "",
             error_message: ""
         }
+        if(global.logged_in === true){
+            // è un negozio ed è già loggato
+            if(global.login_negozio === true) {
+                this.props.navigation.navigate('ShopStackNavigator');
+            }
+            // è un utente ed è già loggato
+            else{
+                this.props.navigation.navigate('UserStackNavigator');
+            }
+        }
+
     }
 
 
@@ -39,7 +60,7 @@ export default class Login extends Component {
             console.log("sto stampando l'id dal fetch")
             console.log(global.user_id)
             console.log(global.login_negozio)
-             if(global.login_negozio == true) {
+             if(global.login_negozio === true) {
                 this.props.navigation.navigate('ShopStackNavigator');
             }
             else {

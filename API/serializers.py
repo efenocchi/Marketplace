@@ -22,25 +22,28 @@ def updatePositionLatLong(user):
     utente_richiedente.longitudine = longitudine
     utente_richiedente.save()
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = [
-            "last_login",
-            "is_superuser",
-            "is_staff",
-            "is_active",
-            "date_joined",
-            "groups",
-            "user_permissions",
-        ]
-        read_only_fields = ["id"]
-        extra_kwargs = {
-            'username': {
-                'validators': [UnicodeUsernameValidator()],
-            }
-        }
+        fields = ["id","username"]
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         exclude = [
+#             "last_login",
+#             "is_superuser",
+#             "is_staff",
+#             "is_active",
+#             "date_joined",
+#             "groups",
+#             "user_permissions",
+#         ]
+#         read_only_fields = ["id"]
+#         extra_kwargs = {
+#             'username': {
+#                 'validators': [UnicodeUsernameValidator()],
+#             }
+#         }
 
         def validate_username(self, data):
             if not re.match("^[A-Za-z0-9]+$", data):

@@ -1,3 +1,4 @@
+import magic
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
@@ -7,12 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 import re
 from .static import NamingList
 
-# import magic
-
-IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
-MIME_TYPES = ['image/jpeg', 'image/png']
-CONTENT_TYPES = ['image', 'video']
-MAX_UPLOAD_SIZE = "5242880"
+MIME_TYPES = ['image/jpeg', 'image/png', 'image/jpg']
 
 
 class UserForm(forms.ModelForm):
@@ -54,34 +50,19 @@ class UserForm(forms.ModelForm):
 
     def clean_password(self):
         # controllo password
-        if not re.match("^[A-Za-z0-9èòàùì]+$", self.cleaned_data['password']):
-            raise ValidationError(_('Errore: la password può contenere solo lettere minuscole, maiuscole e numeri.'))
+        if not re.match("^[0-9A-Za-z]*[!@#$%^&*()_+\-=\[\]{};':\|,.<>\/?][0-9a-zA-Z]*$", self.cleaned_data['password']):
+            raise ValidationError(_('Errore: la password deve contenere lettere minuscole, maiuscole e caratteri speciali.'))
         if not (3 <= len(self.cleaned_data['password']) <= 20):
             raise ValidationError(_('Errore: la password deve avere lunghezza fra 3 e 20 caratteri.'))
         return self.cleaned_data['password']
 
     def clean_conferma_password(self):
-        if not re.match("^[A-Za-z0-9èòàùì]+$", self.cleaned_data['conferma_password']):
+        if not re.match("^[0-9A-Za-z]*[!@#$%^&*()_+\-=\[\]{};':\|,.<>\/?][0-9a-zA-Z]*$", self.cleaned_data['conferma_password']):
             raise ValidationError(
                 _('Errore: la conferma password può contenere solo lettere minuscole, maiuscole e numeri.'))
         if not (3 <= len(self.cleaned_data['conferma_password']) <= 20):
-            raise ValidationError(_('Errore: la conferma password deve avere lunghezza fra 3 e 20 caratteri.'))
+            raise ValidationError(_('Errore: la conferma password deve contenere lettere minuscole, maiuscole e caratteri speciali.'))
         return self.cleaned_data['conferma_password']
-
-    def clean_first_name(self):
-        if not re.match("^[A-Za-z 'èòàùì]+$", self.cleaned_data['first_name']):
-            raise ValidationError(_('Errore: il nome può contenere solo lettere.'))
-        if not (1 <= len(self.cleaned_data['first_name']) <= 30):
-            raise ValidationError(_('Errore: il nome deve avere lunghezza fra 1 e 30 caratteri.'))
-        return self.cleaned_data['first_name']
-
-    def clean_last_name(self):
-        # controllo cognome
-        if not re.match("^[A-Za-z 'èòàùì]+$", self.cleaned_data['last_name']):
-            raise ValidationError(_('Errore: il cognome può contenere solo lettere.'))
-        if not (1 <= len(self.cleaned_data['last_name']) <= 30):
-            raise ValidationError(_('Errore: il cognome deve avere lunghezza fra 1 e 30 caratteri.'))
-        return self.cleaned_data['last_name']
 
     def clean_email(self):
         # controllo email
@@ -116,85 +97,51 @@ class NormalUserForm(ModelForm):
             'descrizione'
         ]
 
-    # def clean_indirizzo(self):
-    #     # controllo indirizzo
-    #     if not re.match("^[A-Za-z0-9/ 'èòàùì]+$", self.cleaned_data['indirizzo']):
-    #         raise ValidationError(_('Errore: l\'indirizzo può contenere solo lettere, numeri e /.'))
-    #     if not (3 <= len(self.cleaned_data['indirizzo']) <= 50):
-    #         raise ValidationError(_('Errore: l\'indirizzo deve avere lunghezza fra 3 e 50 caratteri.'))
-    #     return self.cleaned_data['indirizzo']
-    #
-    # def clean_citta(self):
-    #     # controllo citta
-    #     if not re.match("^[A-Za-z 'èòàùì]+$", self.cleaned_data['citta']):
-    #         raise ValidationError(_('Errore: il campo città può contenere solo lettere.'))
-    #     if not (3 <= len(self.cleaned_data['citta']) <= 50):
-    #         raise ValidationError(_('Errore: la città deve avere lunghezza fra 3 e 50 caratteri.'))
-    #     return self.cleaned_data['citta']
-    #
-    # def clean_provincia(self):
-    #     # controllo provincia
-    #     if not re.match("^[A-Za-z 'èòàùì]+$", self.cleaned_data['provincia']):
-    #         raise ValidationError(_('Errore: il campo provincia può contenere solo lettere.'))
-    #     if not (2 <= len(self.cleaned_data['provincia']) <= 50):
-    #         raise ValidationError(_('Errore: la provincia deve avere lunghezza fra 2 e 50 caratteri.'))
-    #     return self.cleaned_data['provincia']
-    #
-    # def clean_telefono(self):
-    #     # controllo telefono
-    #     if not re.match("^[0-9]+$", self.cleaned_data['telefono']):
-    #         raise ValidationError(_('Errore: il telefono può contenere solo numeri.'))
-    #     if not (3 <= len(self.cleaned_data['telefono']) <= 30):
-    #         raise ValidationError(_('Errore: il telefono deve avere lunghezza fra 3 e 30 caratteri.'))
-    #     return self.cleaned_data['telefono']
+    def clean_indirizzo(self):
+        # controllo indirizzo
+        if not re.match("^[A-Za-z0-9/ 'èòàùì]+$", self.cleaned_data['indirizzo']):
+            raise ValidationError(_('Errore: l\'indirizzo può contenere solo lettere, numeri e /.'))
+        if not (3 <= len(self.cleaned_data['indirizzo']) <= 50):
+            raise ValidationError(_('Errore: l\'indirizzo deve avere lunghezza fra 3 e 50 caratteri.'))
+        return self.cleaned_data['indirizzo']
 
-    # def clean_data_nascita(self):
-    #     # controllo data nascita
-    #     if not re.match("^[0-9]+$", self.cleaned_data['data_nascita']):
-    #         raise ValidationError(('Errore: la data di nascita può contenere solo numeri.'))
-    #     if not (8 <= len(self.cleaned_data['data_nascita']) <= 8):
-    #         raise ValidationError(_('Errore: la data di nascita deve avere lunghezza 8 caratteri (dd-mm-yyyy).'))
-    #     return self.cleaned_data['data_nascita']
+    def clean_citta(self):
+        # controllo citta
+        if not re.match("^[A-Za-z 'èòàùì]+$", self.cleaned_data['citta']):
+            raise ValidationError(_('Errore: il campo città può contenere solo lettere.'))
+        if not (3 <= len(self.cleaned_data['citta']) <= 50):
+            raise ValidationError(_('Errore: la città deve avere lunghezza fra 3 e 50 caratteri.'))
+        return self.cleaned_data['citta']
 
-    # def clean_foto_profilo(self):
-    #     files = self.files.get('foto_profilo')
-    #     if files is not None:
-    #         file_size = files.size
-    #         limit_MB = 5
-    #         if file_size > limit_MB * 1024 * 1024:
-    #             raise ValidationError("La dimensione massima per le immagini è %s MB" % limit_MB)
-    #
-    #         file_type = magic.from_buffer(files.read(), mime=True)
-    #         if file_type not in MIME_TYPES:
-    #             raise forms.ValidationError(_("file non supportato."))
-    #         return files
-    #     return None
-    #
-    # def clean_descrizione(self):
-    #     # controllo descrizione
-    #     if not re.match("^[A-Za-z0-9., 'èòàùì]+$", self.cleaned_data['descrizione']):
-    #         raise ValidationError(
-    #             _('Errore: il campo descrizione può contenere solo lettere, numeri, punti, virgole e spazi.'))
-    #     if not (1 <= len(self.cleaned_data['descrizione']) <= 245):
-    #         raise ValidationError(_('Errore: il campo descrizione deve avere lunghezza fra 1 e 245 caratteri.'))
-    #     return self.cleaned_data['descrizione']
-    #
-    # def clean_eta(self):
-    #     # controllo eta
-    #     if not re.match("^[0-9]+$", str(self.cleaned_data['eta'])):
-    #         raise ValidationError(_('Errore: l\'età può contenere solo numeri.'))
-    #     if not (14 <= int(self.cleaned_data['eta']) <= 100):
-    #         raise ValidationError(_('Errore: l\'età deve essere compresa fra 14 e 100.'))
-    #     return self.cleaned_data['eta']
-    #
-    # def clean_descrizione(self):
-    #     # controllo caratteristiche
-    #     if not re.match("^[A-Za-z0-9., 'èòàùì]+$", self.cleaned_data['descrizione']):
-    #         raise ValidationError(
-    #             _('Errore: il campo descrizione può contenere solo lettere, numeri, punti, virgole e spazi.'))
-    #     if not (1 <= len(self.cleaned_data['descrizione']) <= 245):
-    #         raise ValidationError(_('Errore: il campo caratteristiche deve avere lunghezza fra 1 e 245 caratteri.'))
-    #     return self.cleaned_data['descrizione']
+    def clean_foto_profilo(self):
+        files = self.files.get('foto_profilo')
+        if files is not None:
+            file_size = files.size
+            limit_MB = 5
+            if file_size > limit_MB * 1024 * 1024:
+                raise ValidationError("La dimensione massima per le immagini è %s MB" % limit_MB)
+
+            file_type = magic.from_buffer(files.read(), mime=True)
+            if file_type not in MIME_TYPES:
+                raise forms.ValidationError(_("file non supportato."))
+            return files
+        return None
+
+    def clean_codice_postale(self):
+        if not re.match("^[0-9]+$", self.cleaned_data['codice_postale']):
+            raise ValidationError(_('Errore: il codice postale può contenere solo numeri.'))
+        if not (5 <= len(self.cleaned_data['codice_postale']) <= 5):
+            raise ValidationError(_('Errore: il codice postale deve avere lunghezza di 5 numeri.'))
+        return self.cleaned_data['codice_postale']
+
+    def clean_descrizione(self):
+        # controllo descrizione
+        if not re.match("^[A-Za-z0-9., 'èòàùì]+$", self.cleaned_data['descrizione']):
+            raise ValidationError(
+                _('Errore: il campo descrizione può contenere solo lettere, numeri, punti, virgole e spazi.'))
+        if not (1 <= len(self.cleaned_data['descrizione']) <= 245):
+            raise ValidationError(_('Errore: il campo descrizione deve avere lunghezza fra 1 e 245 caratteri.'))
+        return self.cleaned_data['descrizione']
 
 
 class ShopProfileForm(ModelForm):
@@ -219,3 +166,57 @@ class ShopProfileForm(ModelForm):
             # 'foto_profilo',
             'descrizione'
         ]
+
+    def clean_telefono(self):
+        # controllo telefono
+        if not re.match("^[0-9]+$", self.cleaned_data['telefono']):
+            raise ValidationError(_('Errore: il telefono può contenere solo numeri.'))
+        if not (9 <= len(self.cleaned_data['telefono']) <= 13):
+            raise ValidationError(_('Errore: il telefono deve avere lunghezza fra 9 e 13 caratteri.'))
+        return self.cleaned_data['telefono']
+
+    def clean_codice_postale(self):
+        if not re.match("^[0-9]+$", self.cleaned_data['codice_postale']):
+            raise ValidationError(_('Errore: il codicepostale può contenere solo numeri.'))
+        if not (5 <= len(self.cleaned_data['codice_postale']) <= 5):
+            raise ValidationError(_('Errore: il codicepostale deve avere lunghezza di 5 numeri.'))
+        return self.cleaned_data['codice_postale']
+
+    def clean_indirizzo(self):
+        if not re.match("^[A-Za-z0-9/ 'èòàùì]+$", self.cleaned_data['indirizzo']):
+            raise ValidationError(_('Errore: l\'indirizzo può contenere solo lettere, numeri e /.'))
+        if not (3 <= len(self.cleaned_data['indirizzo']) <= 50):
+            raise ValidationError(_('Errore: l\'indirizzo deve avere lunghezza fra 3 e 50 caratteri.'))
+        return self.cleaned_data['indirizzo']
+
+    def clean_citta(self):
+        # controllo citta
+        if not re.match("^[A-Za-z 'èòàùì]+$", self.cleaned_data['citta']):
+            raise ValidationError(_('Errore: il campo città può contenere solo lettere.'))
+        if not (3 <= len(self.cleaned_data['citta']) <= 50):
+            raise ValidationError(_('Errore: la città deve avere lunghezza fra 3 e 50 caratteri.'))
+        return self.cleaned_data['citta']
+
+    def clean_foto_profilo(self):
+        files = self.files.get('foto_profilo')
+        if files is not None:
+            file_size = files.size
+            limit_MB = 5
+            if file_size > limit_MB * 1024 * 1024:
+                raise ValidationError("La dimensione massima per le immagini è %s MB" % limit_MB)
+
+            file_type = magic.from_buffer(files.read(), mime=True)
+            if file_type not in MIME_TYPES:
+                raise forms.ValidationError(_("file non supportato."))
+            return files
+        return None
+
+    def clean_descrizione(self):
+        # controllo descrizione
+        if not re.match("^[A-Za-z0-9., 'èòàùì]+$", self.cleaned_data['descrizione']):
+            raise ValidationError(
+                _('Errore: il campo descrizione può contenere solo lettere, numeri, punti, virgole e spazi.'))
+        if not (1 <= len(self.cleaned_data['descrizione']) <= 245):
+            raise ValidationError(_('Errore: il campo descrizione deve avere lunghezza fra 1 e 245 caratteri.'))
+        return self.cleaned_data['descrizione']
+

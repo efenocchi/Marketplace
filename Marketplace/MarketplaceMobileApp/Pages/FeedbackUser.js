@@ -83,7 +83,7 @@ export default class FeedbackUser extends Component{
         }
         this.array_values = Array(this.state.number_reviews).fill().map(()=>Array(9).fill())
         // this.array_values[0][2] = 4
-        console.log(this.array_values[0][2])
+        // console.log(this.array_values[0][2])
 
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["description"] // descrizione

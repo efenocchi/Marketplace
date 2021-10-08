@@ -94,9 +94,9 @@ export default class App extends React.Component {
     global.user_key = "-1";
     global.username = "";
     global.user_id = -1;
-    global.provincia = "AG";
-    global.regione = "Abruzzo";
-    global.ip = "192.168.43.99:80"; // Inserire il proprio ip e la porta in ascolto
+    global.provincia = "MO";
+    global.regione = "Emilia-Romagna";
+    global.ip = "10.110.215.142:5000"; // Inserire il proprio ip e la porta in ascolto
     global.uri = false;
     global.state = {
       fontLoaded: false,
@@ -117,6 +117,7 @@ export default class App extends React.Component {
             //     <App />
             // </RootSiblingParent>
 
+    console.log(!global.state.fontLoaded)
 
     if (!global.state.fontLoaded) {
       return (

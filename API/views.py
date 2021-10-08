@@ -1,6 +1,7 @@
 import re
 
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
@@ -129,6 +130,7 @@ class FindUser(generics.ListAPIView):
             profili.append(profilo)
             return profili
         except Exception:
+            print("exception")
             username_trovati = User.objects.filter(username__startswith=name)
             if len(username_trovati) == 0:
                 username_trovati = User.objects.filter(username__contains=name)
@@ -636,3 +638,38 @@ class InsertNewItem(generics.CreateAPIView):
         except Exception:
             raise Exception("Errore nell'aggiunta di un oggetto")
 
+
+def check_existing_username(request, username_to_check):
+    """
+    Controlla se uno username, passato come parametro GET, non sia già registrato nel model.
+    I valori di True e False sono invertiti perchè se è già presente lo username devo ritornare False in modo da evitare
+    che l'utente possa registrarsi
+    :param request: request utente.
+    :return: falso se username già registrato, vero se username non registrato.
+    """
+
+    if request.method == "GET":
+        print(username_to_check)
+        try:
+            user = User.objects.get(username__exact=username_to_check)
+            return JsonResponse({'result': False})
+        except Exception:
+            return JsonResponse({'result': True})
+            raise Exception("Errore nell'aggiunta di un oggetto")
+
+
+def check_existing_username_ajax(request):
+    """
+    Controlla se uno username, passato come parametro GET, non sia già registrato nel model.
+
+    :param request: request utente.
+    :return: falso se username già registrato, vero se username non registrato.
+    """
+    if request.method == "GET":
+        p = request.GET.copy()
+        if 'username' in p:
+            name = p['username']
+            if User.objects.filter(username__iexact=name):
+                return JsonResponse({'result': False})
+            else:
+                return JsonResponse({'result': True})

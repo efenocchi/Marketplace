@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from items.models import Item, Order, OrderItem
 from review.forms import ReviewItemForm, ReviewShopForm, ReviewCustomerForm
@@ -42,8 +43,16 @@ def show_customers_reviewed(request, receiver_id, order_item_id):
     :param order_item_id:
     :return:
     """
-    order = Order.objects.get(items=order_item_id)
-    receiver = GeneralUser.objects.get(id=receiver_id)
+    print(order_item_id)
+    order = Order.objects.get(id=order_item_id)
+
+    user = User.objects.get(id=receiver_id)
+    print(user.id)
+    receiver = GeneralUser.objects.get(user=user)
+    print(receiver.id)
+    print(receiver.user)
+    print(request.user)
+    print(order)
     review = ReviewCustomer.objects.get(writer=request.user, receiver=receiver.user, order=order)
     review_form = ReviewCustomerForm(request.POST or None, request.FILES or None, instance=review, reviewed=True)
     context = {
@@ -144,7 +153,7 @@ def add_review_shop(request, shop_selected_id):
 @login_required(login_url='/utenti/login/')
 def add_review_customer(request, order_id, customer_id):
     """
-    Un negozio potrà dare un feedback all'utente dopo che esso avrà fatto un acquisto
+    Un negozio potrà dare un feedback all'utente dopo che avrà fatto un acquisto
     :param request:
     :param order_id:
     :param customer_id:
@@ -152,9 +161,11 @@ def add_review_customer(request, order_id, customer_id):
     """
 
     review_form = ReviewCustomerForm(request.POST or None, request.FILES or None, reviewed=False)
-
+    print("id ricevuto", customer_id)
     writer = GeneralUser.objects.get(user=request.user)
-    receiver = GeneralUser.objects.get(id=customer_id)
+    user = User.objects.get(id=customer_id)
+    receiver = GeneralUser.objects.get(user=user)
+
     order = Order.objects.get(id=order_id)
 
     # un utente sta cercando di fare una recensione a un altro utente, non è possibile
@@ -170,13 +181,13 @@ def add_review_customer(request, order_id, customer_id):
         review.description = review_form.cleaned_data['description']
         review.rating = review_form.cleaned_data['rating']
         review.save()
-        order.review_customer_done = True
+        order.review_single_customer_done = True
         order.save()
         return HttpResponseRedirect(reverse('index'))
 
     context = {
         "order": order,
-        "receiver": receiver,
+        "receiver": receiver.user,
         'review_form': review_form,
     }
 
