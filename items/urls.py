@@ -15,11 +15,13 @@ urlpatterns = [
 
     path('<int:item_selected_id>/show_feedback_item', views.show_feedback_item, name='show_feedback_item'),
 
-    path('<int:shop_selected_id>/show_feedback_shop', views.show_feedback_shop, name='show_feedback_shop'),
+    path('<int:shop_selected_id>/show_reviews_shop', views.show_reviews_shop, name='show_reviews_shop'),
 
     path('checkout', views.checkout, name='checkout'),
 
     path('<int:item_selected_id>/', views.buy_page, name='buy_page'),
+
+    path('show_shop/<str:username_shop>', views.show_shop, name='show_shop'),
 
     #/annunci/#annuncio/modifica/
     path('<int:item_selected_id>/modify', views.modify_item, name='modify_item'),

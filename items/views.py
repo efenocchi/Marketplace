@@ -2,6 +2,7 @@ import datetime
 from math import radians, sin, cos, atan2, sqrt
 import requests
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -195,6 +196,37 @@ def item_page(request):
         context['all_items'] = item_shop
         return render(request, 'items/item_page_shop.html', context)
         # return HttpResponse("sono un negozio e devo visualizzare un'altra schermata" + request.user.username)
+
+
+def show_shop(request, username_shop):
+    """
+    Mostriamo tutti gli oggetti di un negozio e diamo la possibilità a un utente di lasciare una recensione
+    """
+    user = User.objects.get(username=username_shop)
+    print(username_shop)
+    print("username_shop")
+    shop_user = GeneralUser.objects.get(user=user)
+
+    is_registered, value_redirect = control_info_generalUser(shop_user)
+    if not is_registered:
+        return value_redirect
+
+    item_shop = Item.objects.filter(user=shop_user.user)
+    print(item_shop)
+    text = computeTime(request, shop_user.id)
+    review_shop = ReviewShop.objects.filter(writer=request.user, receiver=shop_user.user)
+    is_reviewed = False
+    if review_shop is not None:
+        is_reviewed = True
+    context = {
+        'all_items': item_shop,
+        'text': str(text),
+        'is_reviewed': is_reviewed,
+        'shop_user': shop_user
+    }
+
+    return render(request, 'items/show_shop.html', context)
+
 
 @login_required(login_url='/users/login')
 def buy_page(request, item_selected_id):
@@ -596,7 +628,7 @@ def show_distance_shops(request, items_available, ascending=True):
     return items_pk
 
 
-def computeTime(request, item_selected_id):
+def computeTime(request, id_shop):
     """"
     Passo gli identificativi univoci dei negozi più vicini e in base a questo filtro mostro i prodotti richiesti
 
@@ -614,8 +646,10 @@ def computeTime(request, item_selected_id):
     # se voglio posso iterare sull'oggetto e tenere solo alcuni negozi da mostrare, altrimenti posso fare la ricerca
     # di tutte le distanze utente-negozio
 
-    item = Item.objects.filter(id=item_selected_id).first()
-    shop = GeneralUser.objects.get(user=item.user)
+    # item = Item.objects.filter(id=item_selected_id).first()
+    # shop = GeneralUser.objects.get(user=item.user)
+
+    shop = GeneralUser.objects.get(id=id_shop)
     user = GeneralUser.objects.get(user=request.user)
     parameters = []
     # metto le coordinate dell'utente
@@ -662,7 +696,7 @@ def computeTime(request, item_selected_id):
     else:
         minuti = " minuto dal negozio"
 
-    return HttpResponse("L'utente " + request.user.username + " si trova a " + ore + str((int(time[1]) % 60)) + minuti)
+    return "L'utente " + request.user.username + " si trova a " + ore + str((int(time[1]) % 60)) + minuti
 
 
 def show_feedback_item(request, item_selected_id):
@@ -682,10 +716,9 @@ def show_feedback_item(request, item_selected_id):
     return render(request, 'items/show_feedback_item.html', context)
 
 
-def show_feedback_shop(request, shop_selected_id):
+def show_reviews_shop(request, shop_selected_id):
     """
-    [modifica]
-    Dobbiamo mostrare una serie di recensioni e cliccando sopra si può visualizzare l'intera recensione (fatta con card)
+    Mostra tutte le recensioni del negozio
     """
 
     shop = GeneralUser.objects.filter(id=shop_selected_id).first()
@@ -697,4 +730,4 @@ def show_feedback_shop(request, shop_selected_id):
         'all_reviews': reviews
     }
 
-    return render(request, 'items/show_feedback_shop.html', context)
+    return render(request, 'items/show_reviews_shop.html', context)

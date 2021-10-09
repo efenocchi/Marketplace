@@ -23,6 +23,10 @@ class ItemForm(ModelForm):
     #data_fine = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'])
     image = forms.ImageField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        super(ItemForm, self).__init__(*args, **kwargs)
+        self.fields['discount_price'].required = False
+
     class Meta:
         model = Item
         fields = ['name', 'price', 'discount_price', 'category', 'quantity', 'description', 'image']
@@ -40,8 +44,10 @@ class ItemForm(ModelForm):
         return self.cleaned_data['price']
 
     def clean_discount_price(self):
-        if not (0 <= self.cleaned_data['discount_price'] <= 10000000):
-            raise ValidationError(_('Errore: inserire un prezzo valido.'))
+        print(self.cleaned_data['discount_price'])
+        if self.cleaned_data['discount_price'] is not None:
+            if not (0 <= self.cleaned_data['discount_price'] <= 10000000):
+                raise ValidationError(_('Errore: inserire un prezzo valido.'))
         return self.cleaned_data['discount_price']
 
     def clean_description(self):

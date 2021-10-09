@@ -29,6 +29,7 @@ urlpatterns = [
     # path('show_distance_shops', views.show_distance_shops, name='show_distance_shops'),
     # path('show_distance_shops', views.show_distance_shops, name='show_distance_shops'),
 
+
     path('home_for_user', views.home_for_user, name='home_for_user'),
     path('home_for_shop', views.home_for_shop, name='home_for_shop'),
     # path('prova_registrazione', views.prova_registrazione, name='prova_registrazione'),

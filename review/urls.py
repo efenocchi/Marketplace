@@ -19,4 +19,5 @@ urlpatterns = [
 
     path('<int:order_id>/<int:customer_id>/add_review_customer', views.add_review_customer, name='add_review_customer'),
 
+
 ]

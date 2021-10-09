@@ -8,7 +8,7 @@
     {% extends 'main/base.html' %}
 
     <!-- ridefinisco title -->
-    <title>{% block title %}Item_Page{% endblock %}</title>
+    <title>{% block title %}Negozio{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -39,23 +39,19 @@
     </a>
     {% endblock %}
 
-    {% block item_page %}
+    {% block show_shop %}
     <main>
         <div class="container">
             <div class="container text-center">
                 {% if user.user is not None %}
-                    <h2 id="title">Welcome: {{ user }}</h2>
+                    <h2 id="title">{{ text }}</h2>
                 {% endif %}
+                {% if is_reviewed %}
+                    <a href="{% url 'items:show_reviews_shop' shop_selected_id=shop_user.id %}" class="btn btn-primary">Mostra recensioni negozio</a>
+                {% endif %}
+                <a href="{% url 'review:add_review_shop' shop_selected_id=shop_user.id %}" class="btn btn-primary">Lascia una recensione al negozio</a>
+
             </div>
-    <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
-        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
-            <div class="small-container">
-                <form class="d-flex" method="get" action="{% url 'items:search'%}">
-                    <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>
-                </form>
-            </div>
-        </nav>
     <!------------------------------ SEZIONE ELENCO PRODOTTI ----------------------------------------->
         <section class="text-center mb-4">
             <div class="row wow fadeIn">
@@ -79,19 +75,17 @@
                               <span>${{ item.price }}</span>
                               {% endif %}
                             </p>
-                            <p>
+                                                        <p>
                                 <span>Negozio: {{ item.user.username }}</span>
                             </p>
                             <p class="card-text">{{ item.category }}</p>
                                 {% if item.quantity <= 0 %}
                                 <h5>{{ item.quantity }}</h5>
                                 <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
-                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
                                 {% endif %}
                                 {% if item.quantity > 0 %}
                                 <h5>{{ item.quantity }}</h5>
                                 <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn">Acquista</a>
-                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
                                 {% endif %}
                         </div>
                     </div>
