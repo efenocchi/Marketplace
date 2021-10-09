@@ -502,44 +502,44 @@ def modify_profile(request):
 
     return render(request, 'users/modify_profile.html', context)
 
-@login_required(login_url='/users/login')
-def modify_shop(request):
-    user = GeneralUser.objects.get(user=request.user)
-    user_basic = User.objects.get(pk=request.user.pk)
-    form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=0)
-
-    if user.login_negozio:
-        form = ShopProfileForm(request.POST or None, instance=user)
-    else:
-        form = NormalUserForm(request.POST or None, instance=user)
-
-    if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
-        print("entra1 valido")
-        set_shop_info(user, form)
-        context = {
-            "form_for_username": form_for_username,
-            "form": form,
-            "user_profile": user,
-        }
-        return render(request, 'users/modify_shop.html', context)
-
-    elif form.is_valid() and not user.login_negozio:
-        print("entra1 valido")
-        set_shop_info(user, form)
-        context = {
-            "form_for_username": form_for_username,
-            "form": form,
-            "user_profile": user,
-        }
-        return render(request, 'users/modify_shop.html', context)
-
-    context = {
-        "form_for_username": form_for_username,
-        "form": form,
-        "user_profile":user,
-    }
-
-    return render(request, 'users/modify_shop.html', context)
+# @login_required(login_url='/users/login')
+# def modify_shop(request):
+#     user = GeneralUser.objects.get(user=request.user)
+#     user_basic = User.objects.get(pk=request.user.pk)
+#     form_for_username = UserForm(data=request.POST or None, instance=user_basic, oauth_user=0)
+#
+#     if user.login_negozio:
+#         form = ShopProfileForm(request.POST or None, instance=user)
+#     else:
+#         form = NormalUserForm(request.POST or None, instance=user)
+#
+#     if form.is_valid() and form_for_username.is_valid() and user.login_negozio:
+#         print("entra1 valido")
+#         set_shop_info(user, form)
+#         context = {
+#             "form_for_username": form_for_username,
+#             "form": form,
+#             "user_profile": user,
+#         }
+#         return render(request, 'users/modify_shop.html', context)
+#
+#     elif form.is_valid() and not user.login_negozio:
+#         print("entra1 valido")
+#         set_shop_info(user, form)
+#         context = {
+#             "form_for_username": form_for_username,
+#             "form": form,
+#             "user_profile": user,
+#         }
+#         return render(request, 'users/modify_shop.html', context)
+#
+#     context = {
+#         "form_for_username": form_for_username,
+#         "form": form,
+#         "user_profile":user,
+#     }
+#
+#     return render(request, 'users/modify_shop.html', context)
 
 
 def set_shop_info(shop_profile, shopform):
