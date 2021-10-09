@@ -48,9 +48,13 @@ urlpatterns = [
 
     # Vale
     path('items/list_all_items/', views.ListAllItems.as_view(), name='API-list-all-items'),
-    path('items/<int:pk>/shop_all_items/', views.ShopAllItems.as_view(), name='API-shop-all-items'),
+    path('items/<str:id_shop>/shop_all_items/', views.ShopAllItems.as_view(), name='API-shop-all-items'),
     path('items/<int:pk>/cart_orders/', views.CartOrders.as_view(), name='API-cart-orders'),
-    path('items_from_orderitems/<int:pk>/', views.IdItemsFromOrderItems.as_view(), name='API-id-items-from-orderitems'),
+    path('id_items_from_orderitems/<int:pk>/', views.IdItemsFromOrderItems.as_view(), name='API-id-items-from-orderitems'),
+    path('items/search/<int:pk>/<str:text>/', views.SearchItem.as_view(), name='API-search-item'),
+    path('items/add_quantity/<int:pk>/<int:id_item>/<int:quantity>/', views.AddToCart.as_view(),
+         name='API-add-to-cart'),
+    path('items/<int:id_item>/delete/', views.DeleteItem.as_view(), name='API-delete-item-from-cart'),
     # Fine
 
 ]

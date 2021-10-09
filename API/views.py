@@ -1,4 +1,5 @@
 import re
+from math import radians, sin, atan2, sqrt, cos
 
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -183,55 +184,13 @@ class ShopAllItems(generics.ListAPIView):
     serializer_class = ItemSerializer
 
     def get_queryset(self):
-        id = self.kwargs['pk']
-        shop = GeneralUser.objects.get(id=id)
+        id_shop = self.kwargs['id_shop']
+        user = User.objects.get(username=id_shop)
+        shop = GeneralUser.objects.get(user=user)
         queryset = Item.objects.filter(user=shop.user)
         lista_query = list(queryset)
         print(lista_query)
         return lista_query
-
-
-class CartOrders(generics.ListAPIView):
-    serializer_class = OrderItemSerializer
-
-    def get_queryset(self):
-        id = self.kwargs['pk']
-        queryset = OrderItem.objects.filter(user__id=id, ordered=False)
-        lista_query = list(queryset)
-        print(lista_query)
-        return lista_query
-
-
-class IdItemsFromOrderItems(generics.ListAPIView):
-    """
-    Ritorno ogni item collegato ad un order items
-    Questa funzione riceve una lista di id di order items
-    """
-    serializer_class = ItemSerializer
-
-    def get_queryset(self):
-        id = self.kwargs['pk']  #prendo id dell'utente di cui voglio sapere gli order items
-        order_items = OrderItem.objects.filter(user__id=id, ordered=False)  #prendo i suoi order_items
-        order_items_id = []
-        items = []
-        print(order_items)
-        for i in order_items:    #scorro gli order_items e li metto in order_items_id
-            order_items_id.append(i.id)
-        print(order_items_id)
-        try:
-            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
-            for single_item in order_items:
-                item = Item.objects.get(id=single_item.item.id) # prendo gli item dei vari order item
-                items.append(item)
-                print("item", item)
-            print(items)
-
-        except Exception:
-            raise Exception("Oggetto non trovato")
-
-        print("list(review)", list(order_items))
-
-        return items
 
 # Fine Da Vale
 
@@ -673,3 +632,273 @@ def check_existing_username_ajax(request):
                 return JsonResponse({'result': False})
             else:
                 return JsonResponse({'result': True})
+
+
+class CartOrders(generics.ListAPIView):
+    """
+    Funzione utilizzata per listare tutti gli item aggiunti nel carrello
+    """
+    serializer_class = OrderItemSerializer  #sistemare con serializzatore order item
+
+    def get_queryset(self):
+        id = self.kwargs['pk']
+        normal_user = GeneralUser.objects.get(id=id)
+        queryset = OrderItem.objects.filter(user=normal_user.user, ordered=False)
+        lista_query = list(queryset)
+        print(lista_query)
+        return lista_query
+
+
+class IdItemsFromOrderItems(generics.ListAPIView):
+    """
+    Ritorno ogni item collegato ad un order items
+    Questa funzione riceve una lista di id di order items
+    """
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        id = self.kwargs['pk']  #prendo id dell'utente di cui voglio sapere gli order items
+        normal_user = GeneralUser.objects.get(id=id)
+        order_items = OrderItem.objects.filter(user=normal_user.user, ordered=False)  #prendo i suoi order_items
+        order_items_id = []
+        items = []
+        print(order_items)
+        for i in order_items:    #scorro gli order_items e li metto in order_items_id
+            order_items_id.append(i.id)
+        print(order_items_id)
+        try:
+            order_items = OrderItem.objects.filter(id__in=order_items_id) # take the items order
+            for single_item in order_items:
+                item = Item.objects.get(id=single_item.item.id) # prendo gli item dei vari order item
+                items.append(item)
+                print("item", item)
+            print(items)
+
+        except Exception:
+            raise Exception("Oggetto non trovato")
+
+        print("list(review)", list(order_items))
+
+        return items
+
+
+class SearchItem(generics.ListAPIView):
+    """
+    Funzione utilizzata per ricercare gli item sia per il negozio che per l'utente
+    """
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        text = self.kwargs['text']
+        id = self.kwargs['pk']
+        print(id)
+        print(text)
+        ascending = True
+        item_searched = Item.objects.filter(name__contains=text)
+        print(item_searched)
+        general_user = GeneralUser.objects.get(user__id=id)
+
+        parameters = []
+
+        # shops_validi = GeneralUser.objects.filter(login_negozio=True)
+        print(item_searched)
+
+        # metto tutti i valori tranne il primo, li aggiorno e metto in testa il primo
+        # dato l'oggetto prendo le coordinate del suo negozio
+        for item in item_searched:
+            shop = GeneralUser.objects.get(user=item.user)
+            print(shop)
+            print(shop.latitudine)
+            parameters.append(shop.indirizzo.replace("/", "") + ',' + shop.citta.replace("/", "") + ','
+                              + shop.stato.replace("/", "") + ',' + shop.codice_postale.replace("/", ""))
+            # parameters['locations'].append(str(shop.latitudine) + ',' + str(shop.longitudine))
+
+        # return HttpResponse(parameters['locations'])
+
+        lat_shop = 0
+        lng_shop = 0
+        if general_user.latitudine is not None and general_user.longitudine is not None:
+            lat_shop = general_user.latitudine
+            lng_shop = general_user.longitudine
+
+        distanze = []
+        indici = []
+        items_pk = []
+        # raggio della terra approssimato
+        r = 6371.0
+
+        lat1 = radians(lat_shop)
+        lon1 = radians(lng_shop)
+
+        # Calcola le distanze di tutti i prodotti
+        for i, item in enumerate(item_searched):
+            indici.append(i)
+            shop_profile = GeneralUser.objects.filter(user=item.user).first()
+
+            if shop_profile.latitudine is not None and shop_profile.longitudine is not None:
+                lat2 = radians(shop_profile.latitudine)
+                lon2 = radians(shop_profile.longitudine)
+            else:
+                lat2 = 0
+                lon2 = 0
+            print(str(lat2) + ',' + str(lon2))
+
+            dlon = lon2 - lon1
+            dlat = lat2 - lat1
+
+            a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+            c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+            distanze.append(r * c)
+            items_pk.append(item.pk)
+
+        # Ordina in modo crescente o decrescente sulle distanze
+        if ascending:
+            distanze_negozi, indici = (list(t) for t in zip(*sorted(zip(distanze, indici))))
+            _, items_pk = (list(t) for t in zip(*sorted(zip(distanze, items_pk))))
+            _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters))))
+        else:
+            distanze_negozi, indici = (list(t) for t in zip(*sorted(zip(distanze, indici), reverse=True)))
+            _, items_pk = (list(t) for t in zip(*sorted(zip(distanze, items_pk), reverse=True)))
+            _, parameters = (list(t) for t in zip(*sorted(zip(distanze, parameters), reverse=True)))
+
+        # return indici
+        print("distanze", distanze_negozi)
+        print("indici", indici)
+
+        complete_parameters = parameters[:]
+        complete_parameters.insert(0,
+                                   general_user.indirizzo.replace("/", "") + ',' + general_user.citta.replace("/",
+                                                                                                              "") + ','
+                                   + general_user.stato.replace("/", "") + ',' + general_user.codice_postale.replace(
+                                       "/",
+                                       ""))
+
+        # Creo il dizionario che utilizzerò con per le richieste POST nella funzione successiva e
+        # inserisco anche l'indirizzo dell'utente (oltre a quello dei negozi)
+        complete_parameters = {
+            'locations':
+                complete_parameters
+
+        }
+
+        # inserisco anche l'identificatore univoco dell'utente
+        # items_pk.insert(0, request.user)
+
+        print('items_pk', items_pk)
+        # t = threading.Thread(target=computeTime, args=[items_pk, complete_parameters], daemon=True)
+        # t.start()
+        # computeTime(items_pk, complete_parameters)
+        # return HttpResponse(distanze, indici)
+
+        items_ordered = list()
+        for id_item in items_pk:
+            items_ordered.append(item_searched.get(id=id_item))
+
+        print(items_ordered)
+        return items_ordered
+
+
+class AddToCart(generics.UpdateAPIView):
+    """
+    #Funzione utilizzata per aggiungere gli item al carrello dalla ItemDetaiPage
+    """
+    serializer_class = ItemSerializer
+    permission_classes = [IsSameUser, IsUserLogged]
+
+    def get_object(self):
+        user_id = self.kwargs['pk']  #prendo la quantità di disponibilità di quell'oggetto
+        id_item = self.kwargs['id_item']    #prendo l'id di quell'oggetto
+        quantity = self.kwargs['quantity']  # prendo l'id di quell'oggetto
+        item_selected = Item.objects.get(id=id_item)    #oggetto da aggiungere al carrello
+
+        print(item_selected)
+        print(item_selected.quantity)
+
+        order_item, created = OrderItem.objects.get_or_create(
+            item=item_selected,
+            user=self.request.user,
+            ordered=False
+        )
+        # ORDER E' L'INSIEME DI ITEM CHE COMPONGONO L'ORDINE DELL'UTENTE
+        order_qs = Order.objects.filter(user=user_id, ordered=False)
+        print(order_qs)
+
+        if order_qs.exists():
+            order = order_qs[0]
+            print(order)
+
+            if order.items.filter(item__id=item_selected.id).exists():
+                print(12)
+                if (item_selected.quantity >= quantity):
+                    print(13)
+                    order_item.quantity += quantity
+                    print(order_item.quantity)
+                    order_item.save()
+                    # item_selected.quantity -= quantity
+                    # item_selected.save()
+
+                else:
+                    print(100)  #non ci va mai
+
+            else:
+                print(14)
+                order_item.quantity += quantity
+                order_item.save()
+                # item_selected.quantity -= quantity
+                # item_selected.save()
+                order.items.add(order_item)
+
+        else:
+            # ordered_date = timezone.now()
+            print(15)
+            order = Order.objects.create(user=self.request.user)
+            order.items.add(order_item)
+
+        return order_item
+
+
+class DeleteItem(generics.RetrieveUpdateDestroyAPIView):
+    """
+    #Funzione utilizzata per eliminare un item dal carrello
+    """
+
+    serializer_class = ItemSerializer
+
+    def get_object(self):
+        id_item = self.kwargs['id_item']
+        return Item.objects.get(id=id_item)
+
+    def perform_destroy(self, instance):
+        id_item = self.kwargs['id_item']    #prendo id dell'item da cancellare
+        item_to_delete = Item.objects.filter(id=id_item).first()    #prendo l'item da cancellare
+
+        #filtro tutti gli oggetti con ordered=False
+        order_qs = Order.objects.filter(
+            user=self.request.user,
+            ordered=False
+        )
+        print(order_qs)
+        # se c'è almeno un elemento
+        if order_qs.exists():
+            print(59)
+            order = order_qs[0]
+            # controllo che l'elemento da eliminare sia in ordine(carrello) se si allora:
+            if order.items.filter(item__id=id_item).exists():
+                print(60)
+                # se l'elemento da eliminare è nel carrello
+                order_item = OrderItem.objects.filter(
+                    item=item_to_delete,
+                    user=self.request.user,
+                    ordered=False
+                )[0]
+                # se la quantità è maggiore di 1 la decremento prima di eliminarlo
+                if order_item.quantity > 1:
+                    print(61)
+                    order_item.quantity -= 1
+                    order_item.save()
+                # se la quantità è 1 rimuovo direttamente
+                else:
+                    print(62)
+                    order.items.remove(order_item)
+                    order_item.delete()

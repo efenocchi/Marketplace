@@ -23,33 +23,71 @@ import SearchBar from "react-native-dynamic-search-bar";
 const {width, height} = Dimensions.get('window');
 
 class ItemList extends Component {
+
     constructor(props){
         super(props);
         this.state ={
-            isLoading: true,
-            show_pickers: true,
-            //search: ""
+            isLoading1: true,
+            isLoading2: true,
+            isLoading3: true
         }
+
     }
 
     componentDidMount() {
-        this.fetchAllItems();
-        this.willFocusSubscription = this.props.navigation.addListener(
-          'willFocus',
-          () => {
+        Promise.all([
+            this.fetchAllItems(),
+        ]).then(([urlOneData, urlTwoData]) => {
             this.setState({
-                isLoading: true,
+                // mergedData: urlOneData.concat(urlTwoData)
+            });
+        })
+
+    }
+
+    fetchSearchItem(text) {
+        if(text == "") {
+            this.setState({
+                //isLoading2: false,
             }, function(){
 
             });
-            this.fetchAllItems();
-          }
-        );
+        } else {
+            return fetch('http://'+ global.ip +'/api/items/search/' + global.user_id + '/' + text + '/?format=json')
+            .then((response) => response.json())
+            .then((responseJson) => {
+
+            this.setState({
+                isLoading2: false,
+                dataSource: responseJson.results,
+                all_items: responseJson.count
+            }, function(){
+
+            });
+
+            })
+            .catch((error) =>{
+            //this.fetchSearchItem(text);
+            });
+        }
     }
+
+    // fetchShowDistance(item_selected_id) {
+    //         return fetch('http://5.88.60.56:8000/api/items/show_distance/' + global.user_id + '/' + item_selected_id + '?format=json')
     //
-    // componentWillUnmount() {
-    // this.willFocusSubscription.remove();
-    // }
+    //         .then((response) => response.json())
+    //         .then((responseJson) => {
+    //
+    //         this.setState({
+    //             isLoading1: false,
+    //             dataSource: responseJson.results,
+    //         }, function(){
+    //
+    //         });
+    //         })
+    //         .catch((error) =>{
+    //         });
+    //     }
 
     fetchAllItems() {
             return fetch('http://'+ global.ip +'/api/items/list_all_items/?format=json')
@@ -58,11 +96,11 @@ class ItemList extends Component {
             .then((responseJson) => {
 
             this.setState({
-                isLoading: false,
+                isLoading1: false,
                 dataSource: responseJson.results,
                 all_items: responseJson.count
             }, function(){
-                console.log(responseJson.results)
+
             });
             })
             .catch((error) =>{
@@ -70,7 +108,7 @@ class ItemList extends Component {
         }
 
     render() {
-        this.array_values = Array(this.state.all_items).fill().map(()=>Array(8).fill())
+        this.array_values = Array(this.state.all_items).fill().map(()=>Array(9).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["id"]
             this.array_values[i][1] = this.state.dataSource[i]["name"]
@@ -78,9 +116,11 @@ class ItemList extends Component {
             this.array_values[i][3] = this.state.dataSource[i]["price"]
             this.array_values[i][4] = this.state.dataSource[i]["discount_price"]
             this.array_values[i][5] = this.state.dataSource[i]["image"]
-            this.array_values[i][6] = this.state.dataSource[i]["user"]["username"]
-            this.array_values[i][7] = this.state.dataSource[i]["user"]["id"]
+            this.array_values[i][6] = this.state.dataSource[i]["quantity"]
+            this.array_values[i][7] = this.state.dataSource[i]["user"]["username"]
+            // this.array_values[i][8] = this.state.dataSource[i]["user"]["id"]
         }
+
         return(
 
 
@@ -101,6 +141,7 @@ class ItemList extends Component {
                     }}
                     onPressCancel={() => {
                         console.log("cancel");
+                        this.fetchAllItems();
                     }}
                 />
                     <FlatList style={styles.flatlist}
@@ -110,20 +151,43 @@ class ItemList extends Component {
                                 <Pressable style={styles.pressable} onPress={() => {
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
-                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4] })
+                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[6]})
                                     ;}}>
-                                    <Image style={styles.image} source={{uri: item[5]}} />
+                                    {item[6] === 0 ?    //se la quantity è 0 -> item finito
+                                    <Image style={styles.imagegray} source={{uri: item[5]}} />
+                                    :
+                                    <Image style={styles.image} source={{uri: item[5]}} />}
                                     <View style={styles.rightContainer}>
                                         <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
+                                        <Text style={styles.title} numberOfLines={1}>Quantity: {item[6]}</Text>
                                         <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Descrizione: {item[2]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[6]}</Text>
+                                        <Text style={styles.description} numberOfLines={3}>Descrizione: {item[2]}</Text>
+                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[7]}</Text>
                                         <Text style={styles.discountprice}>
                                           DiscountPrice: {item[4]}
                                           {
                                             <Text style={styles.price}>Price:  {item[3]}</Text>
                                           }
                                         </Text>
+                                        {item[6] === 0 ?    //se la quantity è 0 -> item finito
+                                        <Button
+                                            style={styles.button_small}
+                                            text={'Enter Your Mail'}
+                                            onPress={() => {
+                                                console.warn('Enter Your Mail')
+                                                // this.fetchShowDistance(item[0]);
+                                            }}
+                                        />
+                                        :
+                                        <Button
+                                            style={styles.button_small}
+                                            text={'Show Distance'}
+                                            onPress={() => {
+                                                console.warn('Show Distance')
+                                                // this.fetchShowDistance(item[0]);
+                                            }}
+                                        />
+                                        }
                                         <Button
                                             text={'Visita il Negozio'}
                                             onPress={() => {console.warn('ShowShop')
@@ -182,6 +246,14 @@ const styles = StyleSheet.create({
     flex: 2,
     height: 150,
     resizeMode: 'contain',
+  },
+
+  imagegray: {
+    flex: 2,
+    height: 150,
+    resizeMode: 'contain',
+    //tintColor: 'gray',
+    opacity: 0.1,
   },
 
   rightContainer: {

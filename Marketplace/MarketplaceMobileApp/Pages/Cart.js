@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Card from "../components/Card";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import Button from "../components/Button";
 
 const {width, height} = Dimensions.get('window');
 
@@ -35,6 +36,19 @@ class Cart extends Component {
 
     }
 
+    deleteItem = (id_item_to_delete) => {
+        fetch('http://'+ global.ip +'/api/items/' + id_item_to_delete + '/delete/', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Token ' + global.user_key
+            }
+        })
+        .then(res => {
+        })
+        .catch((error) => {
+        });
+    }
+
        fetchCartOrders() {
             return fetch('http://'+ global.ip +'/api/items/' + global.user_id + '/cart_orders/?format=json')
 
@@ -55,7 +69,7 @@ class Cart extends Component {
 
    fetchItemsFromOrderItems() {
        // Return the order items related with the ref_code clicked before (not all the objects bought)
-        fetch('http://'+ global.ip +'/api/items_from_orderitems/' + global.user_id + '/?format=json')
+        fetch('http://'+ global.ip +'/api/id_items_from_orderitems/' + global.user_id + '/?format=json')
            .then((response) => response.json())
            .then((responseJson) => {
 
@@ -92,6 +106,7 @@ class Cart extends Component {
             this.array_values[i][4] = this.state.dataSourceItems[i]["discount_price"]
             this.array_values[i][5] = this.state.dataSourceItems[i]["image"]
             this.array_values[i][6] = this.state.dataSourceItems[i]["category"]
+            this.array_values[i][7] = this.state.dataSourceItems[i]["id"]
         }
         return(
             <View style={styles.page}>
@@ -113,6 +128,14 @@ class Cart extends Component {
                                             <Text style={styles.price}>Price:  {item[3]}</Text>
                                           }
                                         </Text>
+                                        <Button
+                                            text={'Delete Item'}
+                                            onPress={() => {console.warn('Delete Item')
+                                                this.deleteItem(item[7]);
+                                                console.log(item[7]);
+                                                //window.location.reload();
+                                            }}
+                                        />
                                     </View>
                                 </Pressable>
                             </Card>
