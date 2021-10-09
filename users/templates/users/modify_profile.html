@@ -33,8 +33,14 @@
     {% endblock %}
 
     {% block cart %}
-    <a href="{% url 'items:go_to_cart' %}"class="nav-link waves-effect">
-        <span class="badge bg-danger bg-secondary">{% if all_items == 0 %}0{% endif %}{% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}</span>
+    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">
+            {% if all_items.ordered != 1 %}
+                {% if all_items == 0 %}0{% endif %}
+                {% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}
+            {% endif %}
+            {% if all_items.ordered == 1 %}0{% endif %}
+        </span>
         <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
     </a>
     {% endblock %}

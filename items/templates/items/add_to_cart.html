@@ -45,12 +45,11 @@
     {% endblock %}
 
 {% block add_to_cart %}
-<p>{{ user }}{{order_qs}} {{all_items}}</p>
-    <div class="container">
-        <div class="table-responsive text-nowrap">
+    <div class="container_add_to_cart">
+        <div id="cart_top" class="table-responsive text-nowrap">
         <h2>Order Summary</h2>
         <table class="table">
-            <thead>
+            <thead class="thead_cart">
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Product</th>
@@ -66,18 +65,18 @@
                     <tr>
                         <th scope="row">{{ forloop.counter }}</th>
                         <td>{{ order_item.item.name }}</td>
-                        <td>{{ order_item.item.price }}</td>
-                        <td>{{ order_item.item.discount_price }}</td>
+                        <td>{{ order_item.item.price }} €</td>
+                        <td>{{ order_item.item.discount_price }} €</td>
                         <td>{{ order_item.quantity }}</td>
-                        <td><a href="{% url 'items:remove_single_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete</a></td>
-                        <td><a href="{% url 'items:remove_entire_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete All</a><td>
                         <td>
                         {% if order_item.item.discount_price %}
-                            ${{ order_item.get_total_discount_item_price }}
-                            <span class="badge badge-primary">Saving ${{ order_item.get_amount_saved }}</span>
+                            {{ order_item.get_total_discount_item_price }} €
+                            <span class="badge badge-primary">Saving €{{ order_item.get_amount_saved }}</span>
                         {% else %}
                             ${{ order_item.get_total_item_price }}
                         {% endif %}
+                        <td><a class="btn_cart btn-warning float-right ml-2" href="{% url 'items:remove_single_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete</a></td>
+                        <td><a class="btn_cart btn-warning float-right ml-2" href="{% url 'items:remove_entire_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete All</a><td>
                         </td>
                     </tr>
                 {% endfor %}
@@ -96,13 +95,13 @@
                 <h6 class="my-0">{{ order_item.quantity }} x {{ order_item.item.name}}</h6>
                 <small class="text-muted">{{ order_item.item.description}}</small>
                 </div>
-                <span class="text-muted">${{ order_item.get_final_price }}</span>
+                <span class="text-muted">{{ order_item.get_final_price }} €</span>
             </li>
             {% endfor %}
         {% endif %}
         <li class="list-group-item d-flex justify-content-between">
-            <span>Total (USD)</span>
-            <strong>${{ all_items.get_total }}</strong>
+            <span>Totale</span>
+            <strong>{{ all_items.get_total }} €</strong>
         </li>
         </ul>
     </div>

@@ -44,7 +44,7 @@
         <div class="container">
             <div class="container text-center">
                 {% if user.user is not None %}
-                    <h2 id="title">Welcome: {{ user }}</h2>
+                    <h3 id="title">Welcome: {{ user }}</h3>
                 {% endif %}
             </div>
     <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
@@ -63,7 +63,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
                         {% if item.quantity > 0 %}
-                            <img src="{{ item.image.url }}" class="card-img-top" alt="...">
+                            <img id="img_no_gray" src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% else %}
                             <img id="gray_no_quantity" src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% endif %}
@@ -84,13 +84,13 @@
                             </p>
                             <p class="card-text">{{ item.category }}</p>
                                 {% if item.quantity <= 0 %}
-                                <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
+                                <h5>Quantità: {{ item.quantity }}</h5>
+                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn_card">Insert Your Mail</a>
                                 <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
                                 {% endif %}
                                 {% if item.quantity > 0 %}
-                                <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn">Acquista</a>
+                                <h5>Quantità: {{ item.quantity }}</h5>
+                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" id="acquista_btn" class="btn_card">Acquista</a>
                                 <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
                                 {% endif %}
                         </div>

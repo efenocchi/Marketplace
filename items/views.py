@@ -324,6 +324,9 @@ def add_to_cart(request, item_selected_id):
     #item_selected_id = slug
 
     #SELEZIONO PRODOTTO CORRENTE CHE STO AGGIUNGENDO AL CARRELLO
+    quantity_to_buy = request.GET.get('quantity')
+    quantity_to_buy_int = int(quantity_to_buy);
+    print(quantity_to_buy_int)
     item_selected = get_object_or_404(Item, id=item_selected_id)
     print(item_selected)
     #IN ORDER_ITEM HO L'OGGETTO CORRENTE CHE STO AGGIUNGENDO AL CARRELLO
@@ -343,8 +346,11 @@ def add_to_cart(request, item_selected_id):
         order = order_qs[0]
 
         if order.items.filter(item__id=item_selected_id).exists():
-            if item_selected.quantity > order_item.quantity:
-                order_item.quantity += 1
+            print(100)
+            if item_selected.quantity > quantity_to_buy_int:
+                print(101)
+                order_item.quantity += quantity_to_buy_int
+                print(quantity_to_buy_int)
                 order_item.save()
                 messages.info(request, "This item quantity was updated")
 
@@ -353,12 +359,17 @@ def add_to_cart(request, item_selected_id):
 
                 return render(request, 'items/buy_page.html',context)
             else:
+                print(102)
                 messages.info(request, "The quantity of item is insufficient")
                 context = {"all_items": order, 'user': request.user, 'order_qs': order_item,
                            'item_selected': item_selected}
 
                 return render(request, 'items/buy_page.html', context)
         else:
+            print(103)
+            order_item.quantity = quantity_to_buy_int
+            print(quantity_to_buy_int)
+            order_item.save()
             order.items.add(order_item)
             messages.info(request, "This item was added to your cart")
 
@@ -368,8 +379,12 @@ def add_to_cart(request, item_selected_id):
             return render(request, 'items/buy_page.html', context)
 
     else:
+        print(104)
         ordered_date = timezone.now()
         order = Order.objects.create(user=request.user, ordered_date=ordered_date)
+        order_item.quantity = quantity_to_buy_int
+        print(quantity_to_buy_int)
+        order_item.save()
         order.items.add(order_item)
         messages.info(request, "This item was added to your cart")
 
@@ -441,12 +456,14 @@ def remove_single_item_from_cart(request, item_selected_id):
             return render(request, 'items/add_to_cart.html', context)
     # se il carrello è vuoto
     else:
+        order = 0
         messages.info(request, "You do not have an active order")
 
-        context = {"all_items": order, 'user': request.user, 'order_qs': order_item}
+        context = {"all_items": order, 'user': request.user}
         print(context)
 
         return render(request, 'items/add_to_cart.html', context)
+
 
 @login_required(login_url='/users/login')
 def remove_entire_item_from_cart(request, item_selected_id):

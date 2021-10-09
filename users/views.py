@@ -459,6 +459,14 @@ def modify_profile(request):
     shop_or_user = GeneralUser.objects.get(user=request.user)
     user = User.objects.get(pk=request.user.pk)
     form = UserForm(data=request.POST or None, instance=user, oauth_user=0)
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    print(order_qs)
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+    else:
+        order = 0
 
     if shop_or_user.login_negozio:
         form_user_or_shop = ShopProfileForm(request.POST or None, instance=shop_or_user)
@@ -498,6 +506,7 @@ def modify_profile(request):
     context = {
         "form": form,
         "form_user_or_shop": form_user_or_shop,
+        "all_items": order
     }
 
     return render(request, 'users/modify_profile.html', context)

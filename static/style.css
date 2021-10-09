@@ -3,9 +3,15 @@
     padding: 0;
     box-sizing: border-box;
 }
+#tempooo{
+    margin-top: -28px;
 
+}
+
+/*Colore sfondo totale*/
 body{
     font-family: 'Poppins', sans-serif;
+    background: #fff;
 }
 .navbar{
     display: flex;
@@ -46,8 +52,26 @@ p{
     margin: auto;
     padding-left: 25px;
     padding-right: 25px;
+
 }
 
+.container_order{
+    max-width: 1300px;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-top: 30px;
+    margin-bottom: 182px;
+}
+
+.container_add_to_cart{
+    max-width: 1300px;
+    margin: auto;
+    padding-left: 25px;
+    padding-right: 25px;
+    margin-top: 30px;
+    margin-bottom: 93px;
+}
 .row{
     display: flex;
     align-items: center;
@@ -77,12 +101,13 @@ p{
 /* bottone Explore Now */
 .btn{
     display: inline-block;
-    background: #f0c14b;
-    border-color: #a88734 #9c7e31 #846a29;
+    background: #f0ecec;
+    border-color: black;
     padding: 8px 30px;
     margin: 30px 0;
-    border-radius: 10px;
-    color: black;
+    border-radius: 0px;
+    color: black;   /* colore scritta dentro */
+    outline-width: thick;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
 
@@ -96,14 +121,74 @@ p{
     color: black;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
+
+.btn_cart{
+    display: inline-block;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    padding-left: 18px;
+    padding-right: 18px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-top: -5px;
+    border-radius: 0px;
+    color: black;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+
+}
+
+.btn_card{
+    display: inline-block;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 20px;
+    border-radius: 10px;
+    color: black;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
+#acquista_btn{
+    display: inline-block;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    padding-left: 44px;
+    padding-right: 44px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 20px;
+    border-radius: 10px;
+    color: black;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
+
+/* transizione bottone da rosso a blu */
+.btn_cart:hover{
+    background: white;
+    color: black;
+}
+
+/* transizione bottone da rosso a blu */
+.btn_card:hover{
+    background: #ea420f;
+    color: black;
+}
 /* transizione bottone da rosso a blu */
 .btn:hover{
+    background: white;
+    color: black;
+}
+
+#acquista_btn:hover{
     background: #ea420f;
+    color: black;
 }
 
 /* colore sfondo */
 .header{
-    background: radial-gradient(white, #90ee90); /* se modifico questo modifico anche .offer e .login_page background */
+    background: #dedede; /* se modifico questo modifico anche .offer e .login_page background */
 }
 
 .header .row{
@@ -574,6 +659,7 @@ form a{
     transition: transform 1s;
 }
 /* ---------------------------------- ITEM_PAGE ----------------------------------------------------------- */
+
 .row-2{
     background: blue;
     display: flex;
@@ -616,7 +702,8 @@ form a{
 }
 
 .btn:hover, #search_button:hover{
-    background: #ea420f;
+    background-color: white;
+    border-color: white;
 }
 
 #title{
@@ -626,7 +713,12 @@ form a{
 }
 
 #gray_no_quantity{
+    height: 350px;
     filter: grayscale(100%);
+}
+
+#img_no_gray {
+    height: 350px;
 }
 /* ---------------------------------- SEARCH ----------------------------------------------------------- */
 #no_search_result{
@@ -645,6 +737,10 @@ form a{
     min-width: 300px;
 }
 
+#quantity{
+    margin-top: 10px;
+
+}
 .col-gallery img{
     max-width: 100%;
     padding: 0px 0;
@@ -735,8 +831,15 @@ input:focus, #search:focus{
     padding: 10px;  /* PADDING = DIMENSIONE -> più alto il valore più è piccola*/
 }
 
-/* ---------------------------------- CART ----------------------------------------------------------- */
+/* ---------------------------------- ADD_TO_CART ----------------------------------------------------------- */
+#cart_top {
+    margin-top: 20px;
 
+}
+.thead_cart {
+    color: #fff;
+    background: #ff523b;
+}
 
 /* ---------------------------------- END SITE ----------------------------------------------------------- */
 .end_site{
