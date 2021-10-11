@@ -50,7 +50,6 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
             <div class="small-container">
                 <form class="d-flex" method="get" action="{% url 'items:search'%}">
-                    {% csrf_token %}
                     <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>
                 </form>
@@ -65,10 +64,6 @@
             {% for item in item_searched %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
-                        <div class="modify-delete">
-                            <a href="{% url 'items:modify_item' item_selected_id=item.id%}" class="fa fa-pencil" aria-hidden="true"></a>
-                            <a href="{% url 'items:delete_item' item_selected_id=item.id%}" class="fa fa-times" aria-hidden="true"></a>
-                        </div>
                         {% if item.quantity > 0 %}
                         <img src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% endif %}
@@ -80,23 +75,26 @@
                             <p class="lead">
                               {% if item.discount_price %}
                               <span class="mr-1">
-                                <del>${{ item.price }}</del>
+                                <del>€{{ item.price }}</del>
                               </span>
-                              <span>${{ item.discount_price }}</span>
+                              <span>€{{ item.discount_price }}</span>
                               {% else %}
-                              <span>${{ item.price }}</span>
+                              <span>€{{ item.price }}</span>
                               {% endif %}
+                            </p>
+                            <p>
+                                <span>Negozio: {{ item.user.username }}</span>
                             </p>
                             <p class="card-text">{{ item.category }}</p>
                                 {% if item.quantity <= 0 %}
                                 <h5>{{ item.quantity }}</h5>
                                 <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
-                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
+                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
                                 {% endif %}
                                 {% if item.quantity > 0 %}
                                 <h5>{{ item.quantity }}</h5>
                                 <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Acquista</a>
-                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
+                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
                                 {% endif %}
                         </div>
                     </div>

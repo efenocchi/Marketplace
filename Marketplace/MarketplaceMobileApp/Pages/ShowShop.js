@@ -38,7 +38,7 @@ export default class ShowShop extends Component {
         this.id_shop = this.props.route.params.id_shop;
 
         Promise.all([
-            // this.fetchTime(),
+            this.fetchTime(),
             this.fetchAllItems()
         ]).then(([urlOneData, urlTwoData]) => {
             this.setState({
@@ -48,18 +48,19 @@ export default class ShowShop extends Component {
 
     }
 
+
     fetchTime(){
-         return fetch('http://10.110.215.142:5000/api/items/' + this.id_shop + '/shop_all_items/?format=json')
+         return fetch('http://'+ global.ip +'/api/travel_time/' + this.id_shop + '/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
 
             this.setState({
                 isLoading2: false,
-                dataSource: responseJson.results,
-                all_items: responseJson.count
+                dataSourceTime: responseJson["result"],
+
             }, function(){
-                console.log(responseJson.results)
+                console.log(responseJson["result"])
             });
             })
             .catch((error) =>{
@@ -68,7 +69,7 @@ export default class ShowShop extends Component {
 
 
     fetchAllItems() {
-            return fetch('http://10.110.215.142:5000/api/items/' + this.id_shop + '/shop_all_items/?format=json')
+            return fetch('http://'+ global.ip +'/api/items/' + this.id_shop + '/shop_all_items/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
@@ -86,6 +87,14 @@ export default class ShowShop extends Component {
     }
 
     render() {
+        if(this.state.isLoading1 || this.state.isLoading2){
+            return(
+                <View style={{flex: 1, paddingTop: height / 2}}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
+
         this.array_values = Array(this.state.all_items).fill().map(()=>Array(7).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["id"]
@@ -100,36 +109,32 @@ export default class ShowShop extends Component {
 
 
             <View style={styles.page}>
-                <SearchBar style={styles.searchbar}
-                    onPressToFocus
-                    autoFocus={false}
-                    fontColor="#c6c6c6"
-                    iconColor="#c6c6c6"
-                    shadowColor="#282828"
-                    cancelIconColor="#c6c6c6"
-                    backgroundColor="#36485f"
-                    placeholder="Search Item"
-                    width="88%"
-                    activeOpacity={.9}
-                    onChangeText={text => {
-                        this.fetchSearchItem(text);
-                    }}
-                    onPressCancel={() => {
-                        console.log("cancel");
-                    }}
-                />
-                    <Button
-                        text={'Mostra distanza'}
-                        onPress={() => {console.warn('Mostra distanza')
-                        // this.props.navigation.navigate('ShowShop',{id_shop: item[7]});
-                        }}
-                    />
+                {/*<SearchBar style={styles.searchbar}*/}
+                {/*    onPressToFocus*/}
+                {/*    autoFocus={false}*/}
+                {/*    fontColor="#c6c6c6"*/}
+                {/*    iconColor="#c6c6c6"*/}
+                {/*    shadowColor="#282828"*/}
+                {/*    cancelIconColor="#c6c6c6"*/}
+                {/*    backgroundColor="#36485f"*/}
+                {/*    placeholder="Search Item"*/}
+                {/*    width="88%"*/}
+                {/*    activeOpacity={.9}*/}
+                {/*    onChangeText={text => {*/}
+                {/*        this.fetchSearchItem(text);*/}
+                {/*    }}*/}
+                {/*    onPressCancel={() => {*/}
+                {/*        console.log("cancel");*/}
+                {/*    }}*/}
+                {/*/>*/}
+
                     <Button
                         text={'Recensioni'}
                         onPress={() => {
                         this.props.navigation.navigate('LeaveShowReviewShop',{id_shop: this.id_shop});
                         }}
                     />
+                    <Text style={styles.title} numberOfLines={2}>{this.state.dataSourceTime}</Text>
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
@@ -142,15 +147,19 @@ export default class ShowShop extends Component {
                                     <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
                                         <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
-                                        <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
+                                        <Text style={styles.title} numberOfLines={2}>Nome: {item[1]}</Text>
                                         <Text style={styles.description} numberOfLines={2}>Descrizione: {item[2]}</Text>
-                                        <Text style={styles.discountprice}>
-                                          DiscountPrice: {item[4]}
-                                          {
-                                            <Text style={styles.price}>Price:  {item[3]}</Text>
-                                          }
-                                        </Text>
+                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[6]}</Text>
+                                        {item[4] !== null && (
+                                        <Text style={styles.discountprice} numberOfLines={2}>Prezzo scontato: {item[4]}€
 
+                                            <Text style={styles.price}>{item[3]}€</Text>
+
+                                        </Text>
+                                        )}
+                                        {item[4] === null && (
+                                            <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
+                                        )}
                                     </View>
                                 </Pressable>
                             </Card>

@@ -7,6 +7,7 @@ from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
 from items.models import Order, OrderItem, Item, WhoHasReviewed
+from items.views import computeTime
 from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
@@ -15,6 +16,7 @@ from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteSh
 from .permissions import *
 from django.contrib.auth import logout
 from rest_framework.views import APIView
+from django.utils import timezone
 
 
 def foundOrdersFromCustomer(request):
@@ -59,11 +61,19 @@ def foundOrdersFromCustomer(request):
     return dict
 
 
-class ReturnTimeUserShop(APIView):
+def ReturnTimeUserShop(request, username_shop):
     """
     Ritorna il valore di tempo che ci vuole dall'utente al negozio
     """
-    ...
+    if request.method == "GET":
+        try:
+            user = User.objects.get(username=username_shop)
+            shop = GeneralUser.objects.get(user=user)
+            time = computeTime(request, shop.id)
+            return JsonResponse({'result': str(time)})
+        except Exception:
+            return JsonResponse({'result': 'Il risultato non è calcolabile'})
+            raise Exception("Errore nell'aggiunta di un oggetto")
 
 
 class ReturnReviewShop(generics.ListAPIView):
@@ -832,7 +842,7 @@ class AddToCart(generics.UpdateAPIView):
                 print(12)
                 if (item_selected.quantity >= quantity):
                     print(13)
-                    order_item.quantity += quantity
+                    # order_item.quantity += quantity
                     print(order_item.quantity)
                     order_item.save()
                     # item_selected.quantity -= quantity
@@ -843,7 +853,7 @@ class AddToCart(generics.UpdateAPIView):
 
             else:
                 print(14)
-                order_item.quantity += quantity
+                # order_item.quantity += quantity
                 order_item.save()
                 # item_selected.quantity -= quantity
                 # item_selected.save()
@@ -852,7 +862,8 @@ class AddToCart(generics.UpdateAPIView):
         else:
             # ordered_date = timezone.now()
             print(15)
-            order = Order.objects.create(user=self.request.user)
+            ordered_date = timezone.now()
+            order = Order.objects.create(user=self.request.user, ordered_date=ordered_date)
             order.items.add(order_item)
 
         return order_item
@@ -860,7 +871,7 @@ class AddToCart(generics.UpdateAPIView):
 
 class DeleteItem(generics.RetrieveUpdateDestroyAPIView):
     """
-    #Funzione utilizzata per eliminare un item dal carrello
+    Funzione utilizzata per eliminare un item dal carrello
     """
 
     serializer_class = ItemSerializer

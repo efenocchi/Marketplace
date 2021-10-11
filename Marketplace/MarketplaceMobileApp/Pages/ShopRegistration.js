@@ -17,6 +17,21 @@ import ErrorMessage from '../components/ErrorMessage'
 import InputField from '../components/InputField'
 import InputButton from '../components/InputButton'
 
+Yup.addMethod(Yup.string, "username_unique", function (errorMessage) {
+    console.log("chiamato metodo")
+    return this.test('test-unique', errorMessage, function (value) {
+
+        return fetch('http://'+ global.ip +'/api/check_existing_username/' + value)
+            .then((user_response) => user_response.json())
+            .then((user_responseJson) => {
+                const result = user_responseJson.result;
+                return (result)
+            })
+            .catch((error) => {
+            });
+    })
+});
+
 
 const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -25,7 +40,7 @@ const validationSchema = Yup.object().shape({
         .min(3, "Username deve avere almeno 3 caratteri")
         .max(30, "Username deve avere al massimo 30 caratteri")
         .matches(/^[a-zA-Z0-9_\-]+$/, "Username invalido")
-        // .username_unique("Username non disponibile")
+        .username_unique("Username non disponibile")
         ,
     password: Yup.string()
         .label('Password')

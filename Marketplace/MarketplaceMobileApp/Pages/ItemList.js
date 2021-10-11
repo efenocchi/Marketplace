@@ -7,14 +7,14 @@ import {
     Text,
     View,
     StyleSheet,
-    YellowBox
+    YellowBox,
+    TouchableOpacity
 } from "react-native";
 import CardItem from "../components/CardItem";
 import CustomHeader from "../components/Header";
 import {IconButton} from "react-native-paper";
 import Card from "../components/Card";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import {NavigationActions as navigation} from "react-navigation";
 import {useNavigation} from "@react-navigation/native";
 import Button from "../components/Button";
@@ -72,22 +72,6 @@ class ItemList extends Component {
         }
     }
 
-    // fetchShowDistance(item_selected_id) {
-    //         return fetch('http://5.88.60.56:8000/api/items/show_distance/' + global.user_id + '/' + item_selected_id + '?format=json')
-    //
-    //         .then((response) => response.json())
-    //         .then((responseJson) => {
-    //
-    //         this.setState({
-    //             isLoading1: false,
-    //             dataSource: responseJson.results,
-    //         }, function(){
-    //
-    //         });
-    //         })
-    //         .catch((error) =>{
-    //         });
-    //     }
 
     fetchAllItems() {
             return fetch('http://'+ global.ip +'/api/items/list_all_items/?format=json')
@@ -148,11 +132,11 @@ class ItemList extends Component {
                         data={this.array_values}
                         renderItem={({item, index}) =>
                             <Card style={styles.card}>
-                                <Pressable style={styles.pressable} onPress={() => {
+                                 <TouchableOpacity key={item.id} onPress={() =>
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
                                         {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[6]})
-                                    ;}}>
+                                    }>
                                     {item[6] === 0 ?    //se la quantity è 0 -> item finito
                                     <Image style={styles.imagegray} source={{uri: item[5]}} />
                                     :
@@ -164,12 +148,19 @@ class ItemList extends Component {
                                         <Text style={styles.description} numberOfLines={3}>Descrizione: {item[2]}</Text>
                                         <Text style={styles.description} numberOfLines={2}>Negozio: {item[7]}</Text>
                                         <Text style={styles.discountprice}>
-                                          DiscountPrice: {item[4]}
-                                          {
-                                            <Text style={styles.price}>Price:  {item[3]}</Text>
-                                          }
+                                            {item[4] !== null && (
+                                        <Text style={styles.discountprice} numberOfLines={2}>Prezzo scontato: {item[4]}€
+
+                                            <Text style={styles.price}>{item[3]}€</Text>
+
                                         </Text>
-                                        {item[6] === 0 ?    //se la quantity è 0 -> item finito
+                                        )}
+                                        {item[4] === null && (
+                                            <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
+                                        )}
+
+                                        </Text>
+                                        {item[6] === 0 &&    //se la quantity è 0 -> item finito
                                         <Button
                                             style={styles.button_small}
                                             text={'Enter Your Mail'}
@@ -178,15 +169,7 @@ class ItemList extends Component {
                                                 // this.fetchShowDistance(item[0]);
                                             }}
                                         />
-                                        :
-                                        <Button
-                                            style={styles.button_small}
-                                            text={'Show Distance'}
-                                            onPress={() => {
-                                                console.warn('Show Distance')
-                                                // this.fetchShowDistance(item[0]);
-                                            }}
-                                        />
+
                                         }
                                         <Button
                                             text={'Visita il Negozio'}
@@ -195,7 +178,7 @@ class ItemList extends Component {
                                             }}
                                         />
                                     </View>
-                                </Pressable>
+                                 </TouchableOpacity>
                             </Card>
                         }
                         keyExtractor={(item, index) => index.toString()}

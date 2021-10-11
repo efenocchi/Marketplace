@@ -28,7 +28,7 @@ from django.core.mail import send_mail
 @login_required(login_url='/users/login')
 def search(request):
     word_searched= request.GET.get('search')
-    item_searched = Item.objects.filter(name__contains=word_searched, user=request.user,)
+    item_searched = Item.objects.filter(name__contains=word_searched)
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False
@@ -42,11 +42,12 @@ def search(request):
     print(item_searched)
 
     if item_searched.count() == 0:
-        context = {}
-        context['item_searched'] = item_searched
-        context['word_searched'] = word_searched
-        context['user'] = request.user
-        context["all_items"] = order
+        context = {
+            'item_searched': item_searched,
+            'word_searched': word_searched,
+            'user': request.user,
+            'all_items': order
+        }
         return render(request, 'items/search.html', context)
 
     indici = show_distance_shops(request, item_searched)
@@ -60,11 +61,12 @@ def search(request):
 
     print("è una lista", type(items_ordered))
     print("tipo di struttura", type(item_searched))
-    context = {}
-    context['item_searched'] = item_searched
-    context['word_searched'] = word_searched
-    context['user'] = request.user
-    context["all_items"] = order
+    context = {
+        'item_searched': items_ordered,
+        'word_searched': word_searched,
+        'user': request.user,
+        'all_items': items_ordered
+    }
     return render(request, 'items/search.html',context)
 
 def isShop(user):
@@ -175,10 +177,11 @@ def item_page(request):
 
     all_items = Item.objects.all()
     item_shop = Item.objects.filter(user=request.user)
-    context = {}
-    context['user'] = general_user
-    context['all_items'] = all_items
-    context['all_items_cart'] = order
+    context = {
+        'user': general_user,
+        'all_items': all_items,
+        'all_items_cart': order
+    }
 
     # faccio il render della pagina html item_page e le passo la var all_items
     # per farlo passo un dictionary chiamato all_items con valori presi dalla var sopra all_items
@@ -186,8 +189,13 @@ def item_page(request):
     # item_page.html che potrà accedervi tramite la var all_items
 
     if not general_user.login_negozio:
-        # se sono un utente
-        context['all_items'] = all_items
+        # se non sono un utente ordino gli oggetti e ritorno gli oggetti ordinati per distanza
+        indici = show_distance_shops(request, all_items)
+        items_ordered = list()
+        for id_item in indici:
+            items_ordered.append(all_items.get(id=id_item))
+
+        context['all_items'] = items_ordered
         return render(request, 'items/item_page.html', context)
         # return HttpResponse("sono un utente e devo visualizzare la BARRA DI RICERCA" + request.user.username)
 

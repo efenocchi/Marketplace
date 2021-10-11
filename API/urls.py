@@ -32,7 +32,7 @@ urlpatterns = [
     # per Shop
     path('orders_shop/', views.ReturnOrderDoneByCustomer.as_view(), name='API-orders-shop'),
     path('items_booked/<str:order_items_id>/', views.ReturnItemsBooked.as_view(), name='API-items-shop'),
-    path('travel_time/<str:id_shop>/', views.ReturnTimeUserShop.as_view(), name='API-time-travel'),
+    path('travel_time/<str:username_shop>/', views.ReturnTimeUserShop, name='API-time-travel'),
     # path('upload_image/<str:id_shop>/', views.UploadItem.as_view(), name='API-upload-item'),
     path('insert_item/', views.InsertNewItem.as_view(), name='API-insert-item'),
 
