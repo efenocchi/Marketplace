@@ -68,24 +68,24 @@
                             <p class="lead">
                               {% if item.discount_price %}
                               <span class="mr-1">
-                                <del>${{ item.price }}</del>
+                                <del>€{{ item.price }}</del>
                               </span>
-                              <span>${{ item.discount_price }}</span>
+                              <span>€{{ item.discount_price }}</span>
                               {% else %}
-                              <span>${{ item.price }}</span>
+                              <span>€{{ item.price }}</span>
                               {% endif %}
+                            </p>
+                            <p>
+                                <span>Negozio: {{ item.user.username }}</span>
                             </p>
                             <p class="card-text">{{ item.category }}</p>
                                 {% if item.quantity <= 0 %}
                                 <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
-                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn btn-primary">Mostra Distanza</a>
+
                                 {% endif %}
                                 {% if item.quantity > 0 %}
-                                <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn">Acquista</a>
-                                <a href="{% url 'items:computeTime' item_selected_id=item.id%}" class="btn">Mostra Distanza</a>
                                 {% endif %}
+                            <h5>Quantità: {{ item.quantity }}</h5>
                         </div>
                     </div>
                 </div>

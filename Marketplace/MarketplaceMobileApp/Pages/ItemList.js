@@ -29,7 +29,6 @@ class ItemList extends Component {
         this.state ={
             isLoading1: true,
             isLoading2: true,
-            isLoading3: true
         }
 
     }
@@ -92,6 +91,22 @@ class ItemList extends Component {
         }
 
     render() {
+        // if(global.stack_refreshed_home === false){
+        //     this.state.isLoading1=false
+        //     global.stack_refreshed_home = true
+        //     this.fetchAllItems()
+        // }
+
+         if(this.state.isLoading1){
+            return(
+                <View style={{flex: 1, paddingTop: height / 2}}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
+         // global.stack_refreshed_home = false
+
+
         this.array_values = Array(this.state.all_items).fill().map(()=>Array(9).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["id"]
@@ -106,7 +121,6 @@ class ItemList extends Component {
         }
 
         return(
-
 
             <View style={styles.page}>
                 <SearchBar style={styles.searchbar}

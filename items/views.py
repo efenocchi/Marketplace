@@ -7,7 +7,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 import uuid
-from .models import Item,OrderItem,Order  # importo il modello così che possa utilizzalo, andrà a                                          # pescare gli Item dal db e conservarli in una variabile
+from .models import Item, OrderItem, Order, WaitUser
 from Marketplace import settings
 from review.forms import ReviewShopForm
 from review.models import ReviewItem, ReviewShop
@@ -17,8 +17,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from users.models import GeneralUser
-from .models import Item  # importo il modello così che possa utilizzalo, andrà a pescare gli Item dal db e conservarli in una variabile
-from .forms import ItemForm
+from .models import Item
+from .forms import ItemForm, WaitUserForm
 from django.utils import timezone
 from django.core.mail import send_mail
 
@@ -27,8 +27,14 @@ from django.core.mail import send_mail
 
 @login_required(login_url='/users/login')
 def search(request):
-    word_searched= request.GET.get('search')
-    item_searched = Item.objects.filter(name__contains=word_searched)
+    word_searched = request.GET.get('search')
+    user_or_shop = GeneralUser.objects.get(user=request.user)
+
+    if user_or_shop.login_negozio:
+        item_searched = Item.objects.filter(user=request.user, name__contains=word_searched)
+    else:
+        item_searched = Item.objects.filter(name__contains=word_searched)
+
     order_qs = Order.objects.filter(
         user=request.user,
         ordered=False
@@ -39,7 +45,7 @@ def search(request):
 
     else:
         order = 0
-    print(item_searched)
+    print("item_searched", item_searched)
 
     if item_searched.count() == 0:
         context = {
@@ -50,24 +56,27 @@ def search(request):
         }
         return render(request, 'items/search.html', context)
 
-    indici = show_distance_shops(request, item_searched)
-    items_ordered = list()
+    if not user_or_shop.login_negozio:
+        indici = show_distance_shops(request, item_searched)
+        items_ordered = list()
+        print("indice ", indici)
+        if indici is not None:
+            for id_item in indici:
+                items_ordered.append(item_searched.get(id=id_item))
+            print("è una lista", type(items_ordered))
+            print("tipo di struttura", type(item_searched))
 
-    if indici is not None:
-        for id_item in indici:
-            items_ordered.append(item_searched.get(id=id_item))
-
-    # [modifica] mettere gli elementi ritornati in base alla distanza (guardare codice vecchio)
-
-    print("è una lista", type(items_ordered))
-    print("tipo di struttura", type(item_searched))
+    #il negozio non ha bisogno che gli oggetti vengano ordinati per distanza essendo = 0
+    else:
+        items_ordered = item_searched
     context = {
         'item_searched': items_ordered,
         'word_searched': word_searched,
         'user': request.user,
         'all_items': items_ordered
     }
-    return render(request, 'items/search.html',context)
+    return render(request, 'items/search.html', context)
+
 
 def isShop(user):
     print("isShop")
@@ -76,11 +85,27 @@ def isShop(user):
     return general_user.login_negozio
 
 
-def send_email(request):
-    subject = "Sending an email with Django"
-    message = "Oggetto caricato"
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [settings.DEFAULT_FROM_EMAIL], fail_silently=False)
-    return HttpResponse("sono un utente e devo visualizzare la BARRA DI RICERCA" + request.user.username)
+def send_email(request, id_item):
+    """
+    Per un oggetto vengono presi tutti gli utenti che hanno lasciato la mail e vengono utilizzate come destinatari
+    della funzione send_email.
+    :param request:
+    :param id_item: id dell'oggetto che era finito ma è stato nuovamente aggiunto
+    :return:
+    """
+    item = Item.objects.get(id=id_item)
+
+    subject = "Oggetto disponibile"
+    message = "Il prodotto " + item.name + " del negozio " + item.user.username + " è nuovamente disponibile"
+    email = []
+    for waiters in item.waiting_customer.all():
+        email.append(waiters.email)
+    print("email: ", email)
+
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, email, fail_silently=False)
+    # rimuovo la lista delle mail
+    item.waiting_customer.clear()
+
 
 
 @login_required(login_url='/users/login')
@@ -125,6 +150,7 @@ def insert_item(request):
 
     # return render(request, 'users/base_registrazione.html', context)
     return render(request, 'items/insert_item.html', context)
+
 
 
 def show_item_shop(request):
@@ -238,7 +264,7 @@ def show_shop(request, username_shop):
 
 @login_required(login_url='/users/login')
 def buy_page(request, item_selected_id):
-
+    email_form = WaitUserForm()
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     print(order_qs)
 
@@ -254,15 +280,71 @@ def buy_page(request, item_selected_id):
 
     # seleziono prodotto con l'id passato dalla schermata
     item_selected = Item.objects.filter(id=item_selected_id).first()
-    context = {}
-    context['item_selected'] = item_selected
-    context['user'] = general_user
-    context['all_items'] = order
+
+    context = {'item_selected': item_selected, 'user': general_user, 'all_items': order, 'form_email': email_form}
 
     return render(request, 'items/buy_page.html', context)
 
+
 def modify_item(request, item_selected_id):
-    print(request)
+    item = Item.objects.get(id=item_selected_id)
+    form = ItemForm(request.POST or None, request.FILES or None, instance=item)
+
+    old_quantity = item.quantity
+    if form.is_valid():
+        item.name = form.cleaned_data['name']
+        item.price = form.cleaned_data['price']
+        item.discount_price = form.cleaned_data['discount_price']
+        item.category = form.cleaned_data['category']
+        item.quantity = form.cleaned_data['quantity']
+        item.description = form.cleaned_data['description']
+        try:
+            item.image = request.FILES['image']
+        except Exception:
+            if item.image is None:
+                item.image = item.item_pic_or_default()
+        item.save()
+        # se prima la quantità era a 0 e sono stati inseriti nuovi oggetti mando la email a chi era interessato
+        if item.quantity > 0 and old_quantity == 0:
+            send_email(request, item_selected_id)
+        return HttpResponseRedirect(reverse('items:item_page'))
+
+    context = {
+        "form": form,
+    }
+
+    # return render(request, 'users/base_registrazione.html', context)
+    return render(request, 'items/insert_item.html', context)
+
+
+def insert_email(request, item_selected_id):
+    """
+    Gli utenti interessati a un prodotto non più disponibile possono lasciare la propria mail e verranno ricontattati
+    appena l'oggetto tornerà ad essere disponibile.
+    :param request:
+    :param item_selected_id:
+    :return:
+    """
+    form = WaitUserForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        waiting_customer = WaitUser.objects.get_or_create(customer=request.user)[0]
+        waiting_customer.email = form.cleaned_data['email']
+        waiting_customer.save()
+        item_to_wait = Item.objects.filter(id=item_selected_id, waiting_customer=waiting_customer)
+        print(len(item_to_wait))
+        if len(item_to_wait) == 0:
+            item = Item.objects.get(id=item_selected_id)
+            item.waiting_customer.add(waiting_customer)
+            item.save()
+            print("chi ha lasciato la mail: ", item.waiting_customer)
+        else:
+            print("l'utente ha già lasciato la propria email")
+            item = Item.objects.get(id=item_selected_id)
+            print("Tutti gli utenti", item.waiting_customer.all())
+
+    return HttpResponseRedirect(reverse('items:item_page'))
+
 
 @login_required(login_url='/users/login')
 def delete_item(request, item_selected_id):
@@ -294,7 +376,14 @@ def delete_item(request, item_selected_id):
 
     raise Http404
 
+
+def allowed_to_buy(user):
+    customer = GeneralUser.objects.get(user=user)
+    return customer.data_fine_blocco < datetime.date.today()
+
+
 @login_required(login_url='/users/login')
+@user_passes_test(allowed_to_buy)
 def checkout(request):
     #ORDER E' L'INSIEME DI ITEM CHE COMPONGONO L'ORDINE DELL'UTENTE
     order = Order.objects.get(user=request.user, ordered=False)
@@ -310,7 +399,7 @@ def checkout(request):
 
     for item in all_items:
         for item_in_order in order_items:
-            if(item_in_order.item.name == item.name):
+            if item_in_order.item.name == item.name:
                 item.quantity = item.quantity - item_in_order.quantity
                 item.save()
 
@@ -333,7 +422,7 @@ def add_to_cart(request, item_selected_id):
 
     #SELEZIONO PRODOTTO CORRENTE CHE STO AGGIUNGENDO AL CARRELLO
     quantity_to_buy = request.GET.get('quantity')
-    quantity_to_buy_int = int(quantity_to_buy);
+    quantity_to_buy_int = int(quantity_to_buy)
     print(quantity_to_buy_int)
     item_selected = get_object_or_404(Item, id=item_selected_id)
     print(item_selected)
@@ -416,9 +505,18 @@ def go_to_cart(request):
 
     print("go_to_cart-order:")
     print(order)
-    context = {"all_items": order, 'user': request.user}
-    print(context)
+    general_user = GeneralUser.objects.get(user=request.user)
+    allowed_to_buy = general_user.data_fine_blocco < datetime.date.today()
+    print("può fare acquisti?", allowed_to_buy)
 
+    context = {
+        "all_items": order,
+        'user': request.user,
+        'allowed_to_buy': allowed_to_buy,
+        'data_fine_blocco': general_user.data_fine_blocco
+    }
+
+    # se ha un blocco per recensioni negative => non può fare acquisti finchè non è finito il periodo di divieta
     return render(request, 'items/add_to_cart.html', context)
 
 @login_required(login_url='/users/login')
@@ -514,6 +612,7 @@ def remove_entire_item_from_cart(request, item_selected_id):
         print(context)
 
         return render(request, 'items/add_to_cart.html', context)
+
 
 def view_order(request):
     all_orders = Order.objects.filter(user=request.user, ordered=True)

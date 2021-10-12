@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('insert_item', views.insert_item, name='insert_item'),
 
-    path('send_email', views.send_email, name='send_email'),
+    path('insert_email/<str:item_selected_id>', views.insert_email, name='insert_email'),
 
     path('<int:item_selected_id>/computeTime', views.computeTime, name='computeTime'),
 

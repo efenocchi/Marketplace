@@ -17,6 +17,16 @@ CATEGORY_CHOICES = (
 )
 
 
+class WaitUser(models.Model):
+    """
+    Sono gli utenti che lasciano la propria mail per essere ricontattati in seguito
+    """
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(default="")
+    def __str__(self):
+        return self.customer.username
+
+
 class Item(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     name = models.CharField(max_length=100) #title
@@ -26,6 +36,7 @@ class Item(models.Model):
     description = models.TextField()
     quantity = models.IntegerField(default=1)
     image = models.ImageField(null=True, default='', blank=True)
+    waiting_customer = models.ManyToManyField(WaitUser)
 
     def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
         if self.image:
@@ -73,7 +84,13 @@ class OrderItem(models.Model):
 
 
 class WhoHasReviewed(models.Model):
+    """
+    Utente che ha lasciato la recensione per un ordine
+    """
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+
 
 
 class Order(models.Model):

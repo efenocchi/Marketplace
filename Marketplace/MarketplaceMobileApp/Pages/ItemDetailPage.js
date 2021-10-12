@@ -57,6 +57,7 @@ class ItemDetailPage extends Component {
                 })
                 .then(res => res.json())
                 .then((res) => {
+
                     if (res.id != null) {
                         // this.clearFields();
                         // this.props.navigation.goBack(null);

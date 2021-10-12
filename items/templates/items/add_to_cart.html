@@ -106,7 +106,12 @@
         </ul>
     </div>
         <td colspan="5">
-            <a class='btn btn-warning float-right ml-2' href="{% url 'items:checkout'%}">Proceed to checkout</a>
+
+            {% if allowed_to_buy %}
+                <a class='btn btn-warning float-right ml-2' href="{% url 'items:checkout'%}">Proceed to checkout</a>
+            {% else %}
+                <a class='btn btn-warning float-right ml-2'>Attendi {{data_fine_blocco}}</a>
+            {% endif %}
             <a class='btn btn-primary float-right' href="{% url 'items:item_page'%}">Continue shopping</a>
         </td>
         </div>

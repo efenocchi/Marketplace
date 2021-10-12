@@ -83,4 +83,3 @@ class ReviewCustomer(models.Model):
     def __str__(self):
         return self.title_of_comment
 
-

@@ -1,6 +1,6 @@
 import magic
 from django import forms
-from .models import Item
+from .models import Item, WaitUser
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -8,6 +8,18 @@ import re
 
 MIME_TYPES = ['image/jpeg', 'image/png']
 
+
+class WaitUserForm(ModelForm):
+    email = forms.EmailField(max_length=100)
+
+    class Meta:
+        model = WaitUser
+        fields = ['email']
+
+    def clean_email(self):
+        if not (5 <= len(self.cleaned_data['email']) <= 100):
+            raise ValidationError(_('Errore: la mail deve essere compresa gra 5 e 100 caratteri.'))
+        return self.cleaned_data['email']
 
 class ItemForm(ModelForm):
     required_css_class = 'required'

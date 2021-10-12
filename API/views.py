@@ -828,7 +828,8 @@ class AddToCart(generics.UpdateAPIView):
         order_item, created = OrderItem.objects.get_or_create(
             item=item_selected,
             user=self.request.user,
-            ordered=False
+            ordered=False,
+            quantity=quantity
         )
         # ORDER E' L'INSIEME DI ITEM CHE COMPONGONO L'ORDINE DELL'UTENTE
         order_qs = Order.objects.filter(user=user_id, ordered=False)
@@ -842,7 +843,7 @@ class AddToCart(generics.UpdateAPIView):
                 print(12)
                 if (item_selected.quantity >= quantity):
                     print(13)
-                    # order_item.quantity += quantity
+                    order_item.quantity += quantity
                     print(order_item.quantity)
                     order_item.save()
                     # item_selected.quantity -= quantity

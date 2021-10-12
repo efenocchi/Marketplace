@@ -98,6 +98,7 @@ export default class App extends React.Component {
     global.regione = "Emilia-Romagna";
     global.ip = "10.110.215.142:5000"; // Inserire il proprio ip e la porta in ascolto
     global.uri = false;
+    global.stack_refreshed_home = true;
     global.state = {
       fontLoaded: false,
     };

@@ -1,3 +1,7 @@
+import datetime
+
+from django.utils import timezone
+
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -150,6 +154,34 @@ def add_review_shop(request, shop_selected_id):
     return render(request, 'review/add_review_shop.html', context)
 
 
+def check_average_raging(request, receiver, last_rating_review):
+    # controllo se l'utente deve essere penalizzato per aver ricevuto troppe recensioni negative
+    review_received_by_customer = ReviewCustomer.objects.filter(receiver=receiver.user)
+    average_value = 0
+
+    for review in review_received_by_customer:
+        average_value += review.rating
+
+    # ce n'è sempre almeno una dato che l'ho appena inserita
+    average_value = average_value / len(review_received_by_customer)
+    print("average_value", average_value)
+
+    # posso avere una media bassa ma aver preso una recensione alta
+    if average_value < 3 and last_rating_review < 3:
+        receiver.numero_volte_bloccato = receiver.numero_volte_bloccato + 1
+        # se non è bloccato gli mette una data di blocco per i prossimi 10 giorni, altrimenti la sommo a quella già data
+        if receiver.data_fine_blocco < datetime.date.today():
+            receiver.data_fine_blocco = datetime.date.today() + datetime.timedelta(days=10)
+            print(receiver.data_fine_blocco)
+        else:
+            receiver.data_fine_blocco = receiver.data_fine_blocco + datetime.timedelta(days=10)
+
+        # aggiungo ulteriori 10 giorni, penalizzo se è recidivo nel prendere valutazioni basse
+        if receiver.numero_volte_bloccato > 3:
+            receiver.data_fine_blocco = receiver.data_fine_blocco + datetime.timedelta(days=5)
+
+    receiver.save()
+
 @login_required(login_url='/utenti/login/')
 def add_review_customer(request, order_id, customer_id):
     """
@@ -183,6 +215,10 @@ def add_review_customer(request, order_id, customer_id):
         review.save()
         order.review_single_customer_done = True
         order.save()
+
+        # controllo se l'utente deve essere penalizzato
+        check_average_raging(request, receiver, review.rating)
+
         return HttpResponseRedirect(reverse('index'))
 
     context = {
