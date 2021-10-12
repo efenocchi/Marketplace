@@ -37,9 +37,9 @@ urlpatterns = [
     path('insert_item/', views.InsertNewItem.as_view(), name='API-insert-item'),
 
     # *** review for/to shop
-    path('review_shop/<str:id_shop>/', views.ReturnReviewShop.as_view(), name='API-review-shop'),
-    path('review_from_customer_to_shop/<str:id_shop>/', views.CreateReviewForShop.as_view(), name='API-new-review-shop'),
-    path('get_single_review_shop/<str:id_shop>/', views.GetSingleReviewShop.as_view(), name='API-get-single-review-left-to-shop'),
+    path('review_shop/<str:username_shop>/', views.ReturnReviewShop.as_view(), name='API-review-shop'),
+    path('review_from_customer_to_shop/<str:username_shop>/', views.CreateReviewForShop.as_view(), name='API-new-review-shop'),
+    path('get_single_review_shop/<str:username_shop>/', views.GetSingleReviewShop.as_view(), name='API-get-single-review-left-to-shop'),
 
     # *** review for/to customer
     path('review_from_shop_to_customer/<str:id_user>/<str:id_order>/', views.CreateReviewForCustomer.as_view(),name='API-new-review-to-customer'),
@@ -48,7 +48,8 @@ urlpatterns = [
 
     # Vale
     path('items/list_all_items/', views.ListAllItems.as_view(), name='API-list-all-items'),
-    path('items/<str:id_shop>/shop_all_items/', views.ShopAllItems.as_view(), name='API-shop-all-items'),
+    path('items/<int:id_shop>/shop_all_items/', views.ShopAllItems.as_view(), name='API-shop-all-items'),
+    path('items/<str:username_shop>/show_shop/', views.ShowShop.as_view(), name='API-show-shop'),
     path('items/<int:pk>/cart_orders/', views.CartOrders.as_view(), name='API-cart-orders'),
     path('id_items_from_orderitems/<int:pk>/', views.IdItemsFromOrderItems.as_view(), name='API-id-items-from-orderitems'),
     path('items/search/<int:pk>/<str:text>/', views.SearchItem.as_view(), name='API-search-item'),

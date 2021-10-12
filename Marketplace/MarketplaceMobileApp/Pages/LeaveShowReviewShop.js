@@ -23,7 +23,7 @@ import SearchBar from "react-native-dynamic-search-bar";
 const {width, height} = Dimensions.get('window');
 
 export default class LeaveShowReviewShop extends Component {
-    id_shop;
+    username_shop;
     review_done;
     constructor(props){
         super(props);
@@ -35,7 +35,7 @@ export default class LeaveShowReviewShop extends Component {
     }
 
     componentDidMount() {
-        this.id_shop = this.props.route.params.id_shop;
+        this.username_shop = this.props.route.params.username_shop;
         this.fetchAllItems();
         this.willFocusSubscription = this.props.navigation.addListener(
           'willFocus',
@@ -52,7 +52,7 @@ export default class LeaveShowReviewShop extends Component {
 
 
     fetchAllItems() {
-            return fetch('http://10.110.215.142:5000/api/review_shop/' + this.id_shop + '/?format=json')
+            return fetch('http://10.110.215.142:5000/api/review_shop/' + this.username_shop + '/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {

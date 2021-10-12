@@ -22,7 +22,7 @@ import {Picker} from "native-base";
 
 
 export default class LeaveOrReadReviewToShop extends Component{
-    id_shop;
+    username_shop;
     review_left;
 
     constructor(props){
@@ -36,7 +36,7 @@ export default class LeaveOrReadReviewToShop extends Component{
     }
 
     componentDidMount() {
-        this.id_shop = this.props.route.params.id_shop;
+        this.username_shop = this.props.route.params.username_shop;
         this.review_left = this.props.route.params.review_left;;
 
         // Se non ho già lasciato una recensione allora non devo caricare niente dal server
@@ -54,7 +54,7 @@ export default class LeaveOrReadReviewToShop extends Component{
 
 
     fetchSingleReviewLeftToShop(){
-       return fetch('http://'+ global.ip +'/api/get_single_review_shop/' + this.id_shop + '/?format=json', {
+       return fetch('http://'+ global.ip +'/api/get_single_review_shop/' + this.username_shop + '/?format=json', {
            method: 'GET',
            headers: {
                 'Accept': 'application/json',
@@ -85,7 +85,7 @@ export default class LeaveOrReadReviewToShop extends Component{
 
     LeaveReview(){
         if(this.state.title_of_comment !== "" && this.state.description !== "" && this.state.rating !== "") {
-            return fetch('http://'+ global.ip +'/api/review_from_customer_to_shop/' + this.id_shop + '/', {
+            return fetch('http://'+ global.ip +'/api/review_from_customer_to_shop/' + this.username_shop + '/', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

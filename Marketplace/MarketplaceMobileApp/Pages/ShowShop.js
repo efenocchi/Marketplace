@@ -23,7 +23,7 @@ import SearchBar from "react-native-dynamic-search-bar";
 const {width, height} = Dimensions.get('window');
 
 export default class ShowShop extends Component {
-    id_shop;
+    username_shop;
     constructor(props){
         super(props);
         this.state ={
@@ -35,7 +35,7 @@ export default class ShowShop extends Component {
     }
 
     componentDidMount() {
-        this.id_shop = this.props.route.params.id_shop;
+        this.username_shop = this.props.route.params.username_shop;
 
         Promise.all([
             this.fetchTime(),
@@ -50,7 +50,7 @@ export default class ShowShop extends Component {
 
 
     fetchTime(){
-         return fetch('http://'+ global.ip +'/api/travel_time/' + this.id_shop + '/?format=json')
+         return fetch('http://'+ global.ip +'/api/travel_time/' + this.username_shop + '/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
@@ -69,7 +69,7 @@ export default class ShowShop extends Component {
 
 
     fetchAllItems() {
-            return fetch('http://'+ global.ip +'/api/items/' + this.id_shop + '/shop_all_items/?format=json')
+            return fetch('http://'+ global.ip +'/api/items/' + this.username_shop + '/show_shop/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
@@ -131,7 +131,7 @@ export default class ShowShop extends Component {
                     <Button
                         text={'Recensioni'}
                         onPress={() => {
-                        this.props.navigation.navigate('LeaveShowReviewShop',{id_shop: this.id_shop});
+                        this.props.navigation.navigate('LeaveShowReviewShop',{username_shop: this.username_shop});
                         }}
                     />
                     <Text style={styles.title} numberOfLines={2}>{this.state.dataSourceTime}</Text>

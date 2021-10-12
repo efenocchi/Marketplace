@@ -83,8 +83,8 @@ class ReturnReviewShop(generics.ListAPIView):
     serializer_class = ReviewShopSerializer
 
     def get_queryset(self):
-        id_shop = self.kwargs['id_shop']
-        shop = GeneralUser.objects.get(user=id_shop)
+        username_shop = self.kwargs['username_shop']
+        shop = GeneralUser.objects.get(user=username_shop)
         review = ReviewShop.objects.filter(receiver=shop.user)
 
         return list(review)
@@ -195,14 +195,27 @@ class ShopAllItems(generics.ListAPIView):
 
     def get_queryset(self):
         id_shop = self.kwargs['id_shop']
-        user = User.objects.get(username=id_shop)
-        shop = GeneralUser.objects.get(user=user)
+        # user = User.objects.get(username=id_shop)
+        shop = GeneralUser.objects.get(id=id_shop)
         queryset = Item.objects.filter(user=shop.user)
         lista_query = list(queryset)
         print(lista_query)
         return lista_query
 
 # Fine Da Vale
+
+
+class ShowShop(generics.ListAPIView):
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        username_shop = self.kwargs['username_shop']
+        user = User.objects.get(username=username_shop)
+        shop = GeneralUser.objects.get(user=user)
+        queryset = Item.objects.filter(user=shop.user)
+        lista_query = list(queryset)
+        print(lista_query)
+        return lista_query
 
 
 class ReturnReviewCustomer(generics.ListAPIView):
@@ -464,9 +477,10 @@ class GetSingleReviewShop(generics.RetrieveUpdateAPIView):
     serializer_class = ReviewShopSerializer
 
     def get_object(self):
-        id_shop = self.kwargs['id_shop']
+        username_shop = self.kwargs['username_shop']
         try:
-            receiver = GeneralUser.objects.get(id=id_shop)
+            user = User.objects.get(username=username_shop)
+            receiver = GeneralUser.objects.get(user=user)
         except Exception:
             raise Exception("Negozio non valido")
 
@@ -514,10 +528,11 @@ class CreateReviewForShop(generics.CreateAPIView):
     serializer_class = ReviewShopSerializer
 
     def perform_create(self, serializer):
-        id_shop = self.kwargs['id_shop']
+        username_shop = self.kwargs['username_shop']
 
         try:
-            shop = GeneralUser.objects.get(id=id_shop)
+            user = User.objects.get(username=username_shop)
+            shop = GeneralUser.objects.get(user=user)
         except Exception:
             raise Exception("Negozio non valido")
 

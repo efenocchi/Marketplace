@@ -188,7 +188,7 @@ class ItemList extends Component {
                                         <Button
                                             text={'Visita il Negozio'}
                                             onPress={() => {console.warn('ShowShop')
-                                            this.props.navigation.navigate('ShowShop',{id_shop: item[7]});
+                                            this.props.navigation.navigate('ShowShop',{username_shop: item[7]});
                                             }}
                                         />
                                     </View>

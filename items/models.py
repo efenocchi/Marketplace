@@ -23,6 +23,7 @@ class WaitUser(models.Model):
     """
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField(default="")
+
     def __str__(self):
         return self.customer.username
 
@@ -36,7 +37,7 @@ class Item(models.Model):
     description = models.TextField()
     quantity = models.IntegerField(default=1)
     image = models.ImageField(null=True, default='', blank=True)
-    waiting_customer = models.ManyToManyField(WaitUser)
+    waiting_customer = models.ManyToManyField(WaitUser, null=True)
 
     def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
         if self.image:
