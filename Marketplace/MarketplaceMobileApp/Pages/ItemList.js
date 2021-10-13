@@ -121,7 +121,7 @@ class ItemList extends Component {
 
                     console.log("Inserimento email esito:")
                     console.log(res)
-                    if(res["result"] == true) {
+                    if(res["result"] === true) {
                         console.warn('Email aggiunta con successo')
                     }
                     else{

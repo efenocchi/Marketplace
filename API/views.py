@@ -551,8 +551,9 @@ class CreateReviewForCustomer(generics.CreateAPIView):
         id_user = self.kwargs['id_user']
         id_order = self.kwargs['id_order']
         print("id_order", id_order)
+        print("id_user", id_user)
         try:
-            user = GeneralUser.objects.get(id=id_user)
+            user = User.objects.get(id=id_user)
             order = Order.objects.get(id=id_order)
             print(order)
         except Exception:
@@ -565,8 +566,8 @@ class CreateReviewForCustomer(generics.CreateAPIView):
             order.save()
         except Exception:
             raise Exception("Negozio recensore non aggiunto")
-
-        serializer.save(writer=self.request.user, receiver=user.user, order=order)
+        print(self.request.data)
+        serializer.save(writer=self.request.user, receiver=user, order=order)
 
 
 class GetSingleReviewCustomer(generics.RetrieveUpdateAPIView):
@@ -580,7 +581,7 @@ class GetSingleReviewCustomer(generics.RetrieveUpdateAPIView):
         id_user = self.kwargs['id_user']
         id_order = self.kwargs['id_order']
         try:
-            receiver = GeneralUser.objects.get(id=id_user)
+            user = User.objects.get(id=id_user)
         except Exception:
             raise Exception("Utente non valido")
         try:
@@ -588,7 +589,7 @@ class GetSingleReviewCustomer(generics.RetrieveUpdateAPIView):
         except Exception:
             raise Exception("Ordine non valido")
 
-        return ReviewCustomer.objects.get(writer=self.request.user, receiver=receiver.user, order=order)
+        return ReviewCustomer.objects.get(writer=self.request.user, receiver=user, order=order)
 
 
 class UploadItem(generics.CreateAPIView):

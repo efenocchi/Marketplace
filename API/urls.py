@@ -47,8 +47,8 @@ urlpatterns = [
     path('get_single_review_shop/<str:username_shop>/', views.GetSingleReviewShop.as_view(), name='API-get-single-review-left-to-shop'),
 
     # *** review for/to customer
-    path('review_from_shop_to_customer/<str:id_user>/<str:id_order>/', views.CreateReviewForCustomer.as_view(),name='API-new-review-to-customer'),
-    path('get_single_review_customer/<str:id_user>/<str:id_order>/', views.GetSingleReviewCustomer.as_view(),name='API-get-single-review-customer'),
+    path('review_from_shop_to_customer/<int:id_user>/<int:id_order>/', views.CreateReviewForCustomer.as_view(),name='API-new-review-to-customer'),
+    path('get_single_review_customer/<int:id_user>/<int:id_order>/', views.GetSingleReviewCustomer.as_view(),name='API-get-single-review-customer'),
     #
 
     # Vale
