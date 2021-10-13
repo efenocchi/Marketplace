@@ -34,13 +34,20 @@ class ItemList extends Component {
     }
 
     componentDidMount() {
-        Promise.all([
-            this.fetchAllItems(),
-        ]).then(([urlOneData, urlTwoData]) => {
-            this.setState({
-                // mergedData: urlOneData.concat(urlTwoData)
-            });
-        })
+        this.focusListener = this.props.navigation.addListener('focus',
+               () => {
+                       console.log('focus is called');
+                       Promise.all([
+                        this.fetchAllItems(),
+                        ]).then(([urlOneData, urlTwoData]) => {
+                        this.setState({
+                            // mergedData: urlOneData.concat(urlTwoData)
+                        });
+                    })
+               }
+             );
+
+
 
     }
 
@@ -187,7 +194,8 @@ class ItemList extends Component {
                                         }
                                         <Button
                                             text={'Visita il Negozio'}
-                                            onPress={() => {console.warn('ShowShop')
+                                            onPress={() => {
+                                                // console.warn('ShowShop')
                                             this.props.navigation.navigate('ShowShop',{username_shop: item[7]});
                                             }}
                                         />

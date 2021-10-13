@@ -7,7 +7,7 @@ import {
     Text,
     View,
     StyleSheet,
-    YellowBox
+    TouchableOpacity
 } from "react-native";
 import CardItem from "../components/CardItem";
 import CustomHeader from "../components/Header";
@@ -16,7 +16,7 @@ import Card from "../components/Card";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import {NavigationActions as navigation} from "react-navigation";
-import {useNavigation} from "@react-navigation/native";
+import {useNavigation, useRoute} from "@react-navigation/native";
 import Button from "../components/Button";
 import SearchBar from "react-native-dynamic-search-bar";
 
@@ -29,23 +29,29 @@ export default class ShowShop extends Component {
         this.state ={
             isLoading1: true,
             isLoading2: true,
-            show_pickers: true,
-            //search: ""
+
         }
     }
 
     componentDidMount() {
+
         this.username_shop = this.props.route.params.username_shop;
 
-        Promise.all([
-            this.fetchTime(),
-            this.fetchAllItems()
-        ]).then(([urlOneData, urlTwoData]) => {
-            this.setState({
-                // mergedData: urlOneData.concat(urlTwoData)
-            });
-        })
-
+        this.focusListener = this.props.navigation.addListener('focus',
+               () => {
+                    this.state.isLoading1 = true
+                    this.state.isLoading2 = true
+                       console.log('focus is called');
+                               Promise.all([
+                            this.fetchTime(),
+                            this.fetchAllItems()
+                        ]).then(([urlOneData, urlTwoData]) => {
+                            this.setState({
+                                // mergedData: urlOneData.concat(urlTwoData)
+                            });
+                        })
+               }
+             );
     }
 
 
@@ -87,6 +93,7 @@ export default class ShowShop extends Component {
     }
 
     render() {
+
         if(this.state.isLoading1 || this.state.isLoading2){
             return(
                 <View style={{flex: 1, paddingTop: height / 2}}>
@@ -94,6 +101,8 @@ export default class ShowShop extends Component {
                 </View>
             )
         }
+
+
 
         this.array_values = Array(this.state.all_items).fill().map(()=>Array(7).fill())
         for (var i in this.state.dataSource) {
@@ -139,7 +148,7 @@ export default class ShowShop extends Component {
                         data={this.array_values}
                         renderItem={({item, index}) =>
                             <Card style={styles.card}>
-                                <Pressable style={styles.pressable} onPress={() => {
+                                <TouchableOpacity style={styles.pressable} onPress={() => {
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
                                         {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4] })
@@ -161,7 +170,7 @@ export default class ShowShop extends Component {
                                             <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
                                         )}
                                     </View>
-                                </Pressable>
+                                </TouchableOpacity>
                             </Card>
                         }
                         keyExtractor={(item, index) => index.toString()}

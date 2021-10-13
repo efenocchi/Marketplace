@@ -5,10 +5,14 @@ import Cart from "../Pages/Cart";
 import ChooseUserInfo from "../Pages/ChooseUserInfo";
 
 import HomeStackNavigator from "./HomeStackNavigator";
-
+import {useRoute} from '@react-navigation/native';
 const Tab = createBottomTabNavigator();
 
 export default function UserStackNavigator() {
+const route = useRoute();
+console.log("Stampo il Route");
+console.log(route.name);
+
   return (
       <Tab.Navigator options={{headerShown: false}} screenOptions={{
 

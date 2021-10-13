@@ -19,7 +19,8 @@ import OrdersPlaced from "../Pages/OrdersPlaced";
 import AddItem from "../Pages/AddItem";
 import TakeAPicture from "../Pages/TakeAPictureOrVideo";
 import UploadPhoto2 from "../Pages/UploadPhoto2";
-const hiddenDrawerItems = ['NestedDrawerNavigator'];
+
+
 
 export function HomeScreen({ navigation, route }) {
 
@@ -33,6 +34,7 @@ export function HomeScreen({ navigation, route }) {
       />
     </View>
   );
+
 }
 
 

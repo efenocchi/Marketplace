@@ -5,10 +5,15 @@ import ItemDetailPage from "../Pages/ItemDetailPage";
 import ShowShop from "../Pages/ShowShop";
 import LeaveShowReviewShop from "../Pages/LeaveShowReviewShop";
 import LeaveOrReadReviewToShop from "../Pages/LeaveOrReadReviewToShop";
+import {useRoute} from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
 export default function HomeStackNavigator()  {
+    const route = useRoute();
+console.log("Stampo il Route");
+console.log(route.name);
+
   return (
       <Stack.Navigator screenOptions={{headerShown: false}}>
 

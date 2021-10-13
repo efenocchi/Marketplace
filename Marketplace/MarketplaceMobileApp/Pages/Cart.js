@@ -25,16 +25,22 @@ class Cart extends Component {
     }
 
     componentDidMount() {
-        Promise.all([
-            this.fetchCartOrders(),
-            this.fetchItemsFromOrderItems()
-        ]).then(([urlOneData, urlTwoData]) => {
-            this.setState({
-                // mergedData: urlOneData.concat(urlTwoData)
-            });
-        })
+        this.focusListener = this.props.navigation.addListener('focus',
+               () => {
+                    this.state.isLoading1 = true
+                    this.state.isLoading2 = true
+                   Promise.all([
+                       this.fetchCartOrders(),
+                       this.fetchItemsFromOrderItems()
+                   ]).then(([urlOneData, urlTwoData]) => {
+                       this.setState({
 
+                       });
+                   })
+               }
+        );
     }
+
 
     deleteItem = (id_item_to_delete) => {
         fetch('http://'+ global.ip +'/api/items/' + id_item_to_delete + '/delete/', {
@@ -60,6 +66,7 @@ class Cart extends Component {
                 dataSourceOrderItems: responseJson.results,
                 all_order_items: responseJson.count
             }, function(){
+                console.log("Entra 1")
                 console.log(responseJson.results)
             });
             })
@@ -77,7 +84,7 @@ class Cart extends Component {
                    dataSourceItems: responseJson.results,
                    isLoading2: false,
                }, function () {
-
+                    console.log("Entra 2")
                     console.log(responseJson.results)
                });
            })
@@ -97,7 +104,7 @@ class Cart extends Component {
            )
        }
 
-        this.array_values = Array(this.state.all_order_items).fill().map(()=>Array(6).fill())
+        this.array_values = Array(this.state.all_order_items).fill().map(()=>Array(8).fill())
         for (var i in this.state.dataSourceOrderItems) {
             this.array_values[i][0] = this.state.dataSourceOrderItems[i]["quantity"]
             this.array_values[i][1] = this.state.dataSourceItems[i]["name"]
