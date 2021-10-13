@@ -27,6 +27,11 @@ urlpatterns = [
     path('check_existing_username/<str:username_to_check>/', check_existing_username),
     path('check_existing_username_ajax/', check_existing_username_ajax),
 
+    # se devo aggiungere la mail prima controllo che non esista già un waituser con quell'username e quella password
+    # e se non esiste lo creo e con un altro fetch aggiungo la password
+    path('create_waituser/', views.CreateWaitUser.as_view(), name='API-create-waituser'),
+    path('insert_email/<int:item_selected_id>/', views.InsertEmail.as_view(), name='API-insert-email'),
+
 
 
     # per Shop

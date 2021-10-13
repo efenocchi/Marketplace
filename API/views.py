@@ -6,13 +6,13 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework import generics
 # Create your views here.
-from items.models import Order, OrderItem, Item, WhoHasReviewed
+from items.models import Order, OrderItem, Item, WhoHasReviewed, WaitUser
 from items.views import computeTime
 from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
     OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer, ReviewShopSerializer, \
-    ReviewPartialCustomerSerializer, InsertItemSerializer
+    ReviewPartialCustomerSerializer, InsertItemSerializer, WaitUserSerializer
 from .permissions import *
 from django.contrib.auth import logout
 from rest_framework.views import APIView
@@ -154,7 +154,8 @@ class FindUser(generics.ListAPIView):
 
 class RegisterNormalUserFromMobilePhone(generics.RetrieveUpdateAPIView):
     '''
-        registra un utente dal telefono cellulare
+    registra un utente dal telefono cellulare (l'utente general user viene creato senza nessun parametro quando creo
+    l'utente user, per questo motivo invece che andare a utilizzare API Create vado a fare un update)
     permission_classes: Returns a boolean denoting whether the current user has permission to execute the decorated view
     '''
     permission_classes = [IsSameUser, IsUserLogged]
@@ -929,3 +930,54 @@ class DeleteItem(generics.RetrieveUpdateDestroyAPIView):
                     print(62)
                     order.items.remove(order_item)
                     order_item.delete()
+
+
+class CreateWaitUser(generics.CreateAPIView):
+    """
+    Se il WaitUser con username e password passati non esiste lo creo.
+    """
+    permission_classes = [IsUserLogged]
+    serializer_class = WaitUserSerializer
+
+    def perform_create(self, serializer):
+        print("serializer.email", self.request.data)
+
+        if len(WaitUser.objects.filter(customer=self.request.user, email=self.request.data["email"])) == 0:
+            serializer.save(customer=self.request.user)
+            print("ho creato un nuovo waituser")
+        else:
+            print("waituser già presente")
+
+
+class InsertEmail(generics.RetrieveUpdateAPIView):
+    """
+    Aggiungo all'oggetto con quantità 0 la mail dell'utente interessato WaitUser passato
+    """
+    print("eccoci!!")
+    permission_classes = [IsUserLogged]
+    serializer_class = ItemSerializer
+
+    def put(self, request, *args, **kwargs):
+        item_selected_id = self.kwargs['item_selected_id']
+
+        try:
+            waiting_user = WaitUser.objects.filter(customer=self.request.user, email=self.request.data["email"]).first()
+
+        except Exception:
+            raise Exception("Errore nel settaggio della mail")
+
+        item_to_wait = Item.objects.filter(id=item_selected_id, waiting_customer=waiting_user)
+
+        # se questo utente non ha già lasciato la propria email la setto
+        if len(item_to_wait) == 0:
+            item = Item.objects.get(id=item_selected_id)
+            item.waiting_customer.add(waiting_user)
+            item.save()
+            print("Email inserita")
+            return JsonResponse({'result': True})
+        else:
+            print("Email già lasciata")
+            return JsonResponse({'result': False})
+
+    def get_object(self):
+        return GeneralUser.objects.get(user=self.request.user)

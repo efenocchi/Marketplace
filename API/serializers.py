@@ -7,7 +7,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
-from items.models import Order, OrderItem, Item, WhoHasReviewed
+from items.models import Order, OrderItem, Item, WhoHasReviewed, WaitUser
 from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from users.views import compute_position
@@ -73,29 +73,30 @@ class UserSerializer(serializers.ModelSerializer):
                     _('Errore: la conferma password deve avere lunghezza fra 3 e 20 caratteri.'))
             return data
 
-        def validate_first_name(self, data):
-            if not re.match("^[A-Za-z 'èòàùì]+$", data):
-                raise serializers.ValidationError(_('Errore: il nome può contenere solo lettere.'))
-            if not (1 <= len(data) <= 30):
-                raise ValidationError(_('Errore: il nome deve avere lunghezza fra 1 e 30 caratteri.'))
-            return data
+        # def validate_first_name(self, data):
+        #     if not re.match("^[A-Za-z 'èòàùì]+$", data):
+        #         raise serializers.ValidationError(_('Errore: il nome può contenere solo lettere.'))
+        #     if not (1 <= len(data) <= 30):
+        #         raise ValidationError(_('Errore: il nome deve avere lunghezza fra 1 e 30 caratteri.'))
+        #     return data
+        #
+        # def validate_last_name(self, data):
+        #     # controllo cognome
+        #     if not re.match("^[A-Za-z 'èòàùì]+$", data):
+        #         raise serializers.ValidationError(_('Errore: il cognome può contenere solo lettere.'))
+        #     if not (1 <= len(data) <= 30):
+        #         raise serializers.ValidationError(_('Errore: il cognome deve avere lunghezza fra 1 e 30 caratteri.'))
+        #     return data
 
-        def validate_last_name(self, data):
-            # controllo cognome
-            if not re.match("^[A-Za-z 'èòàùì]+$", data):
-                raise serializers.ValidationError(_('Errore: il cognome può contenere solo lettere.'))
-            if not (1 <= len(data) <= 30):
-                raise serializers.ValidationError(_('Errore: il cognome deve avere lunghezza fra 1 e 30 caratteri.'))
-            return data
-
-        def validate_email(self, data):
-            # controllo email
-            if not (5 <= len(data) <= 50):
-                raise serializers.ValidationError(_('Errore: la mail deve essere compresa gra 5 e 50 caratteri.'))
-            return data
+        # def validate_email(self, data):
+        #     # controllo email
+        #     if not (5 <= len(data) <= 50):
+        #         raise serializers.ValidationError(_('Errore: la mail deve essere compresa gra 5 e 50 caratteri.'))
+        #     return data
 
 
 class CompleteShopData(serializers.ModelSerializer):
+    # [modifica] mai usato!!
     user = UserSerializer(many=False)
     # numero_recensioni = serializers.SerializerMethodField("get_numero_recensioni_utente")
     # media_voti = serializers.SerializerMethodField("get_media_voti_utente")
@@ -212,14 +213,6 @@ class CompleteUserData(serializers.ModelSerializer):
             raise serializers.ValidationError(_('Errore: l\'età deve essere compresa fra 0 e 100.'))
         return data
 
-    # def get_media_voti_utente(self,profilo):
-    #     # user = Profile.__class__.objects.get(user=self.instance)
-    #     return calcolaMediaVotiUtente(profilo)
-    #
-    # def get_numero_recensioni_utente(self,profilo):
-    #     # user = Profile.__class__.objects.get(user=self.instance)
-    #     return calcolaNumeroVotiUtente(profilo)
-
     def update(self, instance, validated_data):
 
         dati_utente = validated_data.pop('user')
@@ -241,7 +234,7 @@ class CompleteUserData(serializers.ModelSerializer):
             instance.login_negozio = False
 
         else:
-            instance.pet_sitter = True
+            instance.login_negozio = True
             instance.telefono = validated_data['telefono']
 
         instance.user.save()
@@ -637,3 +630,28 @@ class ReviewItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewItem
         fields = "__all__"
+
+
+class WaitUserSerializer(serializers.ModelSerializer):
+    customer = serializers.CharField(max_length=30, allow_null=True, allow_blank=True, required=False)
+    print("entrati nel WaitUserSerializer")
+
+    class Meta:
+        model = WaitUser
+        fields = "__all__"
+    #
+    # def validate_email(self, data):
+    #     # controllo email
+    #     if not (5 <= len(data) <= 50):
+    #         raise serializers.ValidationError(_('Errore: la mail deve essere compresa gra 5 e 50 caratteri.'))
+    #     return data
+    #
+    # def update(self, instance, validated_data):
+    #     instance.customer = self.request.user
+    #     instance.email = validated_data["email"]
+    #     print("instance.user")
+    #     print(instance.user)
+    #     print(instance.email)
+    #     instance.save()
+    #     return instance
+

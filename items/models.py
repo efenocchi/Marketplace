@@ -26,7 +26,7 @@ class WaitUser(models.Model):
 
     def __str__(self):
         return self.customer.username
-
+        # return self.email
 
 class Item(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')

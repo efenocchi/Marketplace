@@ -8,7 +8,8 @@ import {
     View,
     StyleSheet,
     YellowBox,
-    TouchableOpacity
+    TouchableHighlight,
+    TouchableOpacity, TextInput
 } from "react-native";
 import CardItem from "../components/CardItem";
 import CustomHeader from "../components/Header";
@@ -29,6 +30,7 @@ class ItemList extends Component {
         this.state ={
             isLoading1: true,
             isLoading2: true,
+            email: ""
         }
 
     }
@@ -96,6 +98,67 @@ class ItemList extends Component {
             .catch((error) =>{
             });
         }
+
+
+    setPassword(item_selected_id){
+        console.log("bottone spinto")
+        console.log(this.state.email)
+
+        fetch('http://'+ global.ip +'/api/insert_email/' + item_selected_id + '/',
+                {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + global.user_key,
+                },
+                body: JSON.stringify({
+                    email: this.state.email,
+                }),
+                })
+                .then(res => res.json())
+                .then((res) => {
+
+                    console.log("Inserimento email esito:")
+                    console.log(res)
+                    if(res["result"] == true) {
+                        console.warn('Email aggiunta con successo')
+                    }
+                    else{
+                        console.warn('Email già presente')
+                    }
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+    }
+
+    createWaitUser(item_selected_id){
+        console.log("bottone spinto")
+        console.log(this.state.email)
+
+        // fetch('http://'+ global.ip +'/api/insert_email/' + item_selected_id + '/',
+        fetch('http://'+ global.ip +'/api/create_waituser/',
+                {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + global.user_key,
+                },
+                body: JSON.stringify({
+                    email: this.state.email,
+                }),
+                })
+                .then(res => res.json())
+                .then((res) => {
+                    console.log(res)
+                    this.setPassword(item_selected_id)
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+    }
 
     render() {
         // if(global.stack_refreshed_home === false){
@@ -182,15 +245,23 @@ class ItemList extends Component {
 
                                         </Text>
                                         {item[6] === 0 &&    //se la quantity è 0 -> item finito
-                                        <Button
-                                            style={styles.button_small}
-                                            text={'Enter Your Mail'}
-                                            onPress={() => {
-                                                console.warn('Enter Your Mail')
-                                                // this.fetchShowDistance(item[0]);
-                                            }}
-                                        />
-
+                                            <View style={{flexDirection:'row', width: window.width, marginVertical: 10, padding:4, alignItems:'center', justifyContent:'center', borderWidth:1, borderColor:'#888', borderRadius:10}}>
+                                                <View style={{flex:4}}>
+                                                      <TextInput editable maxLength={95}
+                                                        placeholder={"Inserisci la tua email"}
+                                                        placeholderTextColor={'red'}
+                                                        keyboardType = 'email-address'
+                                                        // ref={input => { this.txtName = input }}
+                                                        onChangeText={(value) => this.setState({email: value})}
+                                                        onSubmitEditing = {()=>{this.createWaitUser(item[0])}}
+                                                        />
+                                                </View>
+                                                <TouchableHighlight style={{alignItems:'center',justifyContent:'center'}} onPress = {()=>{this.createWaitUser(item[0])}} underlayColor = 'transparent'>
+                                                        <View>
+                                                          <Image source={ require('../assets/upload.png') } style={ { width: 20, height: 20 } } />
+                                                        </View>
+                                                </TouchableHighlight>
+                                            </View>
                                         }
                                         <Button
                                             text={'Visita il Negozio'}

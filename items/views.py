@@ -328,16 +328,18 @@ def insert_email(request, item_selected_id):
     form = WaitUserForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
-        waiting_customer = WaitUser.objects.get_or_create(customer=request.user)[0]
-        waiting_customer.email = form.cleaned_data['email']
+        waiting_customer = WaitUser.objects.get_or_create(customer=request.user, email=form.cleaned_data['email'])[0]
         waiting_customer.save()
+
         item_to_wait = Item.objects.filter(id=item_selected_id, waiting_customer=waiting_customer)
         print(len(item_to_wait))
+
+        # se questo utente non ha già lasciato la propria email per questo oggetto la lascia
         if len(item_to_wait) == 0:
             item = Item.objects.get(id=item_selected_id)
             item.waiting_customer.add(waiting_customer)
             item.save()
-            print("chi ha lasciato la mail: ", item.waiting_customer)
+            print("chi ha lasciato la mail: ", item.waiting_customer.all())
         else:
             print("l'utente ha già lasciato la propria email")
             item = Item.objects.get(id=item_selected_id)
