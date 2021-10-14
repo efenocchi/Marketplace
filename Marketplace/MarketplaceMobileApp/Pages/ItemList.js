@@ -187,7 +187,7 @@ class ItemList extends Component {
             this.array_values[i][5] = this.state.dataSource[i]["image"]
             this.array_values[i][6] = this.state.dataSource[i]["quantity"]
             this.array_values[i][7] = this.state.dataSource[i]["user"]["username"]
-            // this.array_values[i][8] = this.state.dataSource[i]["user"]["id"]
+            this.array_values[i][8] = this.state.dataSource[i]["user"]["id"]
         }
 
         return(

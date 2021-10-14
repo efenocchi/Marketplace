@@ -84,7 +84,8 @@ class ReturnReviewShop(generics.ListAPIView):
 
     def get_queryset(self):
         username_shop = self.kwargs['username_shop']
-        shop = GeneralUser.objects.get(user=username_shop)
+        user = User.objects.get(username=username_shop)
+        shop = GeneralUser.objects.get(user=user)
         review = ReviewShop.objects.filter(receiver=shop.user)
 
         return list(review)
@@ -980,5 +981,3 @@ class InsertEmail(generics.RetrieveUpdateAPIView):
             print("Email già lasciata")
             return JsonResponse({'result': False})
 
-    def get_object(self):
-        return GeneralUser.objects.get(user=self.request.user)

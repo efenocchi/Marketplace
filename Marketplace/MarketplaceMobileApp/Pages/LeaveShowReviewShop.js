@@ -52,7 +52,7 @@ export default class LeaveShowReviewShop extends Component {
 
 
     fetchAllItems() {
-            return fetch('http://10.110.215.142:5000/api/review_shop/' + this.username_shop + '/?format=json')
+            return fetch('http://'+ global.ip +'/api/review_shop/' + this.username_shop + '/?format=json')
 
             .then((response) => response.json())
             .then((responseJson) => {
@@ -117,7 +117,7 @@ export default class LeaveShowReviewShop extends Component {
                         text={'Lascia una recensione'}
                         onPress={() => {
                             // console.warn('ShowShop')
-                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{id_shop: this.id_shop, review_left: this.review_done});
+                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{username_shop: this.username_shop, review_left: this.review_done});
                         }}
                     />
                    )}
@@ -126,7 +126,7 @@ export default class LeaveShowReviewShop extends Component {
                         text={'Mostra recensione lasciata'}
                         onPress={() => {
                             // console.warn('ShowShop')
-                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{id_shop: this.id_shop, review_left: this.review_done});
+                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{username_shop: this.username_shop, review_left: this.review_done});
                         }}
                         />
                     )}

@@ -104,7 +104,7 @@ export default class ShowShop extends Component {
 
 
 
-        this.array_values = Array(this.state.all_items).fill().map(()=>Array(7).fill())
+        this.array_values = Array(this.state.all_items).fill().map(()=>Array(8).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["id"]
             this.array_values[i][1] = this.state.dataSource[i]["name"]
@@ -113,6 +113,7 @@ export default class ShowShop extends Component {
             this.array_values[i][4] = this.state.dataSource[i]["discount_price"]
             this.array_values[i][5] = this.state.dataSource[i]["image"]
             this.array_values[i][6] = this.state.dataSource[i]["user"]["username"]
+            this.array_values[i][7] = this.state.dataSource[i]["user"]["id"]
         }
         return(
 

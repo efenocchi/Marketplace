@@ -6,6 +6,7 @@ import OrdersReceived from "./OrdersReceived"
 import CheckReservationMade from "./CheckReservationMade"
 import LeaveOrReadReviewToCustomer from "./LeaveOrReadReviewToCustomer"
 import AddItem from "./AddItem"
+import FeedbackShop from "./FeedbackShop"
 
 
 // Serve solo per visualizzare i bottoni con i quali si andrà nelle varie schermate
@@ -23,7 +24,7 @@ export class ChooseShopInfoList extends Component{
             <View>
                 <Button
                 title="Valutazione negozio" //posso visualizzare le recensioni che mi hanno lasciato
-                // onPress={() => this.props.navigation.navigate('FeedbackShop')}
+                onPress={() => this.props.navigation.navigate('FeedbackShop')}
                 />
             </View>
             <View>
@@ -59,7 +60,7 @@ export default class ChooseUserInfo extends Component {
                 <Stack.Screen name="LeaveOrReadReviewToCustomer" component={LeaveOrReadReviewToCustomer}/>
                 <Stack.Screen name="AddItem" component={AddItem}/>
 
-                {/*<Stack.Screen name="FeedbackShop" component={FeedbackShop}/>*/}
+                <Stack.Screen name="FeedbackShop" component={FeedbackShop}/>
 
                 {/*<Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>*/}
 

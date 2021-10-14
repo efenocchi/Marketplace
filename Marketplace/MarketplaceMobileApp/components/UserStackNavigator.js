@@ -25,6 +25,7 @@ console.log(route.name);
         <Tab.Screen component={HomeStackNavigator}
                     name="Home" // nome in alto della pagina
                     options={{
+                        headerShown: false,
                         tabBarIcon: ({color}) => (
                             <Entypo name="home" color={color} size={25}/>
                         ),
