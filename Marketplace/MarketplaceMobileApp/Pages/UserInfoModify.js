@@ -107,6 +107,7 @@ export default class UserInfoModify extends Component {
 
 
     modifyNormalProfile = () => {
+
                 if (this.state.username !== "" && this.state.password !== "" && this.state.conferma_password !== "" &&
             // this.state.nome !== "" && this.state.cognome !== "" && this.state.email !== "" &&
             this.state.indirizzo !== "" && this.state.citta !== ""
@@ -128,9 +129,6 @@ export default class UserInfoModify extends Component {
                     user: {
                         username: this.state.username,
                         password: this.state.password,
-                        // first_name: this.state.nome,
-                        // last_name: this.state.cognome,
-                        // email: this.state.email
                     },
                     indirizzo: this.state.indirizzo,
                     citta: this.state.citta,
@@ -141,12 +139,15 @@ export default class UserInfoModify extends Component {
                 })
                 .then(res => res.json())
                 .then((res) => {
-                    if (res.user.id != null) {
-                        global.username = this.state.username;
+                    try {
+                        if (res.user.id !== null) {
+                            global.username = this.state.username;
 
-                        this.clearFields();
-                        this.props.navigation.navigate("Home");
-                    } else {
+                            this.clearFields();
+                            this.props.navigation.goBack();
+                        }
+                    }
+                    catch {
                         this.setState({error_message: "Errore: " + JSON.stringify(res)});
                     }
                 })
@@ -158,17 +159,15 @@ export default class UserInfoModify extends Component {
     }
 
 modifyShopProfile = () => {
+
                 if (this.state.username !== "" && this.state.password !== "" && this.state.conferma_password !== "" &&
-            // this.state.nome !== "" && this.state.cognome !== "" && this.state.email !== "" &&
             this.state.indirizzo !== "" && this.state.citta !== ""
             && this.state.telefono !== "" && this.state.codice_postale !== ""
-            // this.state.eta !== "" && this.state.caratteristiche !== ""
             )
             {
-            console.log("Sono entrato")
             if (this.state.password === this.state.conferma_password) {
                 console.log("Stesse password")
-                fetch('http://109.116.110.83:8000'+ global.ip +'/api/users/profile/',
+                fetch('http://'+ global.ip +'/api/users/profile/',
                 {
                 method: 'PUT',
                 headers: {
@@ -180,9 +179,6 @@ modifyShopProfile = () => {
                     user: {
                         username: this.state.username,
                         password: this.state.password,
-                        // first_name: this.state.nome,
-                        // last_name: this.state.cognome,
-                        // email: this.state.email
                     },
                     indirizzo: this.state.indirizzo,
                     citta: this.state.citta,
@@ -194,12 +190,15 @@ modifyShopProfile = () => {
                 })
                 .then(res => res.json())
                 .then((res) => {
-                    if (res.user.id != null) {
-                        global.username = this.state.username;
+                    try {
+                        if (res.user.id != null) {
+                            global.username = this.state.username;
 
-                        this.clearFields();
-                        this.props.navigation.navigate("Home");
-                    } else {
+                            this.clearFields();
+                            this.props.navigation.goBack();
+                        }
+                    }
+                    catch {
                         this.setState({error_message: "Errore: " + JSON.stringify(res)});
                     }
                 })
@@ -208,12 +207,10 @@ modifyShopProfile = () => {
                 })
             }
         }
-                else{
-
-                    console.log("Non è entrato")
-                }
+        else{
+            console.log("Non è entrato")
+        }
     }
-
 
 
     clearFields = () => {
@@ -232,26 +229,9 @@ modifyShopProfile = () => {
             // caratteristiche: ""
         });
 
-        // this.txtUsername.clear();
         this.txtPassword.clear();
         this.txtConfermaPassword.clear();
-        // this.txtNome.clear();
-        // this.txtCognome.clear();
-        // this.txtEmail.clear();
-        // this.txtIndirizzo.clear();
-        // this.txtCitta.clear();
-        // this.txtCodicePostale.clear();
-        // this.txtEta.clear();
-        // this.txtCaratteristiche.clear();
 
-        if (global.login_negozio == true) {
-            // this.txtTelefono.clear();
-
-        }
-        // else {
-        //     this.txtDescrizione.clear();
-        //     this.txtHobby.clear();
-        // }
     }
 
     render() {
@@ -270,18 +250,6 @@ modifyShopProfile = () => {
             return(
 
             <View style={styles.screen}>
-                {/*<CustomHeader parent={this.props} />*/}
-
-                {/*<View style={styles.contentbar}>*/}
-                {/*    <View style={styles.leftcontainer}>*/}
-                {/*        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
-                {/*    </View>*/}
-                {/*    <Text style={styles.title}>*/}
-                {/*        Modifica il profilo utente*/}
-                {/*    </Text>*/}
-                {/*    <View style={styles.rightcontainer}></View>*/}
-                {/*    </View>*/}
-
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
                         <Card style={styles.inputContainer}>
@@ -301,18 +269,6 @@ modifyShopProfile = () => {
                                             <Text style={styles.textTitle}>Conferma password: </Text>
                                             <Text style={styles.asteriskStyle}>*</Text>
                                         </View>
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Nome: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Cognome: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Email: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
                                         <View style={styles.entryTitle}>
                                             <Text style={styles.textTitle}>Indirizzo: </Text>
                                             <Text style={styles.asteriskStyle}>*</Text>
@@ -333,19 +289,6 @@ modifyShopProfile = () => {
                                             <Text style={styles.textTitle}>Codice Postale: </Text>
                                             <Text style={styles.asteriskStyle}>*</Text>
                                         </View>
-
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Telefono: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Età: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Caratteristiche: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
                                     </View>
 
                                     <View>
@@ -365,21 +308,6 @@ modifyShopProfile = () => {
                                             ref={input => { this.txtConfermaPassword = input }}
                                             onChangeText={(value) => this.setState({conferma_password: value})}/>
                                         </View>
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtNome = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({nome: value})}/>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtCognome = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({cognome: value})}/>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtEmail = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({email: value})}/>*/}
-                                        {/*</View>*/}
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
                                             value={this.state.indirizzo}
@@ -401,22 +329,6 @@ modifyShopProfile = () => {
                                             onChangeText={(value) => this.setState({codice_postale: value})}/>
                                         </View>
 
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtTelefono = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({telefono: value})}/>*/}
-                                        {/*</View>*/}
-
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtEta = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({eta: value})}/>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtCaratteristiche = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({caratteristiche: value})}/>*/}
-                                        {/*</View>*/}
                                     </View>
                                 </View>
 
@@ -427,9 +339,9 @@ modifyShopProfile = () => {
                                     </View>
                                 </View>
 
-                                <View style={{paddingTop: 10}}></View>
+                                <View style={{paddingTop: 10}}/>
                                 <Text style={{color: 'red'}}>{this.state.error_message}</Text>
-                                <View style={{paddingTop: 10}}></View>
+                                <View style={{paddingTop: 10}}/>
 
                                 <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 5}}>
                                     <Text>I campi contrassegnati con</Text>
@@ -449,18 +361,6 @@ modifyShopProfile = () => {
         else{
             return(
                 <View style={styles.screen}>
-                {/*<CustomHeader parent={this.props} />*/}
-
-                {/*<View style={styles.contentbar}>*/}
-                {/*    <View style={styles.leftcontainer}>*/}
-                {/*        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
-                {/*    </View>*/}
-                {/*    <Text style={styles.title}>*/}
-                {/*         Modifica il profilo negozio*/}
-                {/*    </Text>*/}
-                {/*    <View style={styles.rightcontainer}></View>*/}
-                {/*    </View>*/}
-
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
                         <Card style={styles.inputContainer}>
@@ -480,18 +380,6 @@ modifyShopProfile = () => {
                                             <Text style={styles.textTitle}>Conferma password: </Text>
                                             <Text style={styles.asteriskStyle}>*</Text>
                                         </View>
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Nome: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Cognome: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Email: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
                                         <View style={styles.entryTitle}>
                                             <Text style={styles.textTitle}>Indirizzo: </Text>
                                             <Text style={styles.asteriskStyle}>*</Text>
@@ -517,14 +405,6 @@ modifyShopProfile = () => {
                                             <Text style={styles.textTitle}>Telefono: </Text>
                                             <Text style={styles.asteriskStyle}>*</Text>
                                         </View>
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Età: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.entryTitle}>*/}
-                                        {/*    <Text style={styles.textTitle}>Caratteristiche: </Text>*/}
-                                        {/*    <Text style={styles.asteriskStyle}>*</Text>*/}
-                                        {/*</View>*/}
                                     </View>
 
                                     <View>
@@ -544,21 +424,6 @@ modifyShopProfile = () => {
                                             ref={input => { this.txtConfermaPassword = input }}
                                             onChangeText={(value) => this.setState({conferma_password: value})}/>
                                         </View>
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtNome = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({nome: value})}/>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtCognome = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({cognome: value})}/>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtEmail = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({email: value})}/>*/}
-                                        {/*</View>*/}
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
                                             value={this.state.indirizzo}
@@ -586,17 +451,6 @@ modifyShopProfile = () => {
                                             ref={input => { this.txtTelefono = input }}
                                             onChangeText={(value) => this.setState({telefono: value})}/>
                                         </View>
-
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtEta = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({eta: value})}/>*/}
-                                        {/*</View>*/}
-                                        {/*<View style={styles.textContainer}>*/}
-                                        {/*    <TextInput editable maxLength={95}*/}
-                                        {/*    ref={input => { this.txtCaratteristiche = input }}*/}
-                                        {/*    onChangeText={(value) => this.setState({caratteristiche: value})}/>*/}
-                                        {/*</View>*/}
                                     </View>
                                 </View>
 
@@ -607,9 +461,9 @@ modifyShopProfile = () => {
                                     </View>
                                 </View>
 
-                                <View style={{paddingTop: 10}}></View>
+                                <View style={{paddingTop: 10}}/>
                                 <Text style={{color: 'red'}}>{this.state.error_message}</Text>
-                                <View style={{paddingTop: 10}}></View>
+                                <View style={{paddingTop: 10}}/>
 
                                 <View style={{flexDirection: 'row', marginTop: 20, marginBottom: 5}}>
                                     <Text>I campi contrassegnati con</Text>
@@ -667,23 +521,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginTop: 5
     },
-    // contentbar: {
-    //     height: 50,
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-between',
-    //     alignItems: 'center'
-    //   },
-    // leftcontainer: {
-    //     flex: 1,
-    //     flexDirection: 'row',
-    //     justifyContent: 'flex-start'
-    // },
-    // rightcontainer: {
-    //     flex: 1,
-    //     flexDirection: 'row',
-    //     justifyContent: 'flex-end',
-    //     alignItems: 'center'
-    // },
     textContainer: {
         borderWidth: 1,
         height: 28,

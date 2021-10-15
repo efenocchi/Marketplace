@@ -22,28 +22,32 @@ def updatePositionLatLong(user):
     utente_richiedente.longitudine = longitudine
     utente_richiedente.save()
 
+
+class UserSerializerShow(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username"]
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id","username"]
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         exclude = [
-#             "last_login",
-#             "is_superuser",
-#             "is_staff",
-#             "is_active",
-#             "date_joined",
-#             "groups",
-#             "user_permissions",
-#         ]
-#         read_only_fields = ["id"]
-#         extra_kwargs = {
-#             'username': {
-#                 'validators': [UnicodeUsernameValidator()],
-#             }
-#         }
+        exclude = [
+            "last_login",
+            "is_superuser",
+            "is_staff",
+            "is_active",
+            "date_joined",
+            "groups",
+            "user_permissions",
+        ]
+
+        # read_only_fields = ["id"]
+        extra_kwargs = {
+            'username': {
+                'validators': [UnicodeUsernameValidator()],
+            }
+        }
 
         def validate_username(self, data):
             if not re.match("^[A-Za-z0-9]+$", data):
@@ -59,74 +63,51 @@ class UserSerializer(serializers.ModelSerializer):
             if not re.match("^[A-Za-z0-9èòàùì]+$", data):
                 raise serializers.ValidationError(
                     _('Errore: la password può contenere solo lettere minuscole, maiuscole e numeri.'))
-            if not (3 <= len(data) <= 20):
+            if not (8 <= len(data) <= 20):
                 raise serializers.ValidationError(
-                    _('Errore: la password deve avere lunghezza fra 3 e 20 caratteri.'))
+                    _('Errore: la password deve avere lunghezza fra 8 e 20 caratteri.'))
             return data
 
         def validate_conferma_password(self, data):
             if not re.match("^[A-Za-z0-9èòàùì]+$", data):
                 raise serializers.ValidationError(
                     _('Errore: la conferma password può contenere solo lettere minuscole, maiuscole e numeri.'))
-            if not (3 <= len(data) <= 20):
+            if not (8 <= len(data) <= 20):
                 raise serializers.ValidationError(
-                    _('Errore: la conferma password deve avere lunghezza fra 3 e 20 caratteri.'))
+                    _('Errore: la conferma password deve avere lunghezza fra 8 e 20 caratteri.'))
             return data
 
-        # def validate_first_name(self, data):
-        #     if not re.match("^[A-Za-z 'èòàùì]+$", data):
-        #         raise serializers.ValidationError(_('Errore: il nome può contenere solo lettere.'))
-        #     if not (1 <= len(data) <= 30):
-        #         raise ValidationError(_('Errore: il nome deve avere lunghezza fra 1 e 30 caratteri.'))
-        #     return data
-        #
-        # def validate_last_name(self, data):
-        #     # controllo cognome
-        #     if not re.match("^[A-Za-z 'èòàùì]+$", data):
-        #         raise serializers.ValidationError(_('Errore: il cognome può contenere solo lettere.'))
-        #     if not (1 <= len(data) <= 30):
-        #         raise serializers.ValidationError(_('Errore: il cognome deve avere lunghezza fra 1 e 30 caratteri.'))
-        #     return data
 
-        # def validate_email(self, data):
-        #     # controllo email
-        #     if not (5 <= len(data) <= 50):
-        #         raise serializers.ValidationError(_('Errore: la mail deve essere compresa gra 5 e 50 caratteri.'))
-        #     return data
-
-
-class CompleteShopData(serializers.ModelSerializer):
-    # [modifica] mai usato!!
-    user = UserSerializer(many=False)
-    # numero_recensioni = serializers.SerializerMethodField("get_numero_recensioni_utente")
-    # media_voti = serializers.SerializerMethodField("get_media_voti_utente")
-    foto_profilo = serializers.FileField(read_only=True)
-
-    class Meta:
-        model = GeneralUser
-        fields = ["user",
-                  "indirizzo",
-                  "citta",
-                  "provincia",
-                  "regione",
-                  "codice_postale",
-                  "stato",
-                  "telefono",
-                  # "data_nascita",
-                  # "foto_profilo",
-                  # "eta",
-                  # "sesso",
-                  "descrizione",
-                  "login_negozio",
-                  # "numero_recensioni",
-                  # "media_voti",
-                  ]
+# class CompleteShopData(serializers.ModelSerializer):
+#     # [modifica] mai usato!!
+#     user = UserSerializer(many=False)
+#     # numero_recensioni = serializers.SerializerMethodField("get_numero_recensioni_utente")
+#     # media_voti = serializers.SerializerMethodField("get_media_voti_utente")
+#     foto_profilo = serializers.FileField(read_only=True)
+#
+#     class Meta:
+#         model = GeneralUser
+#         fields = ["user",
+#                   "indirizzo",
+#                   "citta",
+#                   "provincia",
+#                   "regione",
+#                   "codice_postale",
+#                   "stato",
+#                   "telefono",
+#                   # "data_nascita",
+#                   # "foto_profilo",
+#                   # "eta",
+#                   # "sesso",
+#                   "descrizione",
+#                   "login_negozio",
+#                   # "numero_recensioni",
+#                   # "media_voti",
+#                   ]
 
 
 class CompleteUserData(serializers.ModelSerializer):
     user = UserSerializer(many=False)
-    # numero_recensioni = serializers.SerializerMethodField("get_numero_recensioni_utente")
-    # media_voti = serializers.SerializerMethodField("get_media_voti_utente")
     foto_profilo = serializers.FileField(read_only=True)
 
     class Meta:
@@ -142,12 +123,8 @@ class CompleteUserData(serializers.ModelSerializer):
                   "telefono",
                   "data_nascita",
                   "foto_profilo",
-                  "eta",
-                  "sesso",
                   "descrizione",
                   "login_negozio",
-                  # "numero_recensioni",
-                  # "media_voti",
                   ]
 
     def validate_indirizzo(self, data):
@@ -491,7 +468,7 @@ class CompleteShopUserData(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
+    user = UserSerializerShow(many=False)
 
     class Meta:
         model = Order
@@ -557,7 +534,7 @@ class ReviewShopSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
+    user = UserSerializerShow(many=False)
 
     class Meta:
         model = OrderItem
@@ -586,7 +563,7 @@ class WhoHasReviewedSerializer(serializers.ModelSerializer):
 
 
 class OrderCustomerSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
+    user = UserSerializerShow(many=False)
     review_customer_done = WhoHasReviewedSerializer(many=True)
 
     class Meta:
@@ -602,7 +579,7 @@ class OrderCustomerSerializer(serializers.ModelSerializer):
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
+    user = UserSerializerShow(many=False)
 
     class Meta:
         model = Item

@@ -7,13 +7,13 @@ import {
     View,
     Dimensions,
     TouchableOpacity,
-    Image,
-    Button
+    Image
 } from "react-native";
 import CustomHeader from '../components/Header';
 const {width, height} = Dimensions.get('window');
 import {IconButton} from "react-native-paper";
 import Card from "../components/Card";
+import Button from "../components/Button";
 
 
 export default class OrdersReceived extends Component{
@@ -120,17 +120,14 @@ export default class OrdersReceived extends Component{
 
         return (
             <View style={styles.screen}>
-
                 <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
-                    <CustomHeader parent={this.props} />
+                    {/*<CustomHeader parent={this.props} />*/}
 
                     <View style={styles.contentbar}>
                         <View style={styles.leftcontainer}>
-                            <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
+                            {/*<IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
                         </View>
-                        <Text style={styles.title}>
-                            Prenotazioni Effettuate
-                        </Text>
+                        <Text style={styles.title}>Oggetti Comprati</Text>
                         <View style={styles.rightcontainer}></View>
                     </View>
                 </View>
@@ -146,16 +143,27 @@ export default class OrdersReceived extends Component{
 
                             <Card style={styles.inputContainer}>
                                 <View style={styles.data}>
-                                    <Text style={styles.orderTitle} numberOfLines={0}>Codice prenotazione: {item[0]}</Text>
-                                    <Text style={styles.orderTitle} numberOfLines={1}>Utente Acquirente: {item[4]}</Text>
-                                    <Text style={styles.orderTitle} numberOfLines={2}>Data prenotazione: {item[1]}</Text>
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold'}} numberOfLines={1}>Ref. Code:  </Text>
+                                    </View>
+                                    <Text>{item[0]}</Text>
+
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold'}} numberOfLines={1}>Utente Acquirente:  </Text>
+                                        <Text>{item[4]}</Text>
+                                    </View>
+
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold'}} numberOfLines={1}>Data Prenotazione:  </Text>
+                                        <Text>{item[1]}</Text>
+                                    </View>
 
                                        {item[3] === true && (
                                            <View style={styles.textInline}>
                                                <Text style={{fontWeight: 'bold', fontStyle: 'italic', color: 'green'}}>
                                                    Recensione lasciata </Text>
                                             <View style={styles.buttonview}>
-                                                <Button title="Mostra Recensione" onPress={() => { this.props.navigation.navigate('LeaveOrReadReviewToCustomer',
+                                                <Button text="Mostra" onPress={() => { this.props.navigation.navigate('LeaveOrReadReviewToCustomer',
                                                   {id_user: item[5], review_left: item[3], id_order:item[6]}) }} />
                                             </View>
 
@@ -166,8 +174,8 @@ export default class OrdersReceived extends Component{
                                            <View style={styles.textInline}>
                                                <Text style={{fontWeight: 'bold', fontStyle: 'italic', color: 'red'}}>
                                                    Recensione non lasciata</Text>
-                                               <View style={styles.buttonview}>
-                                                <Button title="Lascia Recensione" onPress={() => { this.props.navigation.navigate('LeaveOrReadReviewToCustomer',
+                                               <View style={styles.buttonview2}>
+                                                <Button text="Lascia" onPress={() => { this.props.navigation.navigate('LeaveOrReadReviewToCustomer',
                                                   {id_user: item[5], review_left: item[3], id_order:item[6]}) }} />
                                                 </View>
 
@@ -223,7 +231,8 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         minWidth: '96%',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 7
     },
     orderTitle: {
         fontSize: 18,
@@ -244,6 +253,18 @@ const styles = StyleSheet.create({
     },
     textInline: {
         flexDirection: 'row'
-    }
+    },
+    buttonview: {
+        width: 110,
+        marginTop: 15,
+        marginLeft: -120,
+    },
+
+        buttonview2: {
+        width: 110,
+        marginTop: 15,
+        marginLeft: -145,
+    },
+
 });
 
