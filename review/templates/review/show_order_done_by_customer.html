@@ -8,7 +8,7 @@
     {% extends 'main/base.html' %}
 
     <!-- ridefinisco title -->
-    <title>{% block title %}Item_Page{% endblock %}</title>
+    <title>{% block title %}Show Order Customer{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -28,92 +28,61 @@
 </head>
 <body>
     {% block menu_id %}
-    <li><a href="{% url 'users:home_for_user' %}">Home</a></li>
-    <li><a href="{% url 'items:view_order' %}">View Order</a></li>
-    {% endblock %}
-
-    {% block cart %}
-    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
-        <span class="badge bg-danger bg-secondary">{% if all_items_cart == 0 %}0{% endif %}{% if all_items_cart.get_final_quantity >= 0%}{{ all_items_cart.get_final_quantity}}{% endif %}</span>
-        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
-    </a>
+    <li><a href="{% url 'users:home_for_shop' %}">Home</a></li>
     {% endblock %}
 
     {% block item_page %}
     <main>
         <div class="container">
-            <div class="container text-center">
+        <div class="container text-center">
                 {% if user.user is not None %}
-                    <h2 id="title">Welcome: {{ user }}</h2>
+                    <h3 id="title">Welcome: {{ user }}</h3>
                 {% endif %}
             </div>
-    <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
-<!--        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">-->
-<!--            <div class="small-container">-->
-<!--                <form class="d-flex" method="get" action="{% url 'items:search'%}">-->
-<!--                    <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                    <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </nav>-->
-    <!------------------------------ SEZIONE ELENCO PRODOTTI ----------------------------------------->
+    <!------------------------------ SEZIONE ELENCO REVIEW ----------------------------------------->
         <section class="text-center mb-4">
+        <br>
             <div class="row wow fadeIn">
             {% for k,v in dict.items %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
+                    <!-- evito che venga visualizzato l'order -->
+                    <!-- se ho più di un oggetto -->
+                    {% if v|length %}
+                        {% for single_obj in v %}
+                            {% if forloop.first %}
+                            <!-- qua posso gestire i dati degli order quindi controllo se è già stata lasciata la recensione -->
+                                {% if v.0.review_single_customer_done %}
+                                    <p style="color:green">Recensione effettuata</p>
+                                    <a href="{% url 'review:show_customers_reviewed' receiver_id=v.1.user.id order_item_id=v.0.id%}" class="btn_review">Mostra la recensione</a>
+                                {% else %}
+                                    <p style="color:red">Recensione da lasciare</p>
+                                    <a href="{% url 'review:add_review_customer' order_id=v.0.id customer_id=v.1.user.id%}" class="btn_review">Lascia una recensione</a>
+                                {% endif %}
 
-
-<!--                        evito che venga visualizzato l'order-->
-
-<!--                        se ho più di un oggetto-->
-                {% if v|length %}
-                    {% for single_obj in v %}
-
-                        {% if forloop.first %}
- <!--            qua posso gestire i dati degli order quindi controllo se è già stata lasciata la recensione-->
-
-                             {% if v.0.review_single_customer_done %}
-                                    <p  style="color:green">Recensione effettuata</p>
-                        <a href="{% url 'review:show_customers_reviewed' receiver_id=v.1.user.id order_item_id=v.0.id%}" class="btn btn-primary">Mostra la recensione</a>
-
-                            {% else %}
-
-                                    <p  style="color:red">Recensione da lasciare</p>
-                        <a href="{% url 'review:add_review_customer' order_id=v.0.id customer_id=v.1.user.id%}" class="btn btn-primary">Lascia una recensione</a>
-
+                                <h5>Ref. code: {{ k }}</h5>
                             {% endif %}
-
-                        <h5>Reference code: {{ k }}</h5>
-                        {% endif %}
-
-<!--                        itero sugli oggetti -->
-                        {% if not forloop.first %}
-
-
-                                <h5>Quantità: {{ single_obj.quantity }} Oggetto: {{ single_obj.item }}</h5>
-                            {% if v|length == 2%}
-                                <!--                        Se ho più oggetti visualizzo il nome utente del primo (sono tutti appartenenti allo stesso user)-->
-                                <h5>Utente acquirente: {{ v.0.user }} </h5>
-
-                            {% else %}
+                            <!-- itero sugli oggetti -->
+                            {% if not forloop.first %}
+                            <img id="img_no_gray" src="{{ single_obj.item.image.url }}" class="card-img-top" alt="...">
+                                {% if v|length == 2%}
+                                    <br>
+                                    <!-- Se ho più oggetti visualizzo il nome utente del primo (sono tutti appartenenti allo stesso user) -->
+                                    <h5>Acquirente: {{ v.0.user }} </h5>
+                                {% else %}
                                 {% if forloop.last %}
-                                           <!--                        Se ho più oggetti visualizzo il nome utente del primo (sono tutti appartenenti allo stesso user)-->
-                                <h5>Utente acquirente: {{ v.0.user }} </h5>
+                                    <br>
+                                    <!-- Se ho più oggetti visualizzo il nome utente del primo (sono tutti appartenenti allo stesso user) -->
+                                    <h5>Acquirente: {{ v.0.user }} </h5>
                                 {% endif %}
                             {% endif %}
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                        {% endif %}
-                    {% endfor %}
-
-                {% endif %}
+                            {% endif %}
+                        {% endfor %} <!-- chiusura for single_obj -->
+                    {% endif %} <!-- chiusura if lenght -->
+                    </div>
+                </div>
             {% endfor %}
-
+            </div>
         </section>
         </div>
     </main>

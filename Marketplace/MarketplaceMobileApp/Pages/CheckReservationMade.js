@@ -101,21 +101,18 @@ export default class CheckReservationMade extends Component{
            console.log(this.array_values)
 
            return (
-               <View style={styles.screen}>
+            <View style={styles.screen}>
+                <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
+                    {/*<CustomHeader parent={this.props} />*/}
 
-                   <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
-                       <CustomHeader parent={this.props}/>
-
-                       <View style={styles.contentbar}>
-                           <View style={styles.leftcontainer}>
-                               <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)}/>
-                           </View>
-                           <Text style={styles.title}>
-                               Oggetti Acquistati
-                           </Text>
-                           <View style={styles.rightcontainer}></View>
-                       </View>
-                   </View>
+                    <View style={styles.contentbar}>
+                        <View style={styles.leftcontainer}>
+                            {/*<IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
+                        </View>
+                        <Text style={styles.title}>Oggetti Acquistati</Text>
+                        <View style={styles.rightcontainer}></View>
+                    </View>
+                </View>
                    <View style={styles.flatlistview}>
                        <FlatList
                            style={{flex: 1}}
@@ -125,18 +122,37 @@ export default class CheckReservationMade extends Component{
                            renderItem={({item, index}) =>
 
                                <Card style={styles.inputContainer}>
-
+                                   <Image style={styles.image} source={{uri: item[8]}} />
                                    <View style={styles.data}>
-                                       <Image style={styles.image} source={{uri: item[8]}} />
-                                       <Text style={styles.itemTitle} numberOfLines={0}>Prodotto: {item[2]}</Text>
-                                       <Text style={styles.itemTitle}
-                                             numberOfLines={1}>Descrizione: {item[5]}</Text>
-                                       <Text style={styles.itemTitle}
-                                             numberOfLines={2}>Categoria: {item[4]}</Text>
-                                       <Text style={styles.itemTitle} numberOfLines={3}>Quantità: {item[0]}</Text>
-                                       <Text style={styles.itemTitle} numberOfLines={4}>Negozio: {item[3]}</Text>
-                                       <Text style={styles.itemTitle} numberOfLines={5}>Prezzo finale: {item[6]}</Text>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={1}>Prodotto:  </Text>
+                                            <Text style={{fontSize: 18}}>{item[2]}</Text>
+                                        </View>
 
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={3}>Descrizione:  </Text>
+                                            <Text style={{fontSize: 18}}>{item[5]}</Text>
+                                        </View>
+
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={1}>Categoria:  </Text>
+                                            <Text style={{fontSize: 18}}>{item[4]}</Text>
+                                        </View>
+
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={1}>Quantità:  </Text>
+                                            <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                        </View>
+
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={1}>Negozio:  </Text>
+                                            <Text style={{fontSize: 18}}>{item[3]}</Text>
+                                        </View>
+
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={1}>Totale:  </Text>
+                                            <Text style={{fontSize: 18}}>{item[6]}</Text>
+                                        </View>
                                        {/*<Text style={styles.itemTitle} numberOfLines={6}>Ricevuta da: {item[6]}</Text>*/}
 
                                        {/*Stampo un valore diverso in base al fatto che la recensione sia stata lasciata o meno*/}
@@ -178,6 +194,7 @@ const styles = StyleSheet.create({
         flex: 2,
         height: 150,
         resizeMode: 'contain',
+        marginLeft: -150
     },
     contentbar: {
         height: 50,
@@ -202,7 +219,8 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         minWidth: '96%',
-        flexDirection: 'column'
+        flexDirection: 'row',
+        marginLeft: 8,
     },
     itemTitle: {
         fontSize: 18,
@@ -213,8 +231,10 @@ const styles = StyleSheet.create({
         width: width - width / 2.6
     },
     data: {
-        flex: 1
+        flex: 1,
+        marginLeft: -140
     },
+
     flatlistview: {
         flex: 1,
         width: '100%',

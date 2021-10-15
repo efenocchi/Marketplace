@@ -11,7 +11,8 @@ const Tab = createBottomTabNavigator();
 function ShopStackNavigator() {
 
   return (
-      <Tab.Navigator screenOptions={{ gestureEnabled: false }} options={{headerShown: false}} tabBarOptions={{
+      <Tab.Navigator options={{headerShown: false}} screenOptions={{
+          gestureEnabled: false,
           showLabel: false,
           InactiveTintColor: '#e47911',
           activeTintColor: '#e47911',
@@ -19,6 +20,7 @@ function ShopStackNavigator() {
         <Tab.Screen component={ShopHomeStackNavigator}
                     name="Shop" /* nome in alto della pagina */
                     options={{
+                        headerShown: false,
                         tabBarIcon: ({color}) => (
                             <Entypo name="home" color={color} size={25}/>
                         ),
@@ -28,6 +30,7 @@ function ShopStackNavigator() {
         <Tab.Screen component={ChooseShopInfo}
                     name="ShopInfo"
                     options={{
+                        headerShown: false,
                         tabBarIcon: ({color}) => (
                             <Entypo name="user" color={color} size={25}/>
                         ),
@@ -37,6 +40,7 @@ function ShopStackNavigator() {
         <Tab.Screen component={AddItemStack}
                     name="AddItem"
                     options={{
+                        headerShown: false,
                         tabBarIcon: ({color}) => (
                             <Entypo name="user" color={color} size={25}/>
                         ),

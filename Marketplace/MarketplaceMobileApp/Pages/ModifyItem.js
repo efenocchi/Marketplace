@@ -1,68 +1,77 @@
-import React, { Component, useState, useEffect } from 'react';
-import {View, Text, StyleSheet, Image, TextInput, Platform, ActivityIndicator} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image, TextInput, ActivityIndicator } from 'react-native';
 import CustomHeader from '../components/Header';
 import Card from '../components/Card';
 import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { Picker } from 'native-base';
+import CheckBox from 'react-native-check-box';
+import {Picker} from 'native-base';
 import Button from "../components/Button";
-
-
 
 const {width, height} = Dimensions.get('window');
 
-
-export default class AddItem extends Component {
-    photo_uri=false;
+class ModifyItem extends Component {
+    id_item;
     constructor(props){
         super(props);
         this.state ={
+            // id_item: this.props.route.params.id_item,
             name: "",
             price: "",
             discount_price: "",
             category: "Abbigliamento",
             quantity: "",
             description: "",
-            image_item: null,
-            isCreating: true,
         }
     }
 
-    // createFormData = (photo, body) => {
-    //   const data = new FormData();
-    //
-    //   data.append('photo', {
-    //     name: photo.uri,
-    //     type: photo.type,
-    //     uri: Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', ''),
-    //   });
-    //
-    //   Object.keys(body).forEach((key) => {
-    //     data.append(key, body[key]);
-    //   });
-    //
-    //   return data;
-    // };
+    componentDidMount() {
+        this.id_item = this.props.route.params.id_item;
+        this.fetchItemDetail();
+        this.willFocusSubscription = this.props.navigation.addListener(
+          'willFocus',
+          () => {
+            this.setState({
+                isLoading: true,
+            }, function(){
 
-    // handleUploadPhoto = () => {
-    //     fetch('http://'+ global.ip +'/api/upload_image/' + global.user_id + '/', {
-    //         method: 'POST',
-    //         body: this.createFormData(this.state.photo, { userId: global.user_id }),
-    //         })
-    //         .then((response) => response.json())
-    //         .then((response) => {
-    //               console.log('upload success', response);
-    //               alert('Upload success!');
-    //               this.setState({ photo: null });
-    //         })
-    //         .catch((error) => {
-    //               console.log('upload error', error);
-    //               alert('Upload failed!');
-    //     });
-    // };
-    insertItem(){
+            });
+            this.fetchItemDetail();
+          }
+        );
+    }
 
+    // componentWillUnmount() {
+    // this.willFocusSubscription.remove();
+    // }
+
+    fetchItemDetail() {
+        return fetch('http://'+ global.ip + '/api/items/' + this.id_item + '/detail/?format=json')
+        .then((response) => response.json())
+        .then((responseJson) => {
+        this.setState({
+            isLoading: false,
+            id_item: this.props.navigation.state.params.id_item,
+            dataSource: responseJson,
+            error_message: "",
+            name: responseJson.name,
+            price: responseJson.price,
+            discount_price: responseJson.discount_price,
+            category: responseJson.category,
+            quantity: responseJson.quantity,
+            description: responseJson.description,
+        }, function(){
+
+        });
+
+        })
+        .catch((error) =>{
+            // this.fetchItemDetail();
+        });
+    }
+
+    modifyitem = () => {
         console.log(this.state.name)
         console.log(this.state.price)
         console.log(this.state.discount_price)
@@ -70,17 +79,16 @@ export default class AddItem extends Component {
         console.log(this.state.quantity)
         console.log(this.state.description)
         if(this.state.name !== "" && this.state.price !== "" && this.state.discount_price !== "" &&
-            this.state.quantity !== "" && this.state.description !== "") {
-            console.log("Entrato nel fetch")
-            return fetch('http://'+ global.ip +'/api/insert_item/', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Token ' + global.user_key,
-                },
+            this.state.quantity !== "" && this.state.description !== "")  {
+            fetch('http://'+ global.ip + '/api/items/' + this.id_item + '/modifyitem/',
+            {
+              method: 'PUT',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + global.user_key,
+              },
                 body: JSON.stringify({
-
                     name: this.state.name,
                     price: this.state.price,
                     discount_price: this.state.discount_price,
@@ -88,52 +96,23 @@ export default class AddItem extends Component {
                     quantity: this.state.quantity,
                     description: this.state.description,
                     image_item: null,
-
                 }),
             })
-                .then((response) => response.json())
-                .then((responseJson) => {
-                    if (responseJson.id != null) {
-                        this.clearFields();
-                        this.props.navigation.navigate('ChooseShopInfoList');
-
-                    } else {
-                        this.setState({error_message: JSON.stringify(responseJson)});
-                    }
-                })
-
-                .catch((error) => {
-                    this.setState({error_message: error});
-                    console.error(error)
-                })
-        }
-        else{
-            this.setState({error_message: "Riempire tutti i campi."});
+            .then(res => res.json())
+            .then((res) => {
+                if (res.id != null) {
+                    this.props.navigation.goBack(null);
+                } else {
+                    this.props.navigation.goBack(null);
+                }
+            })
+            .catch((error) => {
+                // this.modifyitem;
+            })
+        } else {
+            this.setState({error_message: "Errore: assicurati di riempire tutti i campi."});
         }
     }
-
-    componentDidMount() {
-        // this.photo = this.props.route.params.photo;
-        // this.createFormData(this.photo);
-        this.insertItem();
-        this.willFocusSubscription = this.props.navigation.addListener(
-          'willFocus',
-          () => {
-            this.setState({
-                isCreating: true,
-            }, function(){
-
-            });
-             this.insertItem();
-            // this.createFormData();
-          }
-        );
-
-        // console.log("preso valore dal DidMount")
-        // console.log(this.photo_uri)
-
-    }
-
 
     clearFields = () => {
         this.setState({error_message: "",
@@ -155,17 +134,16 @@ export default class AddItem extends Component {
     }
 
     render() {
-            // this.photo_uri = this.props.route.params.photo_uri;
-            //
-            //  if (this.photo.uri === false) {
-            //    return (
-            //        <View style={{flex: 1, paddingTop: height / 2}}>
-            //            <ActivityIndicator/>
-            //        </View>
-            //    )
-            // }
+        if(this.state.isLoading){
+            return(
+                <View style={{flex: 1, paddingTop: height / 2}}>
+                    <ActivityIndicator/>
+                </View>
+            )
+        }
 
-             return (
+        return (
+
             <View style={styles.screen}>
                 {/*<CustomHeader parent={this.props} />*/}
 
@@ -174,15 +152,15 @@ export default class AddItem extends Component {
                 {/*        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
                 {/*    </View>*/}
                 {/*    <Text style={styles.title}>*/}
-                {/*        Aggiungi un oggetto*/}
+                {/*        Inserisci un nuovo annuncio*/}
                 {/*    </Text>*/}
                 {/*    <View style={styles.rightcontainer}></View>*/}
-                {/*    </View>*/}
+                {/*</View>*/}
 
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
                         <Card style={styles.inputContainer}>
-                            <Text style={styles.title}>Aggiungi un oggetto </Text>
+                            <Text style={styles.title}>Modifica un oggetto </Text>
                             <View style={styles.data}>
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
@@ -212,7 +190,7 @@ export default class AddItem extends Component {
                                         </View>
                                     </View>
 
-                                    <View>
+                                     <View>
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
                                             ref={input => { this.txtName = input }}
@@ -256,16 +234,10 @@ export default class AddItem extends Component {
 
                                     </View>
                                 </View>
-
-
                                 <View style={styles.controlli}>
                                     <View style={styles.buttonview}>
-                                        {/*{ <Image source={{ uri: this.photo.uri }} style={{ width: 200, height: 200 }} />}*/}
-                                        {/*<Button title="Inserisci oggetto" onPress={() => {*/}
-                                        {/*     this.handleUploadPhoto();}} />*/}
-                                        <Button text="Inserisci" onPress={() => {
-                                             this.insertItem();}} />
-
+                                        <Button text="Modifica" onPress={() => {
+                                            this.modifyitem();}} />
                                     </View>
                                 </View>
 
@@ -277,8 +249,8 @@ export default class AddItem extends Component {
                                     <Text>I campi contrassegnati con</Text>
                                     <Text style={styles.asteriskStyle}>*</Text>
                                     <Text>sono obbligatori.</Text>
-                                </View>
 
+                                </View>
                             </View>
                         </Card>
                     </View>
@@ -367,3 +339,5 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 });
+
+export default ModifyItem;

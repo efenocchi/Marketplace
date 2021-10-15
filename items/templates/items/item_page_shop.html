@@ -59,7 +59,7 @@
                             <a href="{% url 'items:delete_item' item_selected_id=item.id%}" class="fa fa-times" aria-hidden="true"></a>
                         </div>
                         {% if item.quantity > 0 %}
-                            <img src="{{ item.image.url }}" class="card-img-top" alt="...">
+                            <img id = "img_no_gray" src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% else %}
                             <img id="gray_no_quantity" src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% endif %}
@@ -80,8 +80,6 @@
                             </p>
                             <p class="card-text">{{ item.category }}</p>
                                 {% if item.quantity <= 0 %}
-                                <h5>{{ item.quantity }}</h5>
-
                                 {% endif %}
                                 {% if item.quantity > 0 %}
                                 {% endif %}

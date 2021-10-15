@@ -6,6 +6,7 @@ import ShowShop from "../Pages/ShowShop";
 import LeaveShowReviewShop from "../Pages/LeaveShowReviewShop";
 import LeaveOrReadReviewToShop from "../Pages/LeaveOrReadReviewToShop";
 import {useRoute} from "@react-navigation/native";
+import Checkout from "../Pages/Checkout";
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,11 @@ console.log(route.name);
         <Stack.Screen
             component={LeaveOrReadReviewToShop}
             name="LeaveOrReadReviewToShop"
+        />
+
+        <Stack.Screen
+            component={Checkout}
+            name="Checkout"
         />
 
 

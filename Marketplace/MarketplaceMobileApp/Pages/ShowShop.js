@@ -119,32 +119,17 @@ export default class ShowShop extends Component {
 
 
             <View style={styles.page}>
-                {/*<SearchBar style={styles.searchbar}*/}
-                {/*    onPressToFocus*/}
-                {/*    autoFocus={false}*/}
-                {/*    fontColor="#c6c6c6"*/}
-                {/*    iconColor="#c6c6c6"*/}
-                {/*    shadowColor="#282828"*/}
-                {/*    cancelIconColor="#c6c6c6"*/}
-                {/*    backgroundColor="#36485f"*/}
-                {/*    placeholder="Search Item"*/}
-                {/*    width="88%"*/}
-                {/*    activeOpacity={.9}*/}
-                {/*    onChangeText={text => {*/}
-                {/*        this.fetchSearchItem(text);*/}
-                {/*    }}*/}
-                {/*    onPressCancel={() => {*/}
-                {/*        console.log("cancel");*/}
-                {/*    }}*/}
-                {/*/>*/}
 
+                    <Text style={styles.title_time} numberOfLines={2}>{this.state.dataSourceTime}</Text>
+                <View style={styles.buttonView}>
                     <Button
                         text={'Recensioni'}
                         onPress={() => {
                         this.props.navigation.navigate('LeaveShowReviewShop',{username_shop: this.username_shop});
                         }}
                     />
-                    <Text style={styles.title} numberOfLines={2}>{this.state.dataSourceTime}</Text>
+                    </View>
+
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
@@ -183,14 +168,15 @@ export default class ShowShop extends Component {
 }
 const styles = StyleSheet.create({
   page: {
-    marginTop: -35, //10
+    marginTop: 20,
     backgroundColor: 'blue',
 
   },
 
   flatlist: {
     padding: -60,
-    marginLeft: 15,
+    marginLeft: 18,
+    marginBottom:100,
     backgroundColor: 'green',
   },
 
@@ -202,7 +188,6 @@ const styles = StyleSheet.create({
     flex:1,
     padding: -20,
     marginTop: 5,
-
   },
 
   pressable: {
@@ -217,7 +202,12 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-
+buttonView: {
+        width: width/2,
+        paddingRight: 5,
+        paddingLeft: 5,
+        marginLeft: width/4,
+    },
   image: {
     flex: 2,
     height: 150,
@@ -232,6 +222,10 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 18,
+  },
+  title_time: {
+    fontSize: 18,
+      textAlign:'center'
   },
 
   price: {

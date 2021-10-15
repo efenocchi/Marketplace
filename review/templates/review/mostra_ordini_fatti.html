@@ -8,7 +8,8 @@
     {% extends 'main/base.html' %}
 
     <!-- ridefinisco title -->
-    <title>{% block title %}Item_Page{% endblock %}</title>
+    <title>{% block title %}Mostra Ordini Fatti{% endblock %}</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -34,7 +35,13 @@
 
     {% block cart %}
     <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
-        <span class="badge bg-danger bg-secondary">{% if all_items_cart == 0 %}0{% endif %}{% if all_items_cart.get_final_quantity >= 0%}{{ all_items_cart.get_final_quantity}}{% endif %}</span>
+        <span class="badge bg-danger bg-secondary">
+            {% if all_items.ordered != 1 %}
+                {% if all_items == 0 %}0{% endif %}
+                {% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}
+            {% endif %}
+            {% if all_items.ordered == 1 %}0{% endif %}
+        </span>
         <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
     </a>
     {% endblock %}
@@ -47,51 +54,36 @@
                     <h2 id="title">Welcome: {{ user }}</h2>
                 {% endif %}
             </div>
-    <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
-<!--        <nav class="navbar navbar-expand-lg navbar-light bg-transparent">-->
-<!--            <div class="small-container">-->
-<!--                <form class="d-flex" method="get" action="{% url 'items:search'%}">-->
-<!--                    <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                    <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </nav>-->
     <!------------------------------ SEZIONE ELENCO PRODOTTI ----------------------------------------->
-        <section class="text-center mb-4">
-            <div class="row wow fadeIn">
-            {% for single_order in order_item %}
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card" style="width: 18rem;">
-                            <img src="{{ single_order.item.image.url }}" class="card-img-top" alt="...">
+            <section class="text-center mb-4">
+                <div class="row wow fadeIn">
+                {% for single_order in order_item %}
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card" style="width: 18rem;">
+                                <img id="img_no_gray" src="{{ single_order.item.image.url }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ single_order.item.name }}</h5>
+                                <p class="lead">
+                                  <span>€ {{ single_order.item.price }}</span>
+                                </p>
+                                <h5>Quantità acquistate: {{ single_order.quantity }}</h5>
 
-                        <div class="card-body">
-                            <h5 class="card-title">{{ single_order.item.name }}</h5>
-                            <p class="lead">
-                              <span>€ {{ single_order.item.price }}</span>
-                            </p>
-                            <h5>Quantità acquistate: {{ single_order.quantity }}</h5>
-                            {% if single_order.review_item_done %}
-                            <p  style="color:green">Recensione effettuata</p>
-                            <p class="card-text">{{ single_order.item.category }}</p>
-                            <a href="{% url 'review:show_item_reviewed' item_selected_id=single_order.item.id order_item_id=single_order.id%}" class="btn btn-primary">Guarda la recensione</a>
-                            {% else %}
-                            <p  style="color:red">Recensione da lasciare</p>
-                            <p class="card-text">{{ single_order.item.category }}</p>
-                            <a href="{% url 'review:add_review_item' item_selected_id=single_order.item.id order_item_id=single_order.id%}" class="btn btn-primary">Lascia una recensione</a>
+                                {% if single_order.review_item_done %}
+                                <p  style="color:green">Recensione effettuata</p>
+                                <p class="card-text">{{ single_order.item.category }}</p>
+                                <a href="{% url 'review:show_item_reviewed' item_selected_id=single_order.item.id order_item_id=single_order.id%}" class="btn btn-primary">Guarda la recensione</a>
+                                {% else %}
+                                <p  style="color:red">Recensione da lasciare</p>
+                                <p class="card-text">{{ single_order.item.category }}</p>
+                                <a href="{% url 'review:add_review_item' item_selected_id=single_order.item.id order_item_id=single_order.id%}" class="btn btn-primary">Lascia una recensione</a>
+                                {% endif %}
 
-                            {% endif %}
-
-
-
-
-
-
+                            </div>
                         </div>
                     </div>
+                {% endfor %}
                 </div>
-            {% endfor %}
-            </div>
-        </section>
+            </section>
         </div>
     </main>
     {% endblock %}

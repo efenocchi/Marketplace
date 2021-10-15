@@ -12,18 +12,14 @@ import React from "react";
 const Stack = createStackNavigator();
 
 export default function RegistrationStackNavigator() {
-    // this.name = this.props.route.params.user_id
-
-
 
         return (
 
-            <Stack.Navigator initialRouteName="Registration">
-                <Stack.Screen name="Registration" component={Registration}/>
-                <Stack.Screen name="NormalUserRegistration" component={NormalUserRegistration}/>
-                <Stack.Screen name="Home2" component={HomeScreen2}/>
-                <Stack.Screen name="ShopRegistration" component={ShopRegistration}/>
-                {/*<Stack.Screen name="ProvaStampa" component={ProvaStampa}/>*/}
+            <Stack.Navigator initialRouteName="Registration" options={{headerShown: false}}>
+                <Stack.Screen name="Registration" component={Registration} options={{headerShown: false}}/>
+                <Stack.Screen name="NormalUserRegistration" component={NormalUserRegistration} options={{headerShown: false}}/>
+                <Stack.Screen name="Home2" component={HomeScreen2} options={{headerShown: false}}/>
+                <Stack.Screen name="ShopRegistration" component={ShopRegistration} options={{headerShown: false}}/>
             </Stack.Navigator>
 
         );

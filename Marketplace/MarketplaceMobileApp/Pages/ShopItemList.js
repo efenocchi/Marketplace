@@ -117,7 +117,7 @@ class ShopItemList extends Component {
 }
 const styles = StyleSheet.create({
   page: {
-    marginTop: 10,
+    marginTop: 0,
     backgroundColor: 'blue',
 
   },

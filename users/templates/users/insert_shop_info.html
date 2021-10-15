@@ -38,7 +38,7 @@
                         <span>Insert Shop Info</span>
                     </div>
 
-                    <form id="RegFormShop" action="{% url 'users:insert_shop_info'%}" method="post">
+                    <form id="RegFormShop2" action="{% url 'users:insert_shop_info'%}" method="post">
                         {% csrf_token %}
                         {% include 'users/base_registrazione.html' %}
                         <button type="submit" class="btn">Prosegui</button>

@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width= device-width, initial-scale=1.0">
 
-    <!-- login_page.html è un'estensione di base.html -->
-
     {% extends 'main/base.html' %}
-    {% block menu_id %}
-        <li><a href="{% url 'index' %}">Home</a></li>
-    {% endblock %}
 
     <!-- ridefinisco title -->
     <title>{% block title %}Aggiungi Recensione{% endblock %}</title>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -31,38 +27,58 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+    {% block menu_id %}
+    <li><a href="{% url 'users:home_for_user' %}">Home</a></li>
+    {% endblock %}
 
-{% block add_review_item %}
+    {% block cart %}
+    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">
+            {% if all_items.ordered != 1 %}
+                {% if all_items == 0 %}0{% endif %}
+                {% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}
+            {% endif %}
+            {% if all_items.ordered == 1 %}0{% endif %}
+        </span>
+        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
+    </a>
+    {% endblock %}
+
+    {% block add_review_item %}
 
 <!--    FUNZIONI E NOMI DI FUNZIONI SOTTOSTANTI IN HTML DA CONTROLLARE [MODIFICA] -->
 
-    <h5>Aggiungi una recensione per l'oggetto: {{item.name}}</h5>
-        <div class="container-item">
-            <div class="row-2">
-
-                <form id="RegFormReview" action="{% url 'review:add_review_item' item_selected_id=item_selected_id order_item_id=order_item_id%}" method="post">
-                    {% for field in review_form %}
-                        {% csrf_token %}
-                        <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                        <span class="text-danger small">{{ field.errors }}</span>
-                        </div>
-                        <label class="control-label col-sm-2" for="users">{{ field.label_tag }}</label>
-                        <div class="col-sm-10" > {{ field }}</div>
-                        </div>
-                    {% endfor %}
-
+    <div class="modify_user_page">
+      <div class="container">
+          <div class="row">
+              <div class="col-2">
+                  <div class="form_container_add_review">
+                      <div class="form-btn">
+                          <span>Aggiungi una Recensione</span>
+                      </div>
+                      <form id="RegFormReview" action="{% url 'review:add_review_item' item_selected_id=item_selected_id order_item_id=order_item_id%}" method="post">
+                        {% for field in review_form %}
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <span class="text-danger small">{{ field.errors }}</span>
+                                </div>
+                                <label class="control-label col-sm-2" for="users">{{ field.label_tag }}</label>
+                                <div class="col-sm-10" > {{ field }}</div>
+                            </div>
+                        {% endfor %}
                     <button type="submit" class="btn">Aggiungi Recensione</button>
-                 </form>
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-                <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-                <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-                <script type="text/javascript" src="{% static 'review_form_validator.js' %}"></script>
-            </div>
-        </div>
-
-{% endblock %}
-
+                    </form>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+                    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+                    <script type="text/javascript" src="{% static 'review_form_validator.js' %}"></script>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    {% endblock %}
 </body>
 </html>

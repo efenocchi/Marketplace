@@ -113,10 +113,6 @@ export default class App extends React.Component {
 
   render () {
     const Stack = createDrawerNavigator();
-            //
-            // <RootSiblingParent>
-            //     <App />
-            // </RootSiblingParent>
 
     console.log(!global.state.fontLoaded)
 
@@ -128,14 +124,7 @@ export default class App extends React.Component {
       return (
 
           <Drawer/>
-      //     <NavigationContainer>
-      //         <Stack.Navigator initialRouteName="Home">
-      //             <Stack.Screen name="Home" component={HomeScreen} />
-      //             <Stack.Screen name="Home2" component={HomeScreen2} />
-      //             <Stack.Screen name="Login" component={Login} />
-      //             <Stack.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} />
-      //         </Stack.Navigator>
-      //     </NavigationContainer>
+
       );
   }
 

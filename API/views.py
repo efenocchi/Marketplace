@@ -1,4 +1,5 @@
 import re
+import uuid
 from math import radians, sin, atan2, sqrt, cos
 
 from django.contrib.auth.models import User
@@ -12,7 +13,7 @@ from review.models import ReviewCustomer, ReviewItem, ReviewShop
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
     OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer, ReviewShopSerializer, \
-    ReviewPartialCustomerSerializer, InsertItemSerializer, WaitUserSerializer
+    ReviewPartialCustomerSerializer, InsertItemSerializer, WaitUserSerializer, OrderSerializer
 from .permissions import *
 from django.contrib.auth import logout
 from rest_framework.views import APIView
@@ -203,6 +204,172 @@ class ShopAllItems(generics.ListAPIView):
         lista_query = list(queryset)
         print(lista_query)
         return lista_query
+
+
+class DeleteItem(generics.RetrieveUpdateDestroyAPIView):
+    """
+    #Funzione utilizzata per eliminare un item dal carrello
+    """
+    serializer_class = ItemSerializer
+
+    def get_object(self):
+        id_item = self.kwargs['id_item']
+        return Item.objects.get(id=id_item)
+
+    def perform_destroy(self, instance):
+        id_item = self.kwargs['id_item']    #prendo id dell'item da cancellare
+        item_to_delete = Item.objects.filter(id=id_item).first()    #prendo l'item da cancellare
+
+        #filtro tutti gli oggetti con ordered=False
+        order_qs = Order.objects.filter(
+            user=self.request.user,
+            ordered=False
+        )
+        print(order_qs)
+        # se c'è almeno un elemento
+        if order_qs.exists():
+            print(59)
+            order = order_qs[0]
+            # controllo che l'elemento da eliminare sia in ordine(carrello) se si allora:
+            if order.items.filter(item__id=item_to_delete.id).exists():
+                print(60)
+                # se l'elemento da eliminare è nel carrello
+                order_item = OrderItem.objects.filter(
+                    item=item_to_delete,
+                    user=self.request.user,
+                    ordered=False
+                )[0]
+                # se la quantità è maggiore di 1 la decremento prima di eliminarlo
+                if order_item.quantity > 1:
+                    print(61)
+                    order_item.quantity -= 1
+                    order_item.save()
+                # se la quantità è 1 rimuovo direttamente
+                if order_item.quantity <= 1:
+                    print(62)
+                    order.items.remove(order_item)
+                    order_item.delete()
+
+
+class DeleteItemShop(generics.RetrieveUpdateDestroyAPIView):
+    """
+    #Funzione utilizzata per eliminare un item dal del negozio
+    """
+    serializer_class = ItemSerializer
+
+    def get_object(self):
+        id_item_to_delete = self.kwargs['id_item_to_delete']
+        return Item.objects.get(id=id_item_to_delete)
+
+    def perform_destroy(self, instance):
+        id_item_to_delete = self.kwargs['id_item_to_delete']
+        item_to_delete = Item.objects.filter(user=self.request.user,id=id_item_to_delete)
+        item_to_delete.first().delete()
+
+
+def Checkout(request, pk):
+    price_without_discount = 0
+    price_with_discount = 0
+    total_price = 0
+    total_quantity = 0
+    list_checkout = []
+    general_user = GeneralUser.objects.get(id=pk)
+    queryset = OrderItem.objects.filter(user=general_user.user, ordered=False)
+    print(queryset)
+    for i in queryset:
+        price_without_discount = (i.item.price * i.quantity)
+
+        if i.item.discount_price is not None:
+            price_with_discount = (i.item.discount_price * i.quantity)
+            total_price = total_price + price_with_discount
+
+        else:
+            total_price = total_price + price_without_discount
+
+        total_quantity = total_quantity + i.quantity
+
+    print(price_without_discount)
+    print(price_with_discount)
+    print(total_price)
+    print(total_quantity)
+    list_checkout.append(total_price)
+    list_checkout.append(total_quantity)
+    return JsonResponse({'results': list(list_checkout)})
+
+
+def ConfirmCheckout(request, pk):
+    serializer_class = OrderSerializer
+    general_user = GeneralUser.objects.get(id=pk)
+    list_checkout = []
+    #ORDER E' L'INSIEME DI ITEM CHE COMPONGONO L'ORDINE DELL'UTENTE
+    order = Order.objects.get(user=general_user.user, ordered=False)
+    print("CHECKOUT INIZIALE-order:")
+    print(order)
+    order_items = order.items.all()
+    order_items.update(ordered=True)
+
+    for item in order_items:
+        item.save()
+
+    all_items = Item.objects.all()
+
+    for item in all_items:
+        for item_in_order in order_items:
+            if item_in_order.item.name == item.name:
+                item.quantity = item.quantity - item_in_order.quantity
+                item.save()
+
+    order.ordered = True
+    order.ref_code = uuid.uuid4()
+    order.number_order = order.number_order + 1
+    order.save()
+    list_checkout.append(order.ref_code)
+    list_checkout.append(order.number_order)
+    return JsonResponse({'results': list(list_checkout)})
+
+
+class ItemDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Questa view restituisce l'annuncio avente ID passato tramite URL
+    e ne permette la modifica
+    """
+
+    serializer_class = ItemSerializer
+    print(10)
+
+    def get_object(self):
+        """
+        Questa view restituisce i flag dell'annuncio avente ID passato tramite URL
+        """
+        print(11)
+        id_item = self.kwargs['id_item']
+        return Item.objects.get(id=id_item)
+
+
+class ModifyItem(generics.RetrieveUpdateAPIView):
+    """
+    Aggiungo all'oggetto con quantità 0 la mail dell'utente interessato WaitUser passato
+    """
+    print("eccoci!!")
+    # permission_classes = [IsUserLogged]
+    serializer_class = ItemSerializer
+
+    def get_object(self):
+        id_item_to_modify = self.kwargs['id_item']
+        return Item.objects.get(id=id_item_to_modify)
+
+    def put(self, request, *args, **kwargs):
+        id_item_to_modify = self.kwargs['id_item']
+        item_to_modify = Item.objects.get(id=id_item_to_modify)
+        item_to_modify.name = self.request.data["name"]
+        item_to_modify.price = self.request.data["price"]
+        item_to_modify.discount_price = self.request.data["discount_price"]
+        item_to_modify.category = self.request.data["category"]
+        item_to_modify.quantity = self.request.data["quantity"]
+        item_to_modify.description = self.request.data["description"]
+        # image_item: null,
+        item_to_modify.save()
+        return JsonResponse({'results': True})
 
 # Fine Da Vale
 
@@ -593,22 +760,22 @@ class GetSingleReviewCustomer(generics.RetrieveUpdateAPIView):
         return ReviewCustomer.objects.get(writer=self.request.user, receiver=user, order=order)
 
 
-class UploadItem(generics.CreateAPIView):
-    """
-    Upload a new item for the shop
-    """
-    permission_classes = [IsUserLogged]
-    serializer_class = ItemSerializer
-
-    def perform_create(self, serializer):
-        id_shop = self.kwargs['id_shop']
-
-        try:
-            shop = GeneralUser.objects.get(id=id_shop)
-        except Exception:
-            raise Exception("Negozio non valido")
-
-        serializer.save(writer=self.request.user, receiver=shop.user)
+# class UploadItem(generics.CreateAPIView):
+#     """
+#     Upload a new item for the shop
+#     """
+#     permission_classes = [IsUserLogged]
+#     serializer_class = ItemSerializer
+#
+#     def perform_create(self, serializer):
+#         id_shop = self.kwargs['id_shop']
+#
+#         try:
+#             shop = GeneralUser.objects.get(id=id_shop)
+#         except Exception:
+#             raise Exception("Negozio non valido")
+#
+#         serializer.save(writer=self.request.user, receiver=shop.user)
 
 
 class InsertNewItem(generics.CreateAPIView):
@@ -886,52 +1053,6 @@ class AddToCart(generics.UpdateAPIView):
             order.items.add(order_item)
 
         return order_item
-
-
-class DeleteItem(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Funzione utilizzata per eliminare un item dal carrello
-    """
-
-    serializer_class = ItemSerializer
-
-    def get_object(self):
-        id_item = self.kwargs['id_item']
-        return Item.objects.get(id=id_item)
-
-    def perform_destroy(self, instance):
-        id_item = self.kwargs['id_item']    #prendo id dell'item da cancellare
-        item_to_delete = Item.objects.filter(id=id_item).first()    #prendo l'item da cancellare
-
-        #filtro tutti gli oggetti con ordered=False
-        order_qs = Order.objects.filter(
-            user=self.request.user,
-            ordered=False
-        )
-        print(order_qs)
-        # se c'è almeno un elemento
-        if order_qs.exists():
-            print(59)
-            order = order_qs[0]
-            # controllo che l'elemento da eliminare sia in ordine(carrello) se si allora:
-            if order.items.filter(item__id=id_item).exists():
-                print(60)
-                # se l'elemento da eliminare è nel carrello
-                order_item = OrderItem.objects.filter(
-                    item=item_to_delete,
-                    user=self.request.user,
-                    ordered=False
-                )[0]
-                # se la quantità è maggiore di 1 la decremento prima di eliminarlo
-                if order_item.quantity > 1:
-                    print(61)
-                    order_item.quantity -= 1
-                    order_item.save()
-                # se la quantità è 1 rimuovo direttamente
-                else:
-                    print(62)
-                    order.items.remove(order_item)
-                    order_item.delete()
 
 
 class CreateWaitUser(generics.CreateAPIView):

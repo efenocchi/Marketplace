@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    Button,
     Image,
     Dimensions,
     ActivityIndicator,
@@ -18,6 +17,7 @@ const {width, height} = Dimensions.get('window');
 import Card from '../components/Card';
 import {ScrollView} from "react-native-gesture-handler";
 import {Picker} from "native-base";
+import Button from "../components/Button";
 
 
 
@@ -105,7 +105,7 @@ export default class ReadOrLeaveFeedbackItem extends Component{
                 .then((responseJson) => {
                     if (responseJson.id != null) {
 
-                        this.props.navigation.navigate('OrdersPlaced');
+                        this.props.navigation.navigate('ChooseUserInfoList');
 
                     } else {
                         this.setState({error_message: JSON.stringify(responseJson)});
@@ -134,19 +134,18 @@ export default class ReadOrLeaveFeedbackItem extends Component{
 
 
         return(
-
             <View style={styles.screen}>
-                <CustomHeader parent={this.props} />
+                <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
+                    {/*<CustomHeader parent={this.props} />*/}
 
-                <View style={styles.contentbar}>
-                    <View style={styles.leftcontainer}>
-                        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
+                    <View style={styles.contentbar}>
+                        <View style={styles.leftcontainer}>
+                            {/*<IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
+                        </View>
+                        <Text style={styles.title}>Recensione Lasciata</Text>
+                        <View style={styles.rightcontainer}></View>
                     </View>
-                    <Text style={styles.title}>
-                        Recensione Lasciata
-                    </Text>
-                    <View style={styles.rightcontainer}></View>
-                    </View>
+                </View>
 
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
@@ -215,7 +214,7 @@ export default class ReadOrLeaveFeedbackItem extends Component{
 
                                         <View style={styles.titleField}>
                                         <Picker
-
+                                            style={styles.picker}
                                             selectedValue={this.state.rating}
                                             onValueChange={(itemValue) => this.setState({ rating: itemValue })}
                                             mode="dropdown"
@@ -240,12 +239,12 @@ export default class ReadOrLeaveFeedbackItem extends Component{
                                         {/*Se la recensione non è stata lasciata allora devo lasciarla*/}
 
                                 {this.review_left === false && (
-                                           <Button title="Lascia recensione" onPress={() => {
+                                           <Button text="Recensisci" onPress={() => {
                                             this.LeaveReview();}} />
                                 )}
                                 {this.review_left === true && (
-                                           <Button title="Torna indietro" onPress={() => {
-                                            this.props.navigation.navigate('OrdersPlaced');}} />
+                                           <Button text="Indietro" onPress={() => {
+                                            this.props.navigation.navigate('ChooseUserInfoList');}} />
                                 )}
                                     </View>
                                 </View>
@@ -283,7 +282,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         marginVertical: 10,
-        marginLeft: 20
+        // marginLeft: 20
     },
     buttonview: {
         width: 110,
@@ -344,9 +343,9 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         width: width - width / 2,
         height: 28,
-        backgroundColor: '#e7e7e7',
+        backgroundColor: '#efebeb',
         marginBottom: 3,
-        marginTop: 3
+        marginTop: 3,
     },
     pickerItem: {
         color: 'white'

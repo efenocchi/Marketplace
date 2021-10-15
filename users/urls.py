@@ -24,7 +24,7 @@ urlpatterns = [
     # path('modify_shop', views.modify_shop, name='modify_shop'),
 
 
-    # path('<int:oid>/insert_user_info', views.insert_user_info, name='insert_user_info'),
+
     path('<int:oid>/prova_passaggio_interi', views.prova_passaggio_interi, name='prova_passaggio_interi'),
     path('insert_user_info', views.insert_user_info, name='insert_user_info'),
     path('insert_shop_info', views.insert_shop_info, name='insert_shop_info'),

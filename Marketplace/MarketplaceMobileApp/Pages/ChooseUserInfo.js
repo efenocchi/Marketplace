@@ -1,5 +1,5 @@
 import React, { Component, useContext } from 'react';
-import {Button, SafeAreaView, View, StyleSheet} from "react-native";
+import {SafeAreaView, View, StyleSheet} from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
 import UserInfoModify from "./UserInfoModify"
 import OrdersPlaced from "./OrdersPlaced"
@@ -7,7 +7,7 @@ import FeedbackUser from "./FeedbackUser"
 import CheckItemsBought from "./CheckItemsBought"
 import ReadOrLeaveFeedbackItem from "./ReadOrLeaveFeedbackItem"
 import ItemsRelatedToOneShopAndOneOrder from "./ItemsRelatedToOneShopAndOneOrder"
-
+import Button from "../components/Button";
 
 
 export class ChooseUserInfoList extends Component{
@@ -17,19 +17,19 @@ export class ChooseUserInfoList extends Component{
             <SafeAreaView style={styles.container}>
             <View>
                 <Button
-                title="Ordini effettuati"
+                text="Ordini effettuati"
                 onPress={() => this.props.navigation.navigate('OrdersPlaced')}
                 />
             </View>
             <View>
                 <Button
-                title="Recensioni ricevute"
+                text="Recensioni ricevute"
                 onPress={() => this.props.navigation.navigate('FeedbackUser')}
                 />
             </View>
             <View>
                 <Button
-                title="Modifica informazioni utente"
+                text="Modifica informazioni utente"
                 onPress={() => this.props.navigation.navigate('UserInfoModify')}
                 />
             </View>
@@ -47,7 +47,7 @@ export default class ChooseUserInfo extends Component {
     render(){
         return(
 
-            <Stack.Navigator initialRouteName="ChooseUserInfoList">
+                <Stack.Navigator initialRouteName="ChooseUserInfoList">
                 <Stack.Screen name="ChooseUserInfoList" component={ChooseUserInfoList} options={{headerShown: false}}/>
                 <Stack.Screen name="UserInfoModify" component={UserInfoModify} options={{headerShown: false}}/>
                 <Stack.Screen name="OrdersPlaced" component={OrdersPlaced} options={{headerShown: false}}/>

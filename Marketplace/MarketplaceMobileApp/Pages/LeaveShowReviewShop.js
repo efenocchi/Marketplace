@@ -94,24 +94,6 @@ export default class LeaveShowReviewShop extends Component {
         return(
 
             <View style={styles.page}>
-                <SearchBar style={styles.searchbar}
-                    onPressToFocus
-                    autoFocus={false}
-                    fontColor="#c6c6c6"
-                    iconColor="#c6c6c6"
-                    shadowColor="#282828"
-                    cancelIconColor="#c6c6c6"
-                    backgroundColor="#36485f"
-                    placeholder="Search Item"
-                    width="88%"
-                    activeOpacity={.9}
-                    onChangeText={text => {
-                        this.fetchSearchItem(text);
-                    }}
-                    onPressCancel={() => {
-                        console.log("cancel");
-                    }}
-                />
                     {this.review_done === false && (
                        <Button
                         text={'Lascia una recensione'}
@@ -122,21 +104,23 @@ export default class LeaveShowReviewShop extends Component {
                     />
                    )}
                     {this.review_done === true && (
-                        <Button
-                        text={'Mostra recensione lasciata'}
-                        onPress={() => {
-                            // console.warn('ShowShop')
-                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{username_shop: this.username_shop, review_left: this.review_done});
-                        }}
-                        />
+                         <View style={styles.buttonView}>
+                            <Button
+                            text={'Mostra recensione lasciata'}
+                            onPress={() => {
+                                // console.warn('ShowShop')
+                            this.props.navigation.navigate('LeaveOrReadReviewToShop',{username_shop: this.username_shop, review_left: this.review_done});
+                            }}
+                            />
+                         </View>
                     )}
 
-                    <Button
-                        text={'Valutazione media'}
-                        onPress={() => {console.warn('ShowShop')
-                        // this.props.navigation.navigate('',{id_shop: this.id_shop});
-                        }}
-                    />
+                    {/*<Button*/}
+                    {/*    text={'Valutazione media'}*/}
+                    {/*    onPress={() => {console.warn('ShowShop')*/}
+                    {/*    // this.props.navigation.navigate('',{id_shop: this.id_shop});*/}
+                    {/*    }}*/}
+                    {/*/>*/}
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
@@ -160,11 +144,16 @@ export default class LeaveShowReviewShop extends Component {
 }
 const styles = StyleSheet.create({
   page: {
-    marginTop: -35, //10
+    marginTop: 20,
     backgroundColor: 'blue',
 
   },
-
+buttonView: {
+        width: width/2,
+        paddingRight: 5,
+        paddingLeft: 5,
+        marginLeft: width/4,
+    },
   flatlist: {
     padding: -60,
     marginLeft: 15,

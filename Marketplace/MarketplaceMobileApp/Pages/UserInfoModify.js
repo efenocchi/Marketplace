@@ -1,12 +1,13 @@
 import React, { Component, useContext } from 'react';
 import { Dimensions, ActivityIndicator } from 'react-native';
-import {View, Text, StyleSheet, Button, Image, TextInput, ToastAndroid, Platform} from 'react-native';
+import {View, Text, StyleSheet, Image, TextInput, ToastAndroid, Platform} from 'react-native';
 import CustomHeader from "../components/Header";
 import {IconButton} from "react-native-paper";
 import {ScrollView} from "react-native-gesture-handler";
 import Card from "../components/Card";
 import TakeProvinces from "../components/TakeProvinces";
 import TakeRegions from "../components/TakeRegions";
+import Button from "../components/Button";
 const {width, height} = Dimensions.get('window');
 
 
@@ -115,7 +116,7 @@ export default class UserInfoModify extends Component {
             {
 
             if (this.state.password === this.state.conferma_password) {
-                fetch('http://'+ global.ip +'/api/users/profile/',
+                fetch('http://'+ global.ip + '/api/users/profile/',
                 {
                 method: 'PUT',
                 headers: {
@@ -167,7 +168,7 @@ modifyShopProfile = () => {
             console.log("Sono entrato")
             if (this.state.password === this.state.conferma_password) {
                 console.log("Stesse password")
-                fetch('http://'+ global.ip +'/api/users/profile/',
+                fetch('http://109.116.110.83:8000'+ global.ip +'/api/users/profile/',
                 {
                 method: 'PUT',
                 headers: {
@@ -253,10 +254,6 @@ modifyShopProfile = () => {
         // }
     }
 
-    PROVAgetStudentsAndScores(){
-        return Promise.all([this.fetchProfilo()])
-    }
-
     render() {
 
         if(this.state.isLoading){
@@ -273,21 +270,22 @@ modifyShopProfile = () => {
             return(
 
             <View style={styles.screen}>
-                <CustomHeader parent={this.props} />
+                {/*<CustomHeader parent={this.props} />*/}
 
-                <View style={styles.contentbar}>
-                    <View style={styles.leftcontainer}>
-                        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
-                    </View>
-                    <Text style={styles.title}>
-                        Modifica il profilo utente
-                    </Text>
-                    <View style={styles.rightcontainer}></View>
-                    </View>
+                {/*<View style={styles.contentbar}>*/}
+                {/*    <View style={styles.leftcontainer}>*/}
+                {/*        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
+                {/*    </View>*/}
+                {/*    <Text style={styles.title}>*/}
+                {/*        Modifica il profilo utente*/}
+                {/*    </Text>*/}
+                {/*    <View style={styles.rightcontainer}></View>*/}
+                {/*    </View>*/}
 
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
                         <Card style={styles.inputContainer}>
+                            <Text style={styles.title}>Modifica il profilo utente</Text>
                             <View style={styles.data}>
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
@@ -424,7 +422,7 @@ modifyShopProfile = () => {
 
                                 <View style={styles.controlli}>
                                     <View style={styles.buttonview}>
-                                        <Button title="Modifica Utente" onPress={() => {
+                                        <Button text="Modifica" onPress={() => {
                                             this.modifyNormalProfile();}} />
                                     </View>
                                 </View>
@@ -451,21 +449,22 @@ modifyShopProfile = () => {
         else{
             return(
                 <View style={styles.screen}>
-                <CustomHeader parent={this.props} />
+                {/*<CustomHeader parent={this.props} />*/}
 
-                <View style={styles.contentbar}>
-                    <View style={styles.leftcontainer}>
-                        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
-                    </View>
-                    <Text style={styles.title}>
-                         Modifica il profilo negozio
-                    </Text>
-                    <View style={styles.rightcontainer}></View>
-                    </View>
+                {/*<View style={styles.contentbar}>*/}
+                {/*    <View style={styles.leftcontainer}>*/}
+                {/*        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
+                {/*    </View>*/}
+                {/*    <Text style={styles.title}>*/}
+                {/*         Modifica il profilo negozio*/}
+                {/*    </Text>*/}
+                {/*    <View style={styles.rightcontainer}></View>*/}
+                {/*    </View>*/}
 
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
                         <Card style={styles.inputContainer}>
+                            <Text style={styles.title}>Modifica il profilo negozio</Text>
                             <View style={styles.data}>
                                 <View style={{flexDirection: 'row'}}>
                                     <View>
@@ -603,7 +602,7 @@ modifyShopProfile = () => {
 
                                 <View style={styles.controlli}>
                                     <View style={styles.buttonview}>
-                                        <Button title="Modifica Negozio" onPress={() => {
+                                        <Button text="Modifica" onPress={() => {
                                             this.modifyShopProfile();}} />
                                     </View>
                                 </View>
@@ -641,12 +640,14 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     buttonview: {
-        width: 110,
+        width: width/2,
         paddingRight: 5,
-        paddingLeft: 5
+        paddingLeft: 5,
+        marginRight: 100,
     },
     inputContainer: {
-        minWidth: '96%'
+        minWidth: '96%',
+        marginTop: 70
     },
     controlli: {
         paddingTop: 20,
@@ -655,7 +656,7 @@ const styles = StyleSheet.create({
     },
     data: {
         paddingTop: 20,
-        paddingLeft: 10
+        paddingLeft: width/4
     },
     entryTitle: {
         marginBottom: 5,
@@ -663,32 +664,33 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     textTitle: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginTop: 5
     },
-    contentbar: {
-        height: 50,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      },
-    leftcontainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-start'
-    },
-    rightcontainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-    },
+    // contentbar: {
+    //     height: 50,
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     alignItems: 'center'
+    //   },
+    // leftcontainer: {
+    //     flex: 1,
+    //     flexDirection: 'row',
+    //     justifyContent: 'flex-start'
+    // },
+    // rightcontainer: {
+    //     flex: 1,
+    //     flexDirection: 'row',
+    //     justifyContent: 'flex-end',
+    //     alignItems: 'center'
+    // },
     textContainer: {
         borderWidth: 1,
         height: 28,
         width: width - width / 2,
         marginLeft: 10,
         marginBottom: 3,
-        marginTop: 3
+        marginTop: 6
     },
     asteriskStyle: {
         marginLeft: 3,

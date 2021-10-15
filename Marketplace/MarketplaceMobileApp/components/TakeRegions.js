@@ -46,13 +46,13 @@ export default class TakeRegions extends Component {
 const styles = StyleSheet.create({
     picker: {
         marginLeft: 10,
+        marginRight: 100,
         width: width - width / 2,
-        height: 28,
         backgroundColor: '#e7e7e7',
-        marginBottom: 3,
-        marginTop: 3
+        marginBottom: 5,
+        marginTop: 5,
     },
     pickerItem: {
-        color: 'white'
+        color: 'white',
     }
 });

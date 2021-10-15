@@ -60,7 +60,13 @@ urlpatterns = [
     path('items/search/<int:pk>/<str:text>/', views.SearchItem.as_view(), name='API-search-item'),
     path('items/add_quantity/<int:pk>/<int:id_item>/<int:quantity>/', views.AddToCart.as_view(),
          name='API-add-to-cart'),
+
     path('items/<int:id_item>/delete/', views.DeleteItem.as_view(), name='API-delete-item-from-cart'),
+    path('items/<int:id_item_to_delete>/deleteitemshop/', views.DeleteItemShop.as_view(), name='API-delete-item-shop'),
+    path('items/<int:pk>/checkout/', views.Checkout, name='API-checkout'),
+    path('items/<int:pk>/confirmcheckout/', views.ConfirmCheckout, name='API-confirm-checkout'),
+    path('items/<int:id_item>/detail/', views.ItemDetail.as_view(), name='API-item-detail'),
+    path('items/<int:id_item>/modifyitem/', views.ModifyItem.as_view(), name='API-modify-item'),
     # Fine
 
 ]

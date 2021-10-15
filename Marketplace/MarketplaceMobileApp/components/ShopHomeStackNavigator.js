@@ -8,11 +8,13 @@ const Stack = createStackNavigator();
 
 export default function ShopHomeStackNavigator()  {
   return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator >
         <Stack.Screen
             component={ShopItemList}
             name="ItemList"
-            options={{title:'ItemList'}}
+            options={{
+                title:'Gestione prodotti'
+            }}
         />
 
         <Stack.Screen

@@ -20,6 +20,7 @@ class Cart extends Component {
         this.state ={
             isLoading1: true,
             isLoading2: true,
+            isLoading3: true,
         }
 
     }
@@ -29,7 +30,9 @@ class Cart extends Component {
                () => {
                     this.state.isLoading1 = true
                     this.state.isLoading2 = true
+                    this.state.isLoading3 = true
                    Promise.all([
+                       this.fetchCheckout(),
                        this.fetchCartOrders(),
                        this.fetchItemsFromOrderItems()
                    ]).then(([urlOneData, urlTwoData]) => {
@@ -71,6 +74,7 @@ class Cart extends Component {
             });
             })
             .catch((error) =>{
+                console.log(error)
             });
         }
 
@@ -95,8 +99,27 @@ class Cart extends Component {
         ;
    }
 
+    fetchCheckout() {
+            return fetch('http://'+ global.ip +'/api/items/' + global.user_id + '/checkout/?format=json')
+
+           .then((response) => response.json())
+           .then((responseJson) => {
+
+               this.setState({
+                   isLoading3: false,
+                   infocheckout: responseJson.results,
+               }, function () {
+
+                    console.log(responseJson.results)
+               });
+           })
+           .catch((error) => {
+               console.error(error)
+           });
+    }
+
     render() {
-       if (this.state.isLoading1 || this.state.isLoading2) {
+       if (this.state.isLoading1 || this.state.isLoading2 || this.state.isLoading3) {
            return (
                <View style={{flex: 1, paddingTop: height / 2}}>
                    <ActivityIndicator/>
@@ -117,6 +140,17 @@ class Cart extends Component {
         }
         return(
             <View style={styles.page}>
+                <Button
+                text={'Checkout'}
+                onPress={() => {
+                     // this.fetchConfirmCheckout();
+                     this.props.navigation.navigate('Checkout');
+                }}
+                />
+                {/*mostro il prezzo totale*/}
+                <Text>Import Totale: {this.state.infocheckout[0]}</Text>
+                {/*mostro la quantità totale*/}
+                <Text>Quantità: {this.state.infocheckout[1]}</Text>
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
@@ -130,10 +164,16 @@ class Cart extends Component {
                                         <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
                                         <Text style={styles.description} numberOfLines={3}>Descrizione: {item[2]}</Text>
                                         <Text style={styles.discountprice}>
-                                          DiscountPrice: {item[4]}
-                                          {
-                                            <Text style={styles.price}>Price:  {item[3]}</Text>
-                                          }
+                                          {item[4] !== null && (
+                                            <Text style={styles.discountprice} numberOfLines={2}>Prezzo scontato: {item[4]}€
+
+                                            <Text style={styles.price}>{item[3]}€</Text>
+
+                                            </Text>
+                                        )}
+                                        {item[4] === null && (
+                                            <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
+                                        )}  
                                         </Text>
                                         <Button
                                             text={'Delete Item'}

@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Button, Image, TextInput } from 'react-native';
-import CustomHeader from '../components/Header';
-import Card from '../components/Card';
+import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
 import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
-import { IconButton } from 'react-native-paper';
-import { CheckBox } from 'react-native-elements';
-import { Picker } from 'native-base';
 import TakeProvinces from '../components/TakeProvinces';
 import TakeRegions from '../components/TakeRegions';
 import { Field, Formik } from 'formik'
@@ -15,7 +10,7 @@ const {width, height} = Dimensions.get('window');
 import { StatusBar } from 'expo-status-bar';
 import ErrorMessage from '../components/ErrorMessage'
 import InputField from '../components/InputField'
-import InputButton from '../components/InputButton'
+import Button from '../components/Button'
 
 Yup.addMethod(Yup.string, "username_unique", function (errorMessage) {
     console.log("chiamato metodo")
@@ -214,54 +209,17 @@ class ShopRegistration extends Component {
             console.log("global.regione",global.regione)
             console.log("global.login_negozio",global.login_negozio)
 
-            // this.RegisterNormalUser;
         })
     }
-
-    // clearFields = () => {
-    //     this.setState({error_message: "",
-    //         username: "",
-    //         password: "",
-    //         conferma_password: "",
-    //         // nome: "",
-    //         // cognome: "",
-    //         // email: "",
-    //         indirizzo: "",
-    //         citta: "",
-    //         codice_postale: "",
-    //         telefono: "",
-    //         // eta: "",
-    //         // caratteristiche: ""
-    //     });
-    //
-    //     this.txtUsername.clear();
-    //     this.txtPassword.clear();
-    //     this.txtConfermaPassword.clear();
-    //     // this.txtNome.clear();
-    //     // this.txtCognome.clear();
-    //     // this.txtEmail.clear();
-    //     this.txtIndirizzo.clear();
-    //     this.txtCitta.clear();
-    //     this.txtCodicePostale.clear();
-    //     this.txtTelefono.clear();
-    //     // this.txtEta.clear();
-    //     // this.txtCaratteristiche.clear();
-    // }
 
     render() {
         return (
 
             <View style={styles.screen}>
-                <CustomHeader parent={this.props} />
-
                 <View style={styles.contentBar}>
-                    <View style={styles.leftContainer}>
-                        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
-                    </View>
                     <Text style={styles.title}>
                         Registra un account professionale
                     </Text>
-
                 </View>
 
                 <View style={styles.form}>
@@ -365,7 +323,7 @@ class ShopRegistration extends Component {
                                     <View style={styles.titleField}>
                                         <Text style={styles.text}>Provincia: </Text>
 
-                                        <TakeProvinces />
+                                        <TakeProvinces/>
                                     </View>
 
                                     <View style={styles.titleField}>
@@ -400,13 +358,13 @@ class ShopRegistration extends Component {
 
                                     />
                                     <ErrorMessage errorValue={touched.codice_postale && errors.codice_postale} />
-                                    <InputButton
+                                    <View style={styles.buttonView}>
+                                    <Button
                                         onPress={handleSubmit}
                                         buttonType='solid'
-                                        title='Registrati'
-                                        buttonColor='blue'
+                                        text='Registrati'
                                     />
-
+                                    </View>
                                 </ScrollView>
                             </>
 
@@ -426,17 +384,19 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         marginVertical: 10,
-        marginLeft: 20
+        marginTop: 80,
+        marginLeft: width/7
     },
     form: {
         flex: 1,
         width: '100%',
         marginTop: 50
     },
-    buttonview: {
-        width: 110,
+    buttonView: {
+        width: width/2,
         paddingRight: 5,
-        paddingLeft: 5
+        paddingLeft: 5,
+        marginLeft: width/4,
     },
     inputContainer: {
         minWidth: '96%'
@@ -465,7 +425,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     contentBar: {
-        height: 50,
+        height: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
@@ -493,14 +453,6 @@ const styles = StyleSheet.create({
         marginLeft: 3,
         marginRight: 3,
         color: 'red'
-    },
-    picker: {
-        marginLeft: 10,
-        width: width - width / 2,
-        height: 28,
-        backgroundColor: '#e7e7e7',
-        marginBottom: 3,
-        marginTop: 3
     },
     pickerItem: {
         color: 'white'

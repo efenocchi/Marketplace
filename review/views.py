@@ -28,10 +28,24 @@ def show_item_reviewed(request, item_selected_id, order_item_id):
     item = Item.objects.get(id=item_selected_id)
     review = ReviewItem.objects.get(writer=request.user, order=order, item=item)
     review_form = ReviewItemForm(request.POST or None, request.FILES or None, instance=review, reviewed=True)
+
+    order_item = OrderItem.objects.filter(user=request.user)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+    else:
+        order = 0
+
     context = {
         'review_form': review_form,
         'item_selected_id': item_selected_id,
-        'order_item_id': order_item_id
+        'order_item_id': order_item_id,
+        'all_items': order
     }
 
     return render(request, 'review/show_item_reviewed.html', context)
@@ -76,6 +90,17 @@ def add_review_item(request, item_selected_id, order_item_id):
     :param order_item_id:
     :return:
     """
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+    else:
+        order = 0
+
     review_form = ReviewItemForm(request.POST or None, request.FILES or None, reviewed=False)
 
     if review_form.is_valid():
@@ -103,7 +128,8 @@ def add_review_item(request, item_selected_id, order_item_id):
     context = {
         'review_form': review_form,
         'item_selected_id': item_selected_id,
-        'order_item_id': order_item_id
+        'order_item_id': order_item_id,
+        'all_items': order
     }
     return render(request, 'review/add_review_item.html', context)
 
@@ -116,10 +142,21 @@ def show_items_to_review(request):
     :return:
     """
     order_item = OrderItem.objects.filter(user=request.user)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+    else:
+        order = 0
 
     context = {
         'user': request.user,
-        'order_item': order_item
+        'order_item': order_item,
+        'all_items': order
     }
 
     return render(request, 'review/mostra_ordini_fatti.html', context)
@@ -219,7 +256,7 @@ def add_review_customer(request, order_id, customer_id):
         # controllo se l'utente deve essere penalizzato
         check_average_raging(request, receiver, review.rating)
 
-        return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('users:home_for_shop'))
 
     context = {
         "order": order,

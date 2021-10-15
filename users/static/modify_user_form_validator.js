@@ -15,7 +15,7 @@ jQuery.validator.addMethod("specialcharacter", function(value, element) {
     return /^[0-9A-Za-z]*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?][0-9a-zA-Z]*$/.test(value);
 }, "Inserire almeno un carattere speciale");
 
-$( '#RegFormUser' ).validate({
+$( '#RegFormUser2' ).validate({
     rules: {
         'username':{
             required: true,
@@ -107,7 +107,7 @@ $( '#RegFormUser' ).validate({
     }
 });
 
-$( '#RegFormShop' ).validate({
+$( '#RegFormShop2' ).validate({
     rules: {
         'username':{
             required: true,

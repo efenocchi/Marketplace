@@ -27,8 +27,9 @@ $( '#RegFormReview' ).validate({
             maxlength: "Limite di 50 caratteri superato"
             },
         'description':{
-            required: "Il campo prezzo è obbligatorio",
-            number: "Inserisci un numero valido"
+            required: "Il campo descrizione è obbligatorio",
+            minlength: "Requisito minimo di almeno 3 caratteri",
+            maxlength: "Limite di 50 caratteri superato"
             }
     }
 });

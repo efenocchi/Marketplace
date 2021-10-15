@@ -135,13 +135,13 @@ export default class TakeProvinces extends Component {
 const styles = StyleSheet.create({
     picker: {
         marginLeft: 10,
+        marginRight: 100,
         width: width - width / 2,
-        height: 28,
         backgroundColor: '#e7e7e7',
-        marginBottom: 3,
-        marginTop: 3
+        marginBottom: 4,
+        marginTop: 10,
     },
     pickerItem: {
-        color: 'white'
+        color: 'white',
     }
 });

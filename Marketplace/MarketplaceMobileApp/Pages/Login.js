@@ -1,15 +1,5 @@
 import React, { Component } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    Button,
-    Image,
-    TextInput,
-    ToastAndroid,
-    Platform,
-    ActivityIndicator
-} from 'react-native';
+import {View, Text, StyleSheet, Image, TextInput, ToastAndroid, Platform} from 'react-native';
 import CustomHeader from '../components/Header';
 import Card from '../components/Card';
 import { TouchableOpacity, TouchableWithoutFeedback, ScrollView } from 'react-native-gesture-handler';
@@ -17,10 +7,7 @@ import { Dimensions } from 'react-native';
 import { IconButton } from 'react-native-paper';
 const {width, height} = Dimensions.get('window');
 import Toast from 'react-native-root-toast';
-import {ToastContainer} from 'react-native-root-toast';
-import {RootSiblingParent} from "react-native-root-siblings";
-
-
+import Button from "../components/Button";
 
 
 export default class Login extends Component {
@@ -33,17 +20,6 @@ export default class Login extends Component {
             password: "",
             error_message: ""
         }
-        if(global.logged_in === true){
-            // è un negozio ed è già loggato
-            if(global.login_negozio === true) {
-                this.props.navigation.navigate('ShopStackNavigator');
-            }
-            // è un utente ed è già loggato
-            else{
-                this.props.navigation.navigate('UserStackNavigator');
-            }
-        }
-
     }
 
 
@@ -52,15 +28,15 @@ export default class Login extends Component {
         .then((user_response) => user_response.json())
         .then((user_responseJson) => {
 
-            global.user_id = user_responseJson['results'][0]['id'];
+            global.user_id = user_responseJson['results'][0]['user']['id'];
             global.login_negozio = (user_responseJson['results'][0]['login_negozio'] === true);
-            global.provincia = user_responseJson['results'][0]['provincia']
-            global.regione = user_responseJson['results'][0]['regione']
-            console.log(user_responseJson)
             console.log("sto stampando l'id dal fetch")
             console.log(global.user_id)
             console.log(global.login_negozio)
-             if(global.login_negozio === true) {
+            // this.props.navigation.reset({
+            // routes: [{ name: "UserStackNavigator" }]
+            // });
+            if(global.login_negozio == true) {
                 this.props.navigation.navigate('ShopStackNavigator');
             }
             else {
@@ -102,9 +78,8 @@ export default class Login extends Component {
                     global.username = this.state.username;
                     this.fetchUserId();
                     this.changeScreen();
-                    // ToastAndroid.show("Bentornato, " , Toast.SHORT);
 
-                    Toast.show("Bentornato " + global.username, {
+                    Toast.show("Bentornato, {global.user_id}", {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
                         shadow: true,
@@ -112,26 +87,19 @@ export default class Login extends Component {
                         hideOnPress: true,
                         delay: 0,
                     });
-                    // this.props.navigation.navigate('UserStackNavigator');
                     console.log("sto stampando l'id dopo il login")
                     console.log(global.user_id)
-
-
-                    // this.clearFields();
-                    // this.props.navigation.navigate('RegistrationStackNavigator');
 
                 } else {
                     this.setState({error_message: "Errore: username o password errati."});
                 }
             })
             .then(obj =>  {
-              callback(obj)
             })
             .catch((error) => {
-                // this.loginExecute;
+                console.log(error)
             })
 
-        // this.props.navigation.navigate('UserStackNavigator', {user_id: global.user_id});
     }
 
     clearFields = () => {
@@ -147,20 +115,6 @@ export default class Login extends Component {
         return (
 
             <View style={styles.screen}>
-                <CustomHeader parent={this.props} />
-
-                <View style={styles.contentbar}>
-                    <View style={styles.leftcontainer}>
-                        <IconButton icon="arrow-left" onPress={() =>
-                            {this.clearFields();
-                            this.props.navigation.goBack(null);}} />
-                    </View>
-                    <Text style={styles.title}>
-                        Log in
-                    </Text>
-                    <View style={styles.rightcontainer}/>
-                </View>
-
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
                         <Card style={styles.inputContainer}>
@@ -192,7 +146,12 @@ export default class Login extends Component {
 
                                 <View style={styles.controlli}>
                                     <View style={styles.buttonview}>
-                                        <Button title="Accedi" onPress={ this.loginExecute } />
+                                    <Button
+                                        text={'Login'}
+                                        onPress={() => {
+                                            this.loginExecute();
+                                        }}
+                                    />
                                     </View>
                                 </View>
 
@@ -211,15 +170,13 @@ export default class Login extends Component {
 
                                     <View>
                                         <View style={styles.bottomButton}>
-                                            <Button title="Registrati" onPress={() => {
+                                        <Button
+                                            text={'Registrati'}
+                                            onPress={() => {
                                                 this.clearFields();
-                                                // this.props.navigation.navigate('RegistrationStackNavigator');}}
-                                                // this.props.navigation.navigate('RegistrationStackNavigator', {user_id: 'parametro passato1'});}}
                                                 this.props.navigation.navigate('RegistrationStackNavigator');
                                             }}
-
-                                                // this.props.navigation.goBack();}}
-                                            />
+                                        />
                                         </View>
                                     </View>
                                 </View>
@@ -227,7 +184,6 @@ export default class Login extends Component {
                         </Card>
                     </View>
                 </ScrollView>
-
             </View>
 
         );
@@ -236,7 +192,8 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
     screen: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'gray'
     },
     title: {
         fontSize: 20,
@@ -248,6 +205,7 @@ const styles = StyleSheet.create({
         paddingLeft: 5
     },
     inputContainer: {
+        marginTop: height/4,
         minWidth: '96%'
     },
     controlli: {
@@ -267,23 +225,6 @@ const styles = StyleSheet.create({
     textTitle: {
         fontWeight: 'bold'
     },
-    contentbar: {
-        height: 50,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      },
-    leftcontainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-start'
-    },
-    rightcontainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'center'
-    },
     textContainer: {
         borderWidth: 1,
         height: 28,
@@ -300,7 +241,7 @@ const styles = StyleSheet.create({
     },
     bottomTitle: {
         marginBottom: 25,
-        marginTop: 9,
+        marginTop: 17,
         alignItems: 'flex-end'
     }
 });

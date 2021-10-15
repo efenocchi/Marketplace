@@ -42,7 +42,7 @@
                       <div class="form-btn">
                           <span>Modify Shop Info</span>
                       </div>
-                      <form id="RegFormShop" method="post" action="{% url 'users:modify_shop' %}"enctype="multipart/form-data">
+                      <form id="RegFormShop2" method="post" action="{% url 'users:modify_shop' %}"enctype="multipart/form-data">
                           {% csrf_token %}
                           {% include 'users/base_modifica_negozio.html' %}
                           <button type="submit" class="btn" value="Submit">Submit</button>

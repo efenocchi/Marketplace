@@ -1,12 +1,13 @@
 import React, { Component, useContext } from 'react';
-import {Button, SafeAreaView, View, StyleSheet} from "react-native";
+import {SafeAreaView, View, StyleSheet} from "react-native";
 import {createStackNavigator} from "@react-navigation/stack";
 import UserInfoModify from "./UserInfoModify"
 import OrdersReceived from "./OrdersReceived"
 import CheckReservationMade from "./CheckReservationMade"
 import LeaveOrReadReviewToCustomer from "./LeaveOrReadReviewToCustomer"
 import AddItem from "./AddItem"
-import FeedbackShop from "./FeedbackShop"
+import Button from "../components/Button";
+import ModifyItem from "./ModifyItem";
 
 
 // Serve solo per visualizzare i bottoni con i quali si andrà nelle varie schermate
@@ -17,26 +18,20 @@ export class ChooseShopInfoList extends Component{
             <SafeAreaView style={styles.container}>
             <View>
                 <Button
-                title="Ordini ricevuti"
+                text="Ordini ricevuti"
                 onPress={() => this.props.navigation.navigate('OrdersReceived')}
                 />
             </View>
             <View>
                 <Button
-                title="Valutazione negozio" //posso visualizzare le recensioni che mi hanno lasciato
-                onPress={() => this.props.navigation.navigate('FeedbackShop')}
+                text="Valutazione negozio" //posso visualizzare le recensioni che mi hanno lasciato
+                // onPress={() => this.props.navigation.navigate('FeedbackShop')}
                 />
             </View>
             <View>
                 <Button
-                title="Modifica informazioni profilo"
+                text="Modifica informazioni profilo"
                 onPress={() => this.props.navigation.navigate('UserInfoModify')}
-                />
-            </View>
-            <View>
-                <Button
-                title="Inserisci oggetto"
-                onPress={() => this.props.navigation.navigate('AddItem')}
                 />
             </View>
             </SafeAreaView>
@@ -52,15 +47,14 @@ export default class ChooseUserInfo extends Component {
     render(){
         return(
 
-            <Stack.Navigator initialRouteName="ChooseShopInfoList">
-                <Stack.Screen name="ChooseShopInfoList" component={ChooseShopInfoList}/>
-                <Stack.Screen name="UserInfoModify" component={UserInfoModify}/>
-                <Stack.Screen name="OrdersReceived" component={OrdersReceived}/>
-                <Stack.Screen name="CheckReservationMade" component={CheckReservationMade}/>
-                <Stack.Screen name="LeaveOrReadReviewToCustomer" component={LeaveOrReadReviewToCustomer}/>
-                <Stack.Screen name="AddItem" component={AddItem}/>
+            <Stack.Navigator initialRouteName="ChooseShopInfoList" screenOptions={{headerShown: false}}>
+                <Stack.Screen name="ChooseShopInfoList" component={ChooseShopInfoList} screenOptions={{headerShown: false}}/>
+                <Stack.Screen name="UserInfoModify" component={UserInfoModify} screenOptions={{headerShown: false}}/>
+                <Stack.Screen name="OrdersReceived" component={OrdersReceived} screenOptions={{headerShown: false}}/>
+                <Stack.Screen name="CheckReservationMade" component={CheckReservationMade} screenOptions={{headerShown: false}}/>
+                <Stack.Screen name="LeaveOrReadReviewToCustomer" component={LeaveOrReadReviewToCustomer} screenOptions={{headerShown: false}}/>
 
-                <Stack.Screen name="FeedbackShop" component={FeedbackShop}/>
+                {/*<Stack.Screen name="FeedbackShop" component={FeedbackShop}/>*/}
 
                 {/*<Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>*/}
 

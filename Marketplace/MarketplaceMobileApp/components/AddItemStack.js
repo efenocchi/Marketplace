@@ -1,7 +1,6 @@
 import React, { Component, useContext } from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
 import AddItem from "../Pages/AddItem"
-import ProvaUploadImmagini from "../Pages/ProvaUploadImmagini"
 
 
 
@@ -12,11 +11,9 @@ export default class AddItemStack extends Component {
     render(){
         return(
 
-            <Stack.Navigator initialRouteName="AddItem">
+            <Stack.Navigator initialRouteName="AddItem" screenOptions={{headerShown: false}}>
 
-                <Stack.Screen name="AddItem" component={AddItem}/>
-
-                <Stack.Screen name="ProvaUploadImmagini" component={ProvaUploadImmagini}/>
+                <Stack.Screen name="AddItem" component={AddItem} screenOptions={{headerShown: false}}/>
 
             </Stack.Navigator>
 

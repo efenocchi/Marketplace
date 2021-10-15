@@ -48,9 +48,6 @@ class ItemList extends Component {
                     })
                }
              );
-
-
-
     }
 
     fetchSearchItem(text) {
@@ -193,7 +190,7 @@ class ItemList extends Component {
         return(
 
             <View style={styles.page}>
-                <SearchBar style={styles.searchbar}
+                <SearchBar
                     onPressToFocus
                     autoFocus={false}
                     fontColor="#c6c6c6"
@@ -201,8 +198,8 @@ class ItemList extends Component {
                     shadowColor="#282828"
                     cancelIconColor="#c6c6c6"
                     backgroundColor="#36485f"
-                    placeholder="Search Item"
-                    width="88%"
+                    placeholder="Cerca un oggetto"
+                    width="93%"
                     activeOpacity={.9}
                     onChangeText={text => {
                         this.fetchSearchItem(text);
@@ -216,7 +213,7 @@ class ItemList extends Component {
                         data={this.array_values}
                         renderItem={({item, index}) =>
                             <Card style={styles.card}>
-                                 <TouchableOpacity key={item.id} onPress={() =>
+                                 <TouchableOpacity  style={styles.pressable} key={item.id} onPress={() =>
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
                                         {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[6]})
@@ -245,31 +242,37 @@ class ItemList extends Component {
 
                                         </Text>
                                         {item[6] === 0 &&    //se la quantity è 0 -> item finito
-                                            <View style={{flexDirection:'row', width: window.width, marginVertical: 10, padding:4, alignItems:'center', justifyContent:'center', borderWidth:1, borderColor:'#888', borderRadius:10}}>
-                                                <View style={{flex:4}}>
-                                                      <TextInput editable maxLength={95}
-                                                        placeholder={"Inserisci la tua email"}
-                                                        placeholderTextColor={'red'}
-                                                        keyboardType = 'email-address'
-                                                        // ref={input => { this.txtName = input }}
-                                                        onChangeText={(value) => this.setState({email: value})}
-                                                        onSubmitEditing = {()=>{this.createWaitUser(item[0])}}
-                                                        />
+                                            <View style={styles.textInputView}>
+                                                <View style={{flexDirection:'row', width: window.width, marginVertical: 10, padding:4, alignItems:'center', justifyContent:'center', borderWidth:1, borderColor:'#888', borderRadius:10}}>
+
+                                                    <View style={{flex:4}}>
+                                                          <TextInput editable maxLength={95}
+                                                            placeholder={"Inserisci la tua email"}
+                                                            placeholderTextColor={'red'}
+                                                            keyboardType = 'email-address'
+                                                            // ref={input => { this.txtName = input }}
+                                                            onChangeText={(value) => this.setState({email: value})}
+                                                            onSubmitEditing = {()=>{this.createWaitUser(item[0])}}
+                                                            />
+                                                    </View>
+
+                                                    <TouchableHighlight style={{alignItems:'center',justifyContent:'center'}} onPress = {()=>{this.createWaitUser(item[0])}} underlayColor = 'transparent'>
+                                                            <View>
+                                                              <Image source={ require('../assets/upload.png') } style={ { width: 20, height: 20 } } />
+                                                            </View>
+                                                    </TouchableHighlight>
                                                 </View>
-                                                <TouchableHighlight style={{alignItems:'center',justifyContent:'center'}} onPress = {()=>{this.createWaitUser(item[0])}} underlayColor = 'transparent'>
-                                                        <View>
-                                                          <Image source={ require('../assets/upload.png') } style={ { width: 20, height: 20 } } />
-                                                        </View>
-                                                </TouchableHighlight>
                                             </View>
                                         }
-                                        <Button
-                                            text={'Visita il Negozio'}
-                                            onPress={() => {
-                                                // console.warn('ShowShop')
-                                            this.props.navigation.navigate('ShowShop',{username_shop: item[7]});
-                                            }}
-                                        />
+                                        <View style={styles.buttonView}>
+                                            <Button
+                                                text={'Visita il Negozio'}
+                                                onPress={() => {
+                                                    // console.warn('ShowShop')
+                                                this.props.navigation.navigate('ShowShop',{username_shop: item[7]});
+                                                }}
+                                            />
+                                        </View>
                                     </View>
                                  </TouchableOpacity>
                             </Card>
@@ -283,17 +286,30 @@ class ItemList extends Component {
 }
 const styles = StyleSheet.create({
   page: {
-    marginTop: -35, //10
+    marginTop: 10,
     backgroundColor: 'blue',
-
   },
 
   flatlist: {
     padding: -60,
+    marginTop:10,
+    marginBottom:50,
     marginLeft: 15,
     backgroundColor: 'green',
   },
-
+buttonView: {
+        width: width/2,
+        paddingRight: 5,
+        paddingLeft: 5,
+        marginLeft: -width/6,
+    },
+textInputView: {
+        width: width/2,
+        paddingRight: 5,
+        paddingLeft: 5,
+        marginBottom: -10,
+        marginLeft: -width/6,
+    },
   card: {
     borderWidth: 1,
     borderColor: 'white',
@@ -302,7 +318,6 @@ const styles = StyleSheet.create({
     flex:1,
     padding: -20,
     marginTop: 5,
-
   },
 
   pressable: {
@@ -358,7 +373,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 5,
   },
-
   button_small: {
     fontSize: 16,
     backgroundColor: '#e47911',

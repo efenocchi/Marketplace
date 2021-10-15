@@ -61,7 +61,7 @@ export default class OrdersPlaced extends Component{
                 </View>
             )
         }
-        this.array_values = Array(this.state.number_orderitems).fill().map(()=>Array(7).fill())
+        this.array_values = Array(this.state.number_orderitems).fill().map(()=>Array(3).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["ref_code"]
             this.array_values[i][1] = this.state.dataSource[i]["start_date"].slice(0,10)
@@ -77,17 +77,14 @@ export default class OrdersPlaced extends Component{
 
         return (
             <View style={styles.screen}>
-
                 <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
-                    <CustomHeader parent={this.props} />
+                    {/*<CustomHeader parent={this.props} />*/}
 
                     <View style={styles.contentbar}>
                         <View style={styles.leftcontainer}>
-                            <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
+                            {/*<IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
                         </View>
-                        <Text style={styles.title}>
-                            Prenotazioni Effettuate
-                        </Text>
+                        <Text style={styles.title}>Ordini Effettuati</Text>
                         <View style={styles.rightcontainer}></View>
                     </View>
                 </View>
@@ -100,13 +97,15 @@ export default class OrdersPlaced extends Component{
                         renderItem={({item, index}) =>
                             <TouchableOpacity key={item.id} onPress={() => this.props.navigation.navigate('CheckItemsBought',
                                 {order_items: item[2]})}>
-
                             <Card style={styles.inputContainer}>
                                 <View style={styles.data}>
-                                    <Text style={styles.orderTitle} numberOfLines={0}>Codice prenotazione: {item[0]}</Text>
-                                    <View style={styles.textInline}>
-                                        <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>Data prenotazione: </Text>
-                                        <Text>{item[1]}</Text>
+                                   <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={2}>Codice prenotazione: </Text>
+                                   </View>
+                                    <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                    <View style={styles.textSecondLine}>
+                                        <Text style={{fontWeight: 'bold', fontSize: 18}}>Data prenotazione: </Text>
+                                        <Text style={{fontSize: 18}}>{item[1]}</Text>
                                     </View>
                                 </View>
                             </Card>
@@ -153,11 +152,13 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        marginVertical: 10
+        marginVertical: 10,
+        textAlign: 'center'
     },
     inputContainer: {
         minWidth: '96%',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 7
     },
     orderTitle: {
         fontSize: 18,
@@ -177,7 +178,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textInline: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+    },
+    textSecondLine: {
+        flexDirection: 'row',
+        marginTop:5
     }
 });
 

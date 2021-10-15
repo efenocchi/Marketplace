@@ -103,15 +103,13 @@ export default class FeedbackUser extends Component{
             <View style={styles.screen}>
 
                 <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
-                    <CustomHeader parent={this.props} />
+                    {/*<CustomHeader parent={this.props} />*/}
 
                     <View style={styles.contentbar}>
                         <View style={styles.leftcontainer}>
-                            <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
+                            {/*<IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
                         </View>
-                        <Text style={styles.title}>
-                            Recensioni Ricevute
-                        </Text>
+                        <Text style={styles.title}>Recensioni Ricevute</Text>
                         <View style={styles.rightcontainer}></View>
                     </View>
                 </View>
@@ -126,15 +124,25 @@ export default class FeedbackUser extends Component{
                                 {order_items: item[8], name_shop: item[6]})}>
                             <Card style={styles.inputContainer}>
                                 <View style={styles.data}>
-                                    <Text style={styles.feedbackTitle} numberOfLines={0}>Titolo: {item[5]}</Text>
-                                    <Text style={styles.feedbackTitle} numberOfLines={1}>Descrizione: {item[0]}</Text>
-                                    <Text style={styles.feedbackTitle} numberOfLines={2}>Ricevuta da: {item[6]}</Text>
-                                    <Text style={styles.feedbackTitle} numberOfLines={3}>Per l'ordine: {item[7]}</Text>
+                                   <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}}numberOfLines={1}>Titolo: </Text>
+                                        <Text style={{fontSize: 18}}>{item[5]}</Text>
+                                    </View>
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={2}>Descrizione: </Text>
+                                        <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                    </View>
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={2}>Ricevuta da: </Text>
+                                        <Text style={{fontSize: 18}}>{item[6]}</Text>
+                                    </View>
+                                    <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={3}>Ordine con Ref.Code: </Text>
+                                    <Text style={{fontSize: 18}}>{item[7]}</Text>
 
                                     <Text style={styles.feedbackCustomer}></Text>
                                     <View style={styles.textInline}>
-                                        <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>Valutazione: </Text>
-                                        <Text>{item[3]}</Text>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}} >Valutazione: </Text>
+                                        <Text style={{fontSize: 18}}>{item[3]}</Text>
                                     </View>
                                 </View>
                             </Card>
@@ -180,7 +188,8 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         minWidth: '96%',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 7
     },
     feedbackTitle: {
         fontSize: 18,
