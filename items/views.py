@@ -236,6 +236,18 @@ def show_shop(request, username_shop):
     """
     Mostriamo tutti gli oggetti di un negozio e diamo la possibilità a un utente di lasciare una recensione
     """
+    order_item = OrderItem.objects.filter(user=request.user)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+    else:
+        order = 0
+
     user = User.objects.get(username=username_shop)
     print(username_shop)
     print("username_shop")
@@ -256,7 +268,8 @@ def show_shop(request, username_shop):
         'all_items': item_shop,
         'text': str(text),
         'is_reviewed': is_reviewed,
-        'shop_user': shop_user
+        'shop_user': shop_user,
+        "all_items_order": order
     }
 
     return render(request, 'items/show_shop.html', context)
@@ -381,7 +394,7 @@ def delete_item(request, item_selected_id):
 
 def allowed_to_buy(user):
     customer = GeneralUser.objects.get(user=user)
-    return customer.data_fine_blocco < datetime.date.today()
+    return customer.data_fine_blocco <= datetime.date.today()
 
 
 @login_required(login_url='/users/login')
@@ -508,7 +521,7 @@ def go_to_cart(request):
     print("go_to_cart-order:")
     print(order)
     general_user = GeneralUser.objects.get(user=request.user)
-    allowed_to_buy = general_user.data_fine_blocco < datetime.date.today()
+    allowed_to_buy = general_user.data_fine_blocco <= datetime.date.today()
     print("può fare acquisti?", allowed_to_buy)
 
     context = {
@@ -603,14 +616,15 @@ def remove_entire_item_from_cart(request, item_selected_id):
         else:
             messages.info(request, "This item was not in your cart")
 
-            context = {"all_items": order, 'user': request.user, 'order_qs': order_item}
+            context = {"all_items": order, 'user': request.user}
             print(context)
 
             return render(request, 'items/add_to_cart.html', context)
     else:
-        messages.info(request, "You do not have an active order")
+        order = 0
 
-        context = {"all_items": order, 'user': request.user, 'order_qs': order_item}
+        messages.info(request, "You do not have an active order")
+        context = {"all_items": order, 'user': request.user}
         print(context)
 
         return render(request, 'items/add_to_cart.html', context)
@@ -846,6 +860,17 @@ def show_reviews_shop(request, shop_selected_id):
     """
     Mostra tutte le recensioni del negozio
     """
+    order_item = OrderItem.objects.filter(user=request.user)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+    else:
+        order = 0
 
     shop = GeneralUser.objects.filter(id=shop_selected_id).first()
     reviews = ReviewShop.objects.filter(receiver=shop.user)
@@ -853,7 +878,8 @@ def show_reviews_shop(request, shop_selected_id):
     print(reviews)
     context = {
         'shop': shop,
-        'all_reviews': reviews
+        'all_reviews': reviews,
+        "all_items": order
     }
 
     return render(request, 'items/show_reviews_shop.html', context)

@@ -113,17 +113,15 @@ class Checkout extends Component {
                     text={'Visualizza Ordini'}
                     onPress={() => {
                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
-                    this.props.navigation.navigate('ViewOrders');}}
+                    this.props.navigation.navigate('OrdersPlaced');}}
                 />
                 <Button
                     text={'Home'}
                     onPress={() => {
                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
-                    this.props.navigation.navigate('HomeStackNavigator');}}
+                    this.props.navigation.navigate('ItemList');}}
                 />
                 </View>
-
-
         );
 
     }

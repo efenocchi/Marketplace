@@ -28,24 +28,69 @@
 </head>
 <body>
 
+    {% block menu_id %}
+    <li><a href="{% url 'users:home_for_user' %}">Home</a></li>
+    {% endblock %}
 
-{% block show_shop_reviews %}
+    {% block cart %}
+    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">
+            {% if all_items.ordered != 1 %}
+                {% if all_items == 0 %}0{% endif %}
+                {% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}
+            {% endif %}
+            {% if all_items.ordered == 1 %}0{% endif %}
+        </span>
+        <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
+    </a>
+    {% endblock %}
 
+    {% block show_shop_reviews %}
+    <div class="modify_user_page" style="height: 450px;">
+      <div class="container">
         <section class="text-center mb-4">
             <div class="row wow fadeIn">
-        {% for review in all_reviews %}
-               <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card" style="width: 18rem;">
-
-                        <h5 class="card-title">{{ shop }}</h5>
+            {% for review in all_reviews %}
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card" style="width: 18rem; text-align:left">
+                        <h5 class="card-title" style="text-align:center">{{ shop }}</h5>
 <!--                        <img src="{{ item.image.url }}" class="card-img-top" alt="...">-->
                         <div class="card-body">
-                            <h5 class="card-title">{{ review.title_of_comment }}</h5>
-                            <h5 class="card-title">{{ review.description }}</h5>
-                            <h5 class="card-title">{{ review.rating }}</h5>
-
+                            <h5 class="card-title">Titolo: {{ review.title_of_comment }}</h5>
+                            <h5 class="card-title">Descrizione: {{ review.description }}</h5>
+                            <h5 class="card-title">Voto: ({{ review.rating }})
+                            {% if review.rating == 1 %}
+                                <i class="fa fa-star" style="color:red"></i>
+                            {% endif %}
+                            {% if review.rating == 2 %}
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                            {% endif %}
+                            {% if review.rating == 3 %}
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                            {% endif %}
+                            {% if review.rating == 4 %}
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                            {% endif %}
+                            {% if review.rating == 5 %}
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                                <i class="fa fa-star" style="color:red"></i>
+                            {% endif %}
+                            </h5>
                         </div>
                     </div>
+                </div>
+                </div>
+                </section>
+                </div>
                 </div>
             {% endfor %}
         {% endblock %}

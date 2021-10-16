@@ -34,7 +34,7 @@
 
     {% block cart %}
     <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
-        <span class="badge bg-danger bg-secondary">{% if all_items_cart == 0 %}0{% endif %}{% if all_items_cart.get_final_quantity >= 0%}{{ all_items_cart.get_final_quantity}}{% endif %}</span>
+        <span class="badge bg-danger bg-secondary">{% if all_items_order == 0 %}0{% endif %}{% if all_items_order.get_final_quantity >= 0%}{{ all_items_order.get_final_quantity}}{% endif %}</span>
         <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
     </a>
     {% endblock %}
@@ -59,7 +59,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
                         {% if item.quantity > 0 %}
-                            <img src="{{ item.image.url }}" class="card-img-top" alt="...">
+                            <img id="img_no_gray" src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% else %}
                             <img id="gray_no_quantity" src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% endif %}
@@ -79,14 +79,14 @@
                                 <span>Negozio: {{ item.user.username }}</span>
                             </p>
                             <p class="card-text">{{ item.category }}</p>
-                                {% if item.quantity <= 0 %}
-                                <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
-                                {% endif %}
-                                {% if item.quantity > 0 %}
-                                <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn">Acquista</a>
-                                {% endif %}
+{#                                {% if item.quantity <= 0 %}#}
+{#                                <h5>{{ item.quantity }}</h5>#}
+{#                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>#}
+{#                                {% endif %}#}
+{#                                {% if item.quantity > 0 %}#}
+{#                                <h5>{{ item.quantity }}</h5>#}
+{#                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn">Acquista</a>#}
+{#                                {% endif %}#}
                         </div>
                     </div>
                 </div>

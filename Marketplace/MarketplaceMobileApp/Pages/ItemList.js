@@ -216,21 +216,36 @@ class ItemList extends Component {
                                  <TouchableOpacity  style={styles.pressable} key={item.id} onPress={() =>
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
-                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[6]})
+                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[6], shop: item[7]})
                                     }>
                                     {item[6] === 0 ?    //se la quantity è 0 -> item finito
                                     <Image style={styles.imagegray} source={{uri: item[5]}} />
                                     :
                                     <Image style={styles.image} source={{uri: item[5]}} />}
                                     <View style={styles.rightContainer}>
-                                        <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
-                                        <Text style={styles.title} numberOfLines={1}>Quantity: {item[6]}</Text>
-                                        <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
-                                        <Text style={styles.description} numberOfLines={3}>Descrizione: {item[2]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[7]}</Text>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Id: </Text>
+                                            <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Quantità: </Text>
+                                            <Text style={{fontSize: 18}}>{item[6]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Nome: </Text>
+                                            <Text style={{fontSize: 18}}>{item[1]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}  maxLength = {8}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}}>Descrizione: </Text>
+                                            <Text style={{fontSize: 18, paddingRight: 120}} maxLength = {8}>{item[2]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Negozio: </Text>
+                                            <Text style={{fontSize: 18}}>{item[7]}</Text>
+                                        </View>
                                         <Text style={styles.discountprice}>
                                             {item[4] !== null && (
-                                        <Text style={styles.discountprice} numberOfLines={2}>Prezzo scontato: {item[4]}€
+                                        <Text style={styles.discountprice} numberOfLines={2}>Prezzo: { item[4]}€
 
                                             <Text style={styles.price}>{item[3]}€</Text>
 
@@ -239,7 +254,6 @@ class ItemList extends Component {
                                         {item[4] === null && (
                                             <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
                                         )}
-
                                         </Text>
                                         {item[6] === 0 &&    //se la quantity è 0 -> item finito
                                             <View style={styles.textInputView}>
@@ -287,7 +301,7 @@ class ItemList extends Component {
 const styles = StyleSheet.create({
   page: {
     marginTop: 10,
-    backgroundColor: 'blue',
+    backgroundColor: '#dddada',
   },
 
   flatlist: {
@@ -295,19 +309,22 @@ const styles = StyleSheet.create({
     marginTop:10,
     marginBottom:50,
     marginLeft: 15,
-    backgroundColor: 'green',
+    backgroundColor: '#dddada',
   },
 buttonView: {
         width: width/2,
         paddingRight: 5,
         paddingLeft: 5,
         marginLeft: -width/6,
+        marginTop: 10
     },
-textInputView: {
+
+    textInputView: {
         width: width/2,
         paddingRight: 5,
         paddingLeft: 5,
-        marginBottom: -10,
+        marginBottom: -20,
+        marginTop: 10,
         marginLeft: -width/6,
     },
   card: {
@@ -373,6 +390,7 @@ textInputView: {
     alignItems: 'center',
     marginVertical: 5,
   },
+
   button_small: {
     fontSize: 16,
     backgroundColor: '#e47911',
@@ -385,7 +403,10 @@ textInputView: {
     borderColor: '#a15e1b',
 
   },
-
+    textInline: {
+        flexDirection: 'row',
+        marginRight: -10,
+    },
   star: {
     margin: 2,
   },

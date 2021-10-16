@@ -7,7 +7,7 @@ import {
     Text,
     View,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity, TextInput, TouchableHighlight
 } from "react-native";
 import CardItem from "../components/CardItem";
 import CustomHeader from "../components/Header";
@@ -29,7 +29,7 @@ export default class ShowShop extends Component {
         this.state ={
             isLoading1: true,
             isLoading2: true,
-
+            email: ""
         }
     }
 
@@ -92,6 +92,69 @@ export default class ShowShop extends Component {
             });
     }
 
+
+    setPassword(item_selected_id){
+        console.log("bottone spinto")
+        console.log(this.state.email)
+
+        fetch('http://'+ global.ip +'/api/insert_email/' + item_selected_id + '/',
+                {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + global.user_key,
+                },
+                body: JSON.stringify({
+                    email: this.state.email,
+                }),
+                })
+                .then(res => res.json())
+                .then((res) => {
+
+                    console.log("Inserimento email esito:")
+                    console.log(res)
+                    if(res["result"] === true) {
+                        console.warn('Email aggiunta con successo')
+                    }
+                    else{
+                        console.warn('Email già presente')
+                    }
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+    }
+
+
+
+    createWaitUser(item_selected_id){
+        console.log("bottone spinto")
+        console.log(this.state.email)
+
+        // fetch('http://'+ global.ip +'/api/insert_email/' + item_selected_id + '/',
+        fetch('http://'+ global.ip +'/api/create_waituser/',
+                {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Token ' + global.user_key,
+                },
+                body: JSON.stringify({
+                    email: this.state.email,
+                }),
+                })
+                .then(res => res.json())
+                .then((res) => {
+                    console.log(res)
+                    this.setPassword(item_selected_id)
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+    }
+
     render() {
 
         if(this.state.isLoading1 || this.state.isLoading2){
@@ -104,7 +167,7 @@ export default class ShowShop extends Component {
 
 
 
-        this.array_values = Array(this.state.all_items).fill().map(()=>Array(8).fill())
+        this.array_values = Array(this.state.all_items).fill().map(()=>Array(9).fill())
         for (var i in this.state.dataSource) {
             this.array_values[i][0] = this.state.dataSource[i]["id"]
             this.array_values[i][1] = this.state.dataSource[i]["name"]
@@ -114,6 +177,7 @@ export default class ShowShop extends Component {
             this.array_values[i][5] = this.state.dataSource[i]["image"]
             this.array_values[i][6] = this.state.dataSource[i]["user"]["username"]
             this.array_values[i][7] = this.state.dataSource[i]["user"]["id"]
+            this.array_values[i][8] = this.state.dataSource[i]["quantity"]
         }
         return(
 
@@ -137,16 +201,32 @@ export default class ShowShop extends Component {
                                 <TouchableOpacity style={styles.pressable} onPress={() => {
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
-                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4] })
+                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[8], shop: item[6]})
                                     ;}}>
                                     <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
-                                        <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
-                                        <Text style={styles.title} numberOfLines={2}>Nome: {item[1]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Descrizione: {item[2]}</Text>
-                                        <Text style={styles.description} numberOfLines={2}>Negozio: {item[6]}</Text>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Id: </Text>
+                                            <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Quantità: </Text>
+                                            <Text style={{fontSize: 18}}>{item[8]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Nome: </Text>
+                                            <Text style={{fontSize: 18}}>{item[1]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}  maxLength = {8}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}}>Descrizione: </Text>
+                                            <Text style={{fontSize: 18, paddingRight: 120}} maxLength = {8}>{item[2]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Negozio: </Text>
+                                            <Text style={{fontSize: 18}}>{item[6]}</Text>
+                                        </View>
                                         {item[4] !== null && (
-                                        <Text style={styles.discountprice} numberOfLines={2}>Prezzo scontato: {item[4]}€
+                                        <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[4]}€
 
                                             <Text style={styles.price}>{item[3]}€</Text>
 
@@ -155,6 +235,30 @@ export default class ShowShop extends Component {
                                         {item[4] === null && (
                                             <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
                                         )}
+
+                                        {item[8] === 0 &&    //se la quantity è 0 -> item finito
+                                            <View style={styles.textInputView}>
+                                                <View style={{flexDirection:'row', width: window.width, marginVertical: 10, padding:4, alignItems:'center', justifyContent:'center', borderWidth:1, borderColor:'#888', borderRadius:10}}>
+
+                                                    <View style={{flex:4}}>
+                                                          <TextInput editable maxLength={95}
+                                                            placeholder={"Inserisci la tua email"}
+                                                            placeholderTextColor={'red'}
+                                                            keyboardType = 'email-address'
+                                                            // ref={input => { this.txtName = input }}
+                                                            onChangeText={(value) => this.setState({email: value})}
+                                                            onSubmitEditing = {()=>{this.createWaitUser(item[0])}}
+                                                            />
+                                                    </View>
+
+                                                    <TouchableHighlight style={{alignItems:'center',justifyContent:'center'}} onPress = {()=>{this.createWaitUser(item[0])}} underlayColor = 'transparent'>
+                                                            <View>
+                                                              <Image source={ require('../assets/upload.png') } style={ { width: 20, height: 20 } } />
+                                                            </View>
+                                                    </TouchableHighlight>
+                                                </View>
+                                            </View>
+                                        }
                                     </View>
                                 </TouchableOpacity>
                             </Card>
@@ -166,6 +270,7 @@ export default class ShowShop extends Component {
 
     }
 }
+
 const styles = StyleSheet.create({
   page: {
     marginTop: 20,
@@ -189,7 +294,10 @@ const styles = StyleSheet.create({
     padding: -20,
     marginTop: 5,
   },
-
+    textInline: {
+        flexDirection: 'row',
+        marginRight: -10,
+    },
   pressable: {
       flexDirection: 'row',
       borderWidth: 1,
@@ -207,6 +315,14 @@ buttonView: {
         paddingRight: 5,
         paddingLeft: 5,
         marginLeft: width/4,
+    },
+        textInputView: {
+        width: width/2,
+        paddingRight: 5,
+        paddingLeft: 5,
+        marginBottom: -20,
+        marginTop: 10,
+        marginLeft: -width/6,
     },
   image: {
     flex: 2,
@@ -266,4 +382,3 @@ buttonView: {
     margin: 5,
   }
 })
-

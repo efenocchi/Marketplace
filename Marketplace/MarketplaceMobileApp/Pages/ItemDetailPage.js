@@ -14,6 +14,7 @@ class ItemDetailPage extends Component {
     description;
     price;
     discountprice;
+    shop;
     quantity;
     value;
 
@@ -32,6 +33,7 @@ class ItemDetailPage extends Component {
         this.description = this.props.route.params.description;
         this.price = this.props.route.params.price;
         this.discountprice = this.props.route.params.discountprice;
+        this.shop = this.props.route.params.shop;
         this.quantity = this.props.route.params.quantity;  /* quantity = quantità di quell'item disponibile */
         this.setState({
             isLoading: false,
@@ -87,7 +89,15 @@ class ItemDetailPage extends Component {
             <ScrollView style={styles.root}>
 
                 {/* Name */}
-                <Text style={styles.title}>{this.name}</Text>
+                <View style={styles.textInline}>
+                    <Text style={{fontSize: 18}}>{this.name}</Text>
+                </View>
+
+                {/* Negozio */}
+                <View style={styles.textInline}>
+                    <Text style={{fontWeight: 'bold', fontSize: 18}}>Negozio: </Text>
+                    <Text style={{fontSize: 18}}>{this.shop}</Text>
+                </View>
 
                 {/* Image Carousel */}
                 <ImageCarousel images={product.images}/>
@@ -101,13 +111,35 @@ class ItemDetailPage extends Component {
                 <Picker.Item label="Label2" value="Label2"/>
             </Picker>
             */}
-                <Text>Category</Text>
+                {/* Price + Discountprice */}
+                <Text style={styles.discountprice}>
+                    {this.discountprice !== null && (
+                <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {this.discountprice}€
 
-                {/* Price */}
-                <Text style={styles.price}>{this.price}
-                    {/* Discount Price */}
-                    <Text style={styles.discountprice}>{this.discountprice}</Text>
+                    <Text style={styles.price}>{this.price}€</Text>
+
                 </Text>
+                )}
+                {this.discountprice === null && (
+                    <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {this.price}€</Text>
+                )}
+                </Text>
+
+                {/* Quantity */}
+                <View style={styles.textInline}>
+                    <Text style={{fontWeight: 'bold', fontSize: 18}}>Quantità disponibile: </Text>
+                    {this.quantity === 0 ?
+                        <Text style={{fontSize: 18}}>{this.quantity} (Terminato)</Text>
+                        :
+                        <Text style={{fontSize: 18}}>{this.quantity}</Text>
+                    }
+                </View>
+
+                <View style={styles.textInline}>
+                    <Text style={{fontWeight: 'bold', fontSize: 18}}>Quantità da aggiungere: </Text>
+                </View>
+
+                {/* Inserire Quantità */}
                 <NumericInput editable
                     value={this.state.value}
                     onChange={value => this.setState({value})}
@@ -124,20 +156,24 @@ class ItemDetailPage extends Component {
                     iconStyle={{color: 'white'}}
                     rightButtonBackgroundColor='gray'
                     leftButtonBackgroundColor='gray'/>
+
                 {/* Description */}
-                <Text style={styles.description} numberOfLines={10}>{this.description}</Text>
-                <Text style={styles.description} numberOfLines={10}>Quantity:{this.quantity}</Text>
+                <View style={styles.textInline}  maxLength = {8}>
+                    <Text style={{fontWeight: 'bold', fontSize: 18}}>Descrizione: </Text>
+                    <Text style={{fontSize: 18}}>{this.description}</Text>
+                </View>
 
                 {/* Button */}
                 {this.quantity === 0 ?
-                    <Button
-                        text={'Insert Your Mail'}
-                        onPress={() => {
-                            console.warn('Insert Your Mail')
-                            //this.add_to_cart();
-                            // this.props.navigation.navigate('RegistrationStackNavigator');
-                        }}
-                    />
+                    <Text></Text>
+                    // <Button
+                    //     text={'Insert Your Mail'}
+                    //     onPress={() => {
+                    //         console.warn('Insert Your Mail')
+                    //         //this.add_to_cart();
+                    //         // this.props.navigation.navigate('RegistrationStackNavigator');
+                    //     }}
+                    // />
                     :
                     <Button
                         text={'Add To Cart'}
@@ -193,17 +229,19 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
 
-    price: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
+  price: {
+    fontSize: 12,
+    fontWeight: 'normal',
+    textDecorationLine: 'line-through',
+  },
 
-    discountprice: {
-        fontSize: 14,
-        fontWeight: 'normal',
-        textDecorationLine: 'line-through',
+  discountprice: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+    textInline: {
+        marginTop: 10
     },
-
     description: {
         marginVertical: 10,
         lineHeight: 20,

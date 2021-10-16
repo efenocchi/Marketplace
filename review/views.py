@@ -170,6 +170,18 @@ def add_review_shop(request, shop_selected_id):
     :param shop_selected_id:
     :return:
     """
+    order_item = OrderItem.objects.filter(user=request.user)
+    order_qs = Order.objects.filter(
+        user=request.user,
+        ordered=False
+    )
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+    else:
+        order = 0
+
     review_form = ReviewShopForm(request.POST or None, request.FILES or None)
 
     shop_to_review = GeneralUser.objects.get(id=shop_selected_id)
@@ -181,11 +193,19 @@ def add_review_shop(request, shop_selected_id):
         review.description = review_form.cleaned_data['description']
         review.rating = review_form.cleaned_data['rating']
         review.save()
-        return HttpResponseRedirect(reverse('index'))
+
+        context = {
+            "shop_to_review": shop_to_review,
+            "review_form": review_form,
+            "all_items": order
+        }
+
+        return render(request, 'main/home_for_user.html', context)
 
     context = {
         "shop_to_review": shop_to_review,
         "review_form": review_form,
+        "all_items": order
     }
 
     return render(request, 'review/add_review_shop.html', context)

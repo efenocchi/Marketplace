@@ -140,11 +140,16 @@ class Cart extends Component {
         }
         return(
             <View style={styles.page}>
+
                 <Button
                 text={'Checkout'}
+
                 onPress={() => {
                      // this.fetchConfirmCheckout();
-                     this.props.navigation.navigate('Checkout');
+                    {
+                        this.state.infocheckout[1] > 0 &&
+                        this.props.navigation.navigate('Checkout');
+                    }
                 }}
                 />
                 {/*mostro il prezzo totale*/}
