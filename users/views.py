@@ -20,7 +20,6 @@ from . import forms
 import requests
 
 
-
 def index(request):
     return render(request, 'users/home.html')  # pagina sito con barra di ricerca
 

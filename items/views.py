@@ -400,6 +400,7 @@ def allowed_to_buy(user):
 @login_required(login_url='/users/login')
 @user_passes_test(allowed_to_buy)
 def checkout(request):
+
     #ORDER E' L'INSIEME DI ITEM CHE COMPONGONO L'ORDINE DELL'UTENTE
     order = Order.objects.get(user=request.user, ordered=False)
     print("CHECKOUT INIZIALE-order:")

@@ -198,8 +198,8 @@ class ShopAllItems(generics.ListAPIView):
 
     def get_queryset(self):
         id_shop = self.kwargs['id_shop']
-        # user = User.objects.get(username=id_shop)
-        shop = GeneralUser.objects.get(id=id_shop)
+        user = User.objects.get(username=id_shop)
+        shop = GeneralUser.objects.get(user=user)
         queryset = Item.objects.filter(user=shop.user)
         lista_query = list(queryset)
         print(lista_query)
@@ -273,7 +273,8 @@ def Checkout(request, pk):
     total_price = 0
     total_quantity = 0
     list_checkout = []
-    general_user = GeneralUser.objects.get(id=pk)
+    user = User.objects.get(id=pk)
+    general_user = GeneralUser.objects.get(user=user)
     queryset = OrderItem.objects.filter(user=general_user.user, ordered=False)
     print(queryset)
     for i in queryset:
@@ -299,7 +300,8 @@ def Checkout(request, pk):
 
 def ConfirmCheckout(request, pk):
     serializer_class = OrderSerializer
-    general_user = GeneralUser.objects.get(id=pk)
+    user = User.objects.get(id=pk)
+    general_user = GeneralUser.objects.get(user=user)
     list_checkout = []
     #ORDER E' L'INSIEME DI ITEM CHE COMPONGONO L'ORDINE DELL'UTENTE
     order = Order.objects.get(user=general_user.user, ordered=False)
@@ -809,7 +811,8 @@ class CartOrders(generics.ListAPIView):
 
     def get_queryset(self):
         id = self.kwargs['pk']
-        normal_user = GeneralUser.objects.get(id=id)
+        user = User.objects.get(id=id)
+        normal_user = GeneralUser.objects.get(user=user)
         queryset = OrderItem.objects.filter(user=normal_user.user, ordered=False)
         lista_query = list(queryset)
         print(lista_query)
@@ -825,7 +828,8 @@ class IdItemsFromOrderItems(generics.ListAPIView):
 
     def get_queryset(self):
         id = self.kwargs['pk']  #prendo id dell'utente di cui voglio sapere gli order items
-        normal_user = GeneralUser.objects.get(id=id)
+        user = User.objects.get(id=id)
+        normal_user = GeneralUser.objects.get(user=user)
         order_items = OrderItem.objects.filter(user=normal_user.user, ordered=False)  #prendo i suoi order_items
         order_items_id = []
         items = []
@@ -863,7 +867,8 @@ class SearchItem(generics.ListAPIView):
         ascending = True
         item_searched = Item.objects.filter(name__contains=text)
         print(item_searched)
-        general_user = GeneralUser.objects.get(user__id=id)
+        user = User.objects.get(id=id)
+        general_user = GeneralUser.objects.get(user=user)
 
         parameters = []
 
