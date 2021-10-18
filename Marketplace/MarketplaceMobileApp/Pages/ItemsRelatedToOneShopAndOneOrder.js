@@ -47,10 +47,11 @@ export default class ItemsRelatedToOneShopAndOneOrder extends Component{
 
                this.setState({
                    dataSourceOrderItems: responseJson.results,
-
+                    number_order_items : responseJson.count,
                    isLoading1: false
                }, function () {
 
+                    console.log("order_items_ref_code")
                     console.log(responseJson.results)
                });
            })
@@ -95,8 +96,12 @@ export default class ItemsRelatedToOneShopAndOneOrder extends Component{
 
            this.array_values = Array(this.state.number_items).fill().map(() => Array(11).fill())
            for (var i in this.state.dataSourceItems) {
-               this.array_values[i][0] = this.state.dataSourceOrderItems[i]["quantity"] // quantità acquistata
-               this.array_values[i][1] = this.state.dataSourceOrderItems[i]["review_item_done"]  // dice se l'oggetto è stato recensito da questo utente relativo a questo ordine
+
+               // dato che ci sono tanti orderitem quanti item ma in questa funzione vengono scremati solo gli item
+               // relativi alla recensione di un negozio quindi di fatto acquistati presso un negozio
+               // devo tenere solo gli order item di un negozio
+               console.log("i")
+               console.log(i)
                this.array_values[i][2] = this.state.dataSourceItems[i]["name"]  // nome del prodotto
                this.array_values[i][3] = this.state.dataSourceItems[i]["user"]["username"]  // negozio che lo vende
                this.array_values[i][4] = this.state.dataSourceItems[i]["category"]  // categoria del prodotto
@@ -104,11 +109,26 @@ export default class ItemsRelatedToOneShopAndOneOrder extends Component{
                this.array_values[i][6] = this.state.dataSourceItems[i]["price"]
                this.array_values[i][7] = this.state.dataSourceItems[i]["discount_price"]
                this.array_values[i][8] = this.state.dataSourceItems[i]["image"] // Immagine dell'oggetto
-               this.array_values[i][9] = this.state.dataSourceOrderItems[i]["id"] // id order items, mi serve nella prossima pagina
+
                this.array_values[i][10] = this.state.dataSourceItems[i]["id"] // id item to review
            }
 
-           console.log("Stampo il primo")
+            // collego le informazioni degli order item con le informazioni relative all'item, essendo in fil
+            // mi basta scorrere gli order item finchè non c'è il match con un item e in quel caso incrementare
+            // lo scorrimento della lista in entrambi
+
+            var j = 0;
+            for (var i in this.state.dataSourceOrderItems) {
+                // se non sto eccedendo la quantità dell'array contenente le informazioni degli item
+                if(j < this.state.number_items && this.state.dataSourceOrderItems[i]["item"] === this.state.dataSourceItems[j]["id"]) {
+                    this.array_values[j][0] = this.state.dataSourceOrderItems[i]["quantity"] // quantità acquistata
+                    this.array_values[j][1] = this.state.dataSourceOrderItems[i]["review_item_done"]  // dice se l'oggetto è stato recensito da questo utente relativo a questo ordine
+                    this.array_values[j][9] = this.state.dataSourceOrderItems[i]["id"] // id order items, mi serve nella prossima pagina
+                    j = j + 1;
+                }
+            }
+
+           console.log("Stampo l'array")
            console.log(this.array_values)
 
            return (

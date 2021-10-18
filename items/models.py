@@ -37,7 +37,7 @@ class Item(models.Model):
     description = models.TextField()
     quantity = models.IntegerField(default=1)
     image = models.ImageField(null=True, default='', blank=True)
-    waiting_customer = models.ManyToManyField(WaitUser, null=True)
+    waiting_customer = models.ManyToManyField(WaitUser, default='', blank=True)
 
     def item_pic_or_default(self, default_path="/default_images/item_default.jpg"):
         if self.image:

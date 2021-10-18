@@ -5,6 +5,7 @@ import UserInfoModify from "./UserInfoModify"
 import OrdersReceived from "./OrdersReceived"
 import CheckReservationMade from "./CheckReservationMade"
 import LeaveOrReadReviewToCustomer from "./LeaveOrReadReviewToCustomer"
+import FeedbackShop from "./FeedbackShop"
 import AddItem from "./AddItem"
 import Button from "../components/Button";
 import ModifyItem from "./ModifyItem";
@@ -25,7 +26,7 @@ export class ChooseShopInfoList extends Component{
             <View>
                 <Button
                 text="Valutazione negozio" //posso visualizzare le recensioni che mi hanno lasciato
-                // onPress={() => this.props.navigation.navigate('FeedbackShop')}
+                onPress={() => this.props.navigation.navigate('FeedbackShop')}
                 />
             </View>
             <View>
@@ -54,7 +55,7 @@ export default class ChooseUserInfo extends Component {
                 <Stack.Screen name="CheckReservationMade" component={CheckReservationMade} screenOptions={{headerShown: false}}/>
                 <Stack.Screen name="LeaveOrReadReviewToCustomer" component={LeaveOrReadReviewToCustomer} screenOptions={{headerShown: false}}/>
 
-                {/*<Stack.Screen name="FeedbackShop" component={FeedbackShop}/>*/}
+                <Stack.Screen name="FeedbackShop" component={FeedbackShop}/>
 
                 {/*<Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>*/}
 

@@ -141,13 +141,13 @@ $( '#RegFormShop' ).validate({
         },
         'password':{
             required: true,
-            minlength: 4,
+            minlength: 8,
             maxlength: 20,
             specialcharacter: true
         },
         'conferma_password':{
             equalTo: '#password',
-            minlength: 4,
+            minlength: 8,
             maxlength: 20
         },
 
@@ -194,12 +194,12 @@ $( '#RegFormShop' ).validate({
             },
         'password':{
             required: "Il campo password è obbligatorio",
-            minlength: "Inserisci una password di almeno 4 caratteri",
+            minlength: "Inserisci una password di almeno 8 caratteri",
             maxlength: "Limite di 20 caratteri superato"
             },
         'conferma_password':{
             equalTo: "Le due password non coincidono",
-            minlength: "Inserisci una password di almeno 4 caratteri",
+            minlength: "Inserisci una password di almeno 8 caratteri",
             maxlength: "Limite di 20 caratteri superato"
             },
         'indirizzo': {

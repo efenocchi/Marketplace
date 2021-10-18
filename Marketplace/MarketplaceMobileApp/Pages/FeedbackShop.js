@@ -17,8 +17,7 @@ const {width, height} = Dimensions.get('window');
 import Card from '../components/Card';
 
 export default class FeedbackShop extends Component{
-    // In questa funzione verranno ritornati i feedback che un utente loggato ha ricevuto
-    // Non è la funzione che ritorna le recensioni dei prodotti da acquistare
+    // In questa funzione verranno ritornati i feedback che un negozio loggato ha ricevuto
 
     array_values;
     constructor(props){
@@ -44,9 +43,6 @@ export default class FeedbackShop extends Component{
         );
     }
 
-   // componentWillUnmount() {
-   //     this.willFocusSubscription.remove();
-   // }
 
 
    fetchRecensioni() {
@@ -66,7 +62,7 @@ export default class FeedbackShop extends Component{
            })
            .catch((error) => {
                console.error(error)
-               // this.fetchRecensioni();
+               console.log(error)
            });
    }
 
@@ -100,15 +96,11 @@ export default class FeedbackShop extends Component{
             <View style={styles.screen}>
 
                 <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
-                    <CustomHeader parent={this.props} />
 
                     <View style={styles.contentbar}>
                         <View style={styles.leftcontainer}>
-                            <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />
-                        </View>
-                        <Text style={styles.title}>
-                            Recensioni Ricevute
-                        </Text>
+                            </View>
+                        <Text style={styles.title}>Recensioni Ricevute</Text>
                         <View style={styles.rightcontainer}></View>
                     </View>
                 </View>
@@ -121,11 +113,21 @@ export default class FeedbackShop extends Component{
                         renderItem={({item, index}) =>
                             <Card style={styles.inputContainer}>
                                 <View style={styles.data}>
-                                    <Text style={styles.feedbackTitle} numberOfLines={0}>Titolo: {item[5]}</Text>
-                                    <Text style={styles.feedbackTitle} numberOfLines={1}>Descrizione: {item[0]}</Text>
-                                    <Text style={styles.feedbackTitle} numberOfLines={2}>Ricevuta da: {item[6]}</Text>
 
-                                    <Text style={styles.feedbackCustomer}></Text>
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold'}} numberOfLines={1}>Titolo:  </Text>
+                                    </View>
+                                    <Text>{item[5]}</Text>
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold'}} numberOfLines={2}>Descrizione:  </Text>
+                                    </View>
+                                    <Text>{item[0]}</Text>
+                                    <View style={styles.textInline}>
+                                        <Text style={{fontWeight: 'bold'}} numberOfLines={1}>Ricevuta da:  </Text>
+                                    </View>
+                                    <Text>{item[6]}</Text>
+
+                                    <Text style={styles.feedbackCustomer}/>
                                     <View style={styles.textInline}>
                                         <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>Valutazione: </Text>
                                         <Text>{item[3]}</Text>

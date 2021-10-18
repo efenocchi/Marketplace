@@ -36,7 +36,7 @@ export default class Login extends Component {
             // this.props.navigation.reset({
             // routes: [{ name: "UserStackNavigator" }]
             // });
-            if(global.login_negozio == true) {
+            if(global.login_negozio === true) {
                 this.props.navigation.navigate('ShopStackNavigator');
             }
             else {
@@ -79,7 +79,7 @@ export default class Login extends Component {
                     this.fetchUserId();
                     this.changeScreen();
 
-                    Toast.show("Bentornato, {global.user_id}", {
+                    Toast.show("Bentornato, " + global.username, {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
                         shadow: true,

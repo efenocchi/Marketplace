@@ -28,7 +28,6 @@ def index(request):
 
 def login_all(request):
     """
-    [modifica] aggiungere parte Ajax!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     Permette agli utenti di effettuare il login.
 
     :param request: request utente.

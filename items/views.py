@@ -12,7 +12,6 @@ from Marketplace import settings
 from review.forms import ReviewShopForm
 from review.models import ReviewItem, ReviewShop
 from .models import Item, OrderItem, Order  # importo il modello così che possa utilizzalo, andrà a
-# pescare gli Item dal db e conservarli in una variabile
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import Http404, HttpResponse
 from django.shortcuts import render
@@ -142,7 +141,7 @@ def insert_item(request):
         context = {
             "form": form,
         }
-        return render(request, 'items/insert_item.html', context)
+        return render(request, 'main/home_for_shop.html', context)
 
     context = {
         "form": form,
@@ -218,8 +217,9 @@ def item_page(request):
         # se non sono un utente ordino gli oggetti e ritorno gli oggetti ordinati per distanza
         indici = show_distance_shops(request, all_items)
         items_ordered = list()
-        for id_item in indici:
-            items_ordered.append(all_items.get(id=id_item))
+        if indici is not None:
+            for id_item in indici:
+                items_ordered.append(all_items.get(id=id_item))
 
         context['all_items'] = items_ordered
         return render(request, 'items/item_page.html', context)

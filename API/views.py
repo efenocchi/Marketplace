@@ -88,7 +88,7 @@ class ReturnReviewShop(generics.ListAPIView):
         user = User.objects.get(username=username_shop)
         shop = GeneralUser.objects.get(user=user)
         review = ReviewShop.objects.filter(receiver=shop.user)
-
+        print(review)
         return list(review)
 
 
@@ -198,7 +198,7 @@ class ShopAllItems(generics.ListAPIView):
 
     def get_queryset(self):
         id_shop = self.kwargs['id_shop']
-        user = User.objects.get(username=id_shop)
+        user = User.objects.get(id=id_shop)
         shop = GeneralUser.objects.get(user=user)
         queryset = Item.objects.filter(user=shop.user)
         lista_query = list(queryset)
@@ -731,7 +731,7 @@ class GetSingleReviewCustomer(generics.RetrieveUpdateAPIView):
         except Exception:
             raise Exception("Ordine non valido")
 
-        return ReviewCustomer.objects.get(writer=self.request.user, receiver=user, order=order)
+        return ReviewCustomer.objects.filter(writer=self.request.user, receiver=user, order=order).first()
 
 
 # class UploadItem(generics.CreateAPIView):

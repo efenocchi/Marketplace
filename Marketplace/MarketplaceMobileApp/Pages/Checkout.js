@@ -110,13 +110,7 @@ class Checkout extends Component {
                 <Text>Ref.Code: {this.state.data[0]}</Text>
                 <Text>Number Order: {this.state.data[1]}</Text>
                 <Button
-                    text={'Visualizza Ordini'}
-                    onPress={() => {
-                    //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
-                    this.props.navigation.navigate('OrdersPlaced');}}
-                />
-                <Button
-                    text={'Home'}
+                    text={'Acquista ancora'}
                     onPress={() => {
                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                     this.props.navigation.navigate('ItemList');}}

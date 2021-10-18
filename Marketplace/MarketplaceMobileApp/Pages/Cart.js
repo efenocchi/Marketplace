@@ -185,7 +185,13 @@ class Cart extends Component {
                                             onPress={() => {console.warn('Delete Item')
                                                 this.deleteItem(item[7]);
                                                 console.log(item[7]);
-                                                //window.location.reload();
+                                                this.state.isLoading1 = true
+                                                this.state.isLoading2 = true
+                                                this.state.isLoading3 = true
+
+                                                this.fetchCheckout(),
+                                               this.fetchCartOrders(),
+                                               this.fetchItemsFromOrderItems()
                                             }}
                                         />
                                     </View>

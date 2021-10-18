@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.utils import timezone
 
@@ -7,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-from items.models import Item, Order, OrderItem
+from items.models import Item, Order, OrderItem, WhoHasReviewed
 from review.forms import ReviewItemForm, ReviewShopForm, ReviewCustomerForm
 from review.models import ReviewItem, ReviewShop, ReviewCustomer
 from users.models import GeneralUser
@@ -270,7 +271,9 @@ def add_review_customer(request, order_id, customer_id):
         review.description = review_form.cleaned_data['description']
         review.rating = review_form.cleaned_data['rating']
         review.save()
-        order.review_single_customer_done = True
+        whohasreviewed = WhoHasReviewed.objects.get_or_create(writer=request.user)[0]
+        order.review_customer_done.add(whohasreviewed)
+        # order.review_single_customer_done = True
         order.save()
 
         # controllo se l'utente deve essere penalizzato
@@ -327,6 +330,7 @@ def show_order_done_by_customer(request):
                     list.append(single_order)
                     list.append(single_order_item)
                     dict.update({str(single_order.ref_code): list})
+
 
 
     # print(dict[stringa])

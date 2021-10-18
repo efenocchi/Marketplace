@@ -121,20 +121,18 @@ export default class OrdersReceived extends Component{
         return (
             <View style={styles.screen}>
                 <View style={{alignSelf: 'flex-start', width: '100%', alignItems: 'center'}}>
-                    {/*<CustomHeader parent={this.props} />*/}
 
                     <View style={styles.contentbar}>
                         <View style={styles.leftcontainer}>
-                            {/*<IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
                         </View>
                         <Text style={styles.title}>Oggetti Comprati</Text>
-                        <View style={styles.rightcontainer}></View>
+                        <View style={styles.rightcontainer}/>
                     </View>
                 </View>
                 <View style={styles.flatlistview}>
                     <FlatList
                         style={{flex: 1}}
-                        // data={[['ciao','ciao2','ciao3'],['risposta1','risposta2']]}
+
                         data={this.array_values}
 
                         renderItem={({item, index}) =>
