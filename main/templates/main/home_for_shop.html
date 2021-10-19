@@ -30,10 +30,13 @@
 
 <!----------------------------------------- SCRITTE INIZIALI ---------------------------------------->
     {% block menu_id %}
-        <li><a href="{% url 'items:insert_item' %}">Add item</a></li>
-        <li><a href="{% url 'users:modify_profile' %}">Shop Info</a></li>
+        <li> <a href="{% url 'users:modify_profile' %}">
+            <span class="badge bg-danger bg-secondary"></span>
+            <img src="{% static 'images/edit-profile-icon.jpg'%}" width="30px" height="30px">
+        </a></li>
+        <li><a href="{% url 'items:insert_item' %}">Aggiungi oggetto</a></li>
         <li><a href="{% url 'review:show_order_done_by_customer' %}">Recensioni Ordini</a></li>
-        <li><a href="{% url 'items:item_page' %}">Item Page Shop</a></li>
+        <li><a href="{% url 'items:item_page' %}">Oggetti Negozio</a></li>
     {% block logout %}
         <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
           <div class="modal-dialog modal-dialog-centered">
@@ -69,12 +72,12 @@
 
 <!----------------------------------------- MENU ---------------------------------------->
     {% block first_row %}
-    <div class="container text-center">
+    <div style="padding-left: 150px; margin-right: 0px; background: rgba(238,238,238,0.7);" class="row">
+        <div style="padding-left: 0px" class="container text-center">
         {% if user_profile is not None %}
-        <h3 id="title">Welcome Shop: {{ user_profile }}</h3>
+        <h3 id="title">Benvenuto: {{ user_profile }}</h3>
         {% endif %}
     </div>
-    <div class="row">
         <div class="col-2">
             <h1>Give Your Workout<br>A New Style!</h1>
             <p>Success isn't always about greatness. It's about

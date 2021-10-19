@@ -157,6 +157,16 @@ class CompleteUserData(serializers.ModelSerializer):
                 _('Errore: il telefono deve avere lunghezza fra 3 e 30 caratteri.'))
         return data
 
+    def validate_codice_postale(self, data):
+        # controllo telefono
+        if not re.match("^[0-9]+$", data):
+            raise serializers.ValidationError(
+                _('Errore: il codice_postale può contenere solo 5 numeri.'))
+        if not (5 <= len(data) <= 5):
+            raise serializers.ValidationError(
+                _('Errore: il codice postale deve avere lunghezza fra 5 e 5 caratteri.'))
+        return data
+
     def validate_foto_profilo(self, data):
         files = data
 
@@ -182,30 +192,18 @@ class CompleteUserData(serializers.ModelSerializer):
                 _('Errore: il campo descrizione deve avere lunghezza fra 1 e 245 caratteri.'))
         return data
 
-    def validate_eta(self, data):
-        # controllo eta
-        if not re.match("^[0-9]+$", str(data)):
-            raise serializers.ValidationError(_('Errore: l\'età può contenere solo numeri.'))
-        if not (0 <= int(data) <= 100):
-            raise serializers.ValidationError(_('Errore: l\'età deve essere compresa fra 0 e 100.'))
-        return data
 
     def update(self, instance, validated_data):
 
         dati_utente = validated_data.pop('user')
         utente_richiedente = GeneralUser.objects.get(user=instance.user)
-        # username, first_name, last_name, email
         instance.user.username = dati_utente['username']
         instance.user.set_password(dati_utente['password'])
-        # instance.user.first_name = dati_utente['first_name']
-        # instance.user.last_name = dati_utente['last_name']
-        # instance.user.email = dati_utente['email']
-
         instance.indirizzo = validated_data['indirizzo']
         instance.citta = validated_data['citta']
         instance.regione = validated_data['regione']
         instance.provincia = validated_data['provincia']
-        # instance.descrizione = validated_data['descrizione']
+        instance.codice_postale = validated_data['codice_postale']
 
         if not utente_richiedente.login_negozio:
             instance.login_negozio = False

@@ -65,9 +65,9 @@ class Cart extends Component {
             .then((responseJson) => {
 
             this.setState({
-                isLoading1: false,
                 dataSourceOrderItems: responseJson.results,
-                all_order_items: responseJson.count
+                all_order_items: responseJson.count,
+                isLoading1: false
             }, function(){
                 console.log("Entra 1")
                 console.log(responseJson.results)
@@ -106,8 +106,8 @@ class Cart extends Component {
            .then((responseJson) => {
 
                this.setState({
-                   isLoading3: false,
                    infocheckout: responseJson.results,
+                   isLoading3: false,
                }, function () {
 
                     console.log(responseJson.results)
@@ -128,34 +128,46 @@ class Cart extends Component {
        }
 
         this.array_values = Array(this.state.all_order_items).fill().map(()=>Array(8).fill())
-        for (var i in this.state.dataSourceOrderItems) {
-            this.array_values[i][0] = this.state.dataSourceOrderItems[i]["quantity"]
-            this.array_values[i][1] = this.state.dataSourceItems[i]["name"]
-            this.array_values[i][2] = this.state.dataSourceItems[i]["description"]
-            this.array_values[i][3] = this.state.dataSourceItems[i]["price"]
-            this.array_values[i][4] = this.state.dataSourceItems[i]["discount_price"]
-            this.array_values[i][5] = this.state.dataSourceItems[i]["image"]
-            this.array_values[i][6] = this.state.dataSourceItems[i]["category"]
-            this.array_values[i][7] = this.state.dataSourceItems[i]["id"]
+        if(this.state.all_order_items > 0) {
+            for (var i in this.state.dataSourceOrderItems) {
+                this.array_values[i][0] = this.state.dataSourceOrderItems[i]["quantity"]
+                this.array_values[i][1] = this.state.dataSourceItems[i]["name"]
+                this.array_values[i][2] = this.state.dataSourceItems[i]["description"]
+                this.array_values[i][3] = this.state.dataSourceItems[i]["price"]
+                this.array_values[i][4] = this.state.dataSourceItems[i]["discount_price"]
+                this.array_values[i][5] = this.state.dataSourceItems[i]["image"]
+                this.array_values[i][6] = this.state.dataSourceItems[i]["category"]
+                this.array_values[i][7] = this.state.dataSourceItems[i]["id"]
+            }
         }
         return(
             <View style={styles.page}>
-
-                <Button
-                text={'Checkout'}
-
-                onPress={() => {
-                     // this.fetchConfirmCheckout();
-                    {
-                        this.state.infocheckout[1] > 0 &&
-                        this.props.navigation.navigate('Checkout');
-                    }
-                }}
-                />
-                {/*mostro il prezzo totale*/}
-                <Text>Import Totale: {this.state.infocheckout[0]}</Text>
-                {/*mostro la quantità totale*/}
-                <Text>Quantità: {this.state.infocheckout[1]}</Text>
+                    <Card style={styles.viewcheckout}>
+                        {/*mostro il prezzo totale*/}
+                        <View style={styles.textInline}>
+                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Import totale: </Text>
+                            <Text style={{fontSize: 18}}>{this.state.infocheckout[0]}€</Text>
+                        </View>
+                        {/*mostro la quantità totale*/}
+                        <View style={styles.textInline}>
+                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Quantità totale: </Text>
+                            <Text style={{fontSize: 18}}>{this.state.infocheckout[1]}</Text>
+                        </View>
+                        <View style={styles.buttonView}>
+                            <Button
+                            text={'Checkout'}
+                            onPress={() => {
+                                 // this.fetchConfirmCheckout();
+                                {
+                                    this.state.infocheckout[1] > 0 &&
+                                    this.props.navigation.navigate('Checkout');
+                                }
+                            }}
+                            />
+                        </View>
+                    </Card>
+                 <View style={{borderBottomColor: 'black', borderBottomWidth: 1, marginTop: 4, marginBottom: 4}}/>
+                 <Text style={{fontWeight: 'bold', fontSize: 18, marginLeft: 120}} numberOfLines={1}>Oggetti nel carrello</Text>
                     <FlatList style={styles.flatlist}
                         data={this.array_values}
                         renderItem={({item, index}) =>
@@ -165,9 +177,18 @@ class Cart extends Component {
                                     this.props.navigation.navigate('ItemDetailPage');}}>
                                     <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
-                                        <Text style={styles.title} numberOfLines={1}>Quantity: {item[0]}</Text>
-                                        <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
-                                        <Text style={styles.description} numberOfLines={3}>Descrizione: {item[2]}</Text>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Quantità: </Text>
+                                            <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                        </View>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Nome: </Text>
+                                            <Text style={{fontSize: 18}}>{item[1]}</Text>
+                                       </View>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Descrizione: </Text>
+                                            <Text style={{fontSize: 18}}>{item[2]}</Text>
+                                       </View>
                                         <Text style={styles.discountprice}>
                                           {item[4] !== null && (
                                             <Text style={styles.discountprice} numberOfLines={2}>Prezzo scontato: {item[4]}€
@@ -178,7 +199,7 @@ class Cart extends Component {
                                         )}
                                         {item[4] === null && (
                                             <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
-                                        )}  
+                                        )}
                                         </Text>
                                         <Button
                                             text={'Delete Item'}
@@ -207,15 +228,15 @@ class Cart extends Component {
 }
 const styles = StyleSheet.create({
   page: {
-    marginTop: 10,
-    backgroundColor: 'blue',
+    paddingTop: 10,
+    // backgroundColor: '#dedede',
 
   },
 
   flatlist: {
     padding: -60,
     marginLeft: 15,
-    backgroundColor: 'green',
+    backgroundColor: '#dedede',
   },
 
   card: {
@@ -272,7 +293,30 @@ const styles = StyleSheet.create({
   },
   quantityContainer: {
     margin: 5,
-  }
+  },
+  textInline: {
+      flexDirection: 'row',
+      marginRight: -10,
+  },
+
+  viewcheckout: {
+    marginLeft: 10,
+    borderRadius: 0,
+    marginTop: -5,
+    paddingLeft: -2,
+    textAlign: 'center',
+    backgroundColor: 'rgb(255,255,255)',
+    borderColor: 'black'
+  },
+
+  buttonView: {
+    width: width/2,
+    paddingRight: 5,
+    paddingLeft: 5,
+    marginLeft: 25,
+    marginTop: 0,
+    marginBottom: -2
+  },
 })
 
 export default Cart;

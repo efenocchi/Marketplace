@@ -60,16 +60,16 @@
                   <div class="form_container_modify_user_page">
                       <div class="form-btn">
                           {% if flag_negozio == 0 %}  <!-- sono un utente(solo l'utente ha il carrello -->
-                          <span>Modify User Info</span>
+                          <span>Modifica Utente</span>
                           {% endif %}
                           {% if flag_negozio == 1 %}  <!-- sono un utente(solo l'utente ha il carrello -->
-                          <span>Modify Shop Info</span>
+                          <span>Modifica Negozio</span>
                           {% endif %}
                       </div>
                       <form id="RegFormUser2" method="post" action="{% url 'users:modify_profile' %}"enctype="multipart/form-data">
                           {% csrf_token %}
                           {% include 'users/base_modifica_utente.html' %}
-                          <button type="submit" class="btn" value="Submit">Submit</button>
+                          <button class="btn_modify" type="submit" value="Submit">Modifica</button>
                       </form>
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
                         <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>

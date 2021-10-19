@@ -28,12 +28,12 @@
 </head>
 <body>
     {% block menu_id %}
-    <li><a href="{% url 'users:home_for_user'%}">Home</a></li>
+    <li><a href="{% url 'users:home_for_user' %}">Home</a></li>
     {% endblock %}
 
     {% block cart %}
-    <a href="{% url 'items:go_to_cart' %}"class="nav-link waves-effect">
-        <span class="badge bg-danger bg-secondary">{% if all_items == 0 %}0{% endif %}{% if all_items.get_final_quantity >= 0%}{{ all_items.get_final_quantity}}{% endif %}</span>
+    <a href="{% url 'items:go_to_cart' %}" class="nav-link waves-effect">
+        <span class="badge bg-danger bg-secondary">{% if all_items_cart == 0 %}0{% endif %}{% if all_items_cart.get_final_quantity >= 0%}{{ all_items_cart.get_final_quantity}}{% endif %}</span>
         <img src="{% static 'images/cart.png'%}" width="30px" height="30px">
     </a>
     {% endblock %}
@@ -43,7 +43,7 @@
         <div class="container">
             <div class="container text-center">
                 {% if user.user is not None %}
-                    <h2 id="title">Welcome: {{ user }}</h2>
+                    <h2 id="title">Benvenuto: {{ user }}</h2>
                 {% endif %}
             </div>
     <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
@@ -51,28 +51,24 @@
             <div class="small-container">
                 <form class="d-flex" method="get" action="{% url 'items:search'%}">
                     <input name="search" id="search" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button id="search_button" class="btn btn-outline-secondary" type="submit">Search</button>
+                    <button id="search_button" class="btn" type="submit">Search</button>
                 </form>
             </div>
         </nav>
     <!------------------------------ SEZIONE ELENCO PRODOTTI ----------------------------------------->
         <section class="text-center mb-4">
             <div class="row wow fadeIn">
-            {% if not item_searched %}
-                <h3 id="no_search_result">No result for {{word_searched}}</h3>
-            {% endif %}
-            {% for item in item_searched %}
+            {% for item in all_items %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
                         {% if item.quantity > 0 %}
-                        <img src="{{ item.image.url }}" class="card-img-top" alt="...">
-                        {% endif %}
-                        {% if item.quantity == 0 %}
-                        <img id="gray_no_quantity" src="{{ item.image.url }}" class="card-img-top" alt="...">
+                            <img id="img_no_gray" src="{{ item.image.url }}" class="card-img-top" alt="...">
+                        {% else %}
+                            <img id="gray_no_quantity" src="{{ item.image.url }}" class="card-img-top" alt="...">
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ item.name }}</h5>
-                            <p class="lead">
+                            <h5 class="lead">
                               {% if item.discount_price %}
                               <span class="mr-1">
                                 <del>€{{ item.price }}</del>
@@ -81,20 +77,18 @@
                               {% else %}
                               <span>€{{ item.price }}</span>
                               {% endif %}
-                            </p>
-                            <p>
-                                <span>Negozio: {{ item.user.username }}</span>
-                            </p>
-                            <p class="card-text">{{ item.category }}</p>
+                            </h5>
+                            <h5>Negozio: {{ item.user.username }}</h5>
+                            <h5 class="card-text">{{ item.category }}</h5>
                                 {% if item.quantity <= 0 %}
-                                <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Insert Your Mail</a>
-                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
+                                <h5>Quantità: {{ item.quantity }}</h5>
+                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn_card">Inserisci Email</a>
+                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn_card">Visita Negozio</a>
                                 {% endif %}
                                 {% if item.quantity > 0 %}
-                                <h5>{{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn btn-primary">Acquista</a>
-                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
+                                <h5>Quantità: {{ item.quantity }}</h5>
+                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" id="acquista_btn" class="btn_card">Acquista</a>
+                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn_card">Visita Negozio</a>
                                 {% endif %}
                         </div>
                     </div>

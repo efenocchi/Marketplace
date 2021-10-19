@@ -8,7 +8,7 @@
     {% extends 'main/base.html' %}
 
     <!-- ridefinisco title -->
-    <title>{% block title %}Registration{% endblock %}</title>
+    <title>{% block title %}Registrazione{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- carico la directory static per poter usare i suoi file -->
@@ -34,7 +34,6 @@
     <li><a href="{% url 'index' %}">Home</a></li>
     {% endblock %}
 
-
 <!----------------------------------------- LOGIN_PAGE ---------------------------------------->
     {% block insert_info %}
     <div class="registration_page">
@@ -43,8 +42,8 @@
                 <div class="col-2">
                     <div class="form-container">
                         <div class="form-btn">
-                            <span onclick="register_user()">Register User</span>
-                            <span onclick="register_shop()">Register Shop</span>
+                            <span onclick="register_user()">Utente</span>
+                            <span onclick="register_shop()">Negozio</span>
                             <hr id="Indicator">
                         </div>
 
@@ -54,7 +53,7 @@
 <!--                            <input type="text" name="username" class="input-box" placeholder="Username22" maxlength="15">-->
 <!--                            <input type="password" name="password" class="input-box" placeholder="Password22" maxlength="15">-->
 
-                            <button type="submit" class="btn">Register User</button>
+                            <button type="submit" class="btn_modify">Registra Utente</button>
                         </form>
 
                         <form id="RegFormShop" action="{% url 'users:shop_registration'%}" method="post">
@@ -64,7 +63,7 @@
 <!--                            <input type="email" placeholder="Email">-->
 <!--                            <input type="password" placeholder="Password">-->
 
-                            <button type="submit" class="btn">Register Shop</button>
+                            <button type="submit" class="btn_modify">Registra Negozio</button>
                         </form>
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
                         <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>

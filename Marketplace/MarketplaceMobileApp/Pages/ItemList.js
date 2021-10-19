@@ -190,14 +190,14 @@ class ItemList extends Component {
         return(
 
             <View style={styles.page}>
-                <SearchBar
+               <SearchBar
                     onPressToFocus
                     autoFocus={false}
                     fontColor="#c6c6c6"
                     iconColor="#c6c6c6"
                     shadowColor="#282828"
                     cancelIconColor="#c6c6c6"
-                    backgroundColor="#36485f"
+                    backgroundColor= 'rgba(178,25,25,0.90)'
                     placeholder="Cerca un oggetto"
                     width="93%"
                     activeOpacity={.9}
@@ -300,8 +300,8 @@ class ItemList extends Component {
 }
 const styles = StyleSheet.create({
   page: {
-    marginTop: 10,
-    backgroundColor: '#dddada',
+    paddingTop: 10,
+    backgroundColor: '#ebc66d',
   },
 
   flatlist: {
@@ -309,9 +309,9 @@ const styles = StyleSheet.create({
     marginTop:10,
     marginBottom:50,
     marginLeft: 15,
-    backgroundColor: '#dddada',
+    backgroundColor: '#ebc66d',
   },
-buttonView: {
+    buttonView: {
         width: width/2,
         paddingRight: 5,
         paddingLeft: 5,

@@ -22,6 +22,7 @@ class WaitUserForm(ModelForm):
             raise ValidationError(_('Errore: la mail deve essere compresa gra 5 e 100 caratteri.'))
         return self.cleaned_data['email']
 
+
 class ItemForm(ModelForm):
     required_css_class = 'required'
     name = forms.CharField(max_length=95)

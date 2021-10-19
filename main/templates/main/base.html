@@ -28,9 +28,6 @@
 <div class="header">
         <div class="container">
             <div class="navbar">
-                <div class="logo">
-                    <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" width="200px"></a>
-                </div>
                 <nav>
                     <ul id="MenuItems">
                             {% block menu_id %}
@@ -40,7 +37,7 @@
 <!--                        <li><a href="{% url 'index' %}">Home</a></li>-->
 <!--                        <li><a href="{% url 'users:login_all' %}">Iscriviti o Accedi</a></li> &lt;!&ndash; chiamo la pagina col nome specificato nel campo name in urls.py di main &ndash;&gt;-->
 <!--                        <li><a href="{% url 'items:item_page' %}">Product_Temp</a></li>-->
-                        <li><a href="{% url 'contact' %}">Contact</a></li>
+                        <li><a href="{% url 'contact' %}">Contatti</a></li>
                     </ul>
                 </nav>
                 {% block cart %}
@@ -49,10 +46,10 @@
                 <img src="{% static 'images/menu.png'%}" class="menu_icon" onclick="menutoggle()">
             </div>
 <!----------------------------------------- HOME.HTML-FIRST_ROW ---------------------------------------->
-            {% block first_row %}
-            {% endblock %}
         </div>
     </div>
+            {% block first_row %}
+            {% endblock %}
             <div>
             {% if messages %}
                 {% for message in messages %}
@@ -134,8 +131,8 @@
         <div class="container">
             <div class="row">
                 <div class="end_site_col-1">
-                    <h3>Download Our App</h3>
-                    <p>Download App for Android and IOS</p>
+                    <h3>Scarica la nostra App</h3>
+                    <p>Download per Android e IOS</p>
                     <div class="app_logo">
                         <img src="{% static 'images/app_store.png' %}">
                         <img src="{% static 'images/play_store.png' %}">
@@ -143,22 +140,27 @@
                 </div>
 
                 <div class="end_site_col-2">
-                    <a href="{% url 'index' %}"><img src="{% static 'images/logo.png' %}" width="200px"></a>
-                    <p>Our Purpose Is To Sustainably Make the Pleasure and Benefits of Sports Accessible to the Many.</p>
-                </div>
+                    <h3 style="margin-left: 20px">Domande Frequenti</h3>
+                    <ul>
+                        <li>Procedi all'ordine</li>
+                        <li>Metodi di pagamento</li>
+                        <li>Tempi di spedizione</li>
+                        <li>Come effettuare un reso</li>
+                    </ul>
+                    </div>
 
                 <div class="end_site_col-3">
-                    <h3>Useful Links</h3>
+                    <h3 style="margin-left: 20px">Link Utili</h3>
                     <ul>
-                        <li>Coupons</li>
-                        <li>Blog Post</li>
-                        <li>Return Policy</li>
-                        <li>Join Affiliate</li>
+                        <li>Condizioni uso e vendita</li>
+                        <li>Informativa sulla privacy</li>
+                        <li>Cookie</li>
+                        <li>Area Legale</li>
                     </ul>
                 </div>
 
                 <div class="end_site_col-4">
-                    <h3>Follow us</h3>
+                    <h3 style="margin-left: 20px">Seguci su</h3>
                     <ul>
                         <li>Instagram</li>
                         <li>Facebook</li>

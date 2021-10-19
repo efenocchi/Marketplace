@@ -19,22 +19,6 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import {NavigationContainer} from "@react-navigation/native";
 
 
-// const AppContainer = createAppContainer(Drawer);
-
-
-// export function HomeScreen({ navigation }) {
-//
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Text>Home Screen</Text>
-//       <Button
-//         title="Go to Login"
-//         onPress={() => navigation.navigate('Home2', {user_id: 'parametro passato2'})}
-//         // onPress={() => navigation.navigate('Home2')}
-//       />
-//     </View>
-//   );
-// }
 
 
 

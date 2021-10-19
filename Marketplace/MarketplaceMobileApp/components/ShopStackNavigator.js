@@ -4,7 +4,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import EmptyTemp from "./EmptyTemp";
 import ShopHomeStackNavigator from "./ShopHomeStackNavigator";
 import ChooseShopInfo from "../Pages/ChooseShopInfo";
-import AddItemStack from "./AddItemStack";
+import AddItem from "../Pages/AddItem";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +18,7 @@ function ShopStackNavigator() {
           activeTintColor: '#e47911',
       }}>
         <Tab.Screen component={ShopHomeStackNavigator}
-                    name="Shop" /* nome in alto della pagina */
+                    name="Home" /* nome in alto della pagina */
                     options={{
                         headerShown: false,
                         tabBarIcon: ({color}) => (
@@ -27,8 +27,18 @@ function ShopStackNavigator() {
                     }}
         />
 
+        <Tab.Screen component={AddItem}
+                    name="Aggiungi"
+                    options={{
+                        headerShown: false,
+                        tabBarIcon: ({color}) => (
+                            <Entypo name="plus" color={color} size={30}/>
+                        ),
+                    }}
+        />
+
         <Tab.Screen component={ChooseShopInfo}
-                    name="ShopInfo"
+                    name="Gestione negozio"
                     options={{
                         headerShown: false,
                         tabBarIcon: ({color}) => (
@@ -37,15 +47,7 @@ function ShopStackNavigator() {
                     }}
         />
 
-        <Tab.Screen component={AddItemStack}
-                    name="AddItem"
-                    options={{
-                        headerShown: false,
-                        tabBarIcon: ({color}) => (
-                            <Entypo name="user" color={color} size={25}/>
-                        ),
-                    }}
-        />
+
       </Tab.Navigator>
   );
 };

@@ -47,7 +47,7 @@
 {% block add_to_cart %}
     <div class="container_add_to_cart">
         <div id="cart_top" class="table-responsive text-nowrap">
-        <h2>Order Summary</h2>
+        <h2>Oggetti nel carrello</h2>
         <table class="table">
             <thead class="thead_cart">
                 <tr>
@@ -75,8 +75,8 @@
                         {% else %}
                             ${{ order_item.get_total_item_price }}
                         {% endif %}
-                        <td><a class="btn_cart btn-warning float-right ml-2" href="{% url 'items:remove_single_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete</a></td>
-                        <td><a class="btn_cart btn-warning float-right ml-2" href="{% url 'items:remove_entire_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Delete All</a><td>
+                        <td><a class="btn_cart" href="{% url 'items:remove_single_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Cancella</a></td>
+                        <td><a class="btn_cart" href="{% url 'items:remove_entire_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Cancella Tutto</a><td>
                         </td>
                     </tr>
                 {% endfor %}
@@ -108,11 +108,11 @@
         <td colspan="5">
 
             {% if allowed_to_buy %}
-                <a class='btn btn-warning float-right ml-2' href="{% url 'items:checkout'%}">Proceed to checkout</a>
+                <a class='btn' href="{% url 'items:checkout'%}">Procedi al checkout</a>
             {% else %}
-                <a class='btn btn-warning float-right ml-2'>Attendi {{data_fine_blocco}}</a>
+                <a class='btn'>Attendi {{data_fine_blocco}}</a>
             {% endif %}
-            <a class='btn btn-primary float-right' href="{% url 'items:item_page'%}">Continue shopping</a>
+            <a class='btn' href="{% url 'items:item_page'%}">Fai altri acquisti</a>
         </td>
         </div>
     </div>

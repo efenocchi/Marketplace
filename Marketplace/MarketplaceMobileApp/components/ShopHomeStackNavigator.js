@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import ItemList from "../Pages/ItemList";
-import ItemDetailPage from "../Pages/ItemDetailPage";
+import ModifyItem from "../Pages/ModifyItem";
 import ShopItemList from "../Pages/ShopItemList";
 
 const Stack = createStackNavigator();
@@ -18,8 +18,11 @@ export default function ShopHomeStackNavigator()  {
         />
 
         <Stack.Screen
-            component={ItemDetailPage}
-            name="ItemDetailPage"
+            component={ModifyItem} screenOptions={{headerShown: false}}
+            name="ModifyItem"
+            options={{
+                headerShown: false,
+            }}
         />
       </Stack.Navigator>
   );

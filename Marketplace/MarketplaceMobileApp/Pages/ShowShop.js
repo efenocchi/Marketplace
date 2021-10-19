@@ -201,7 +201,7 @@ export default class ShowShop extends Component {
                                 <TouchableOpacity style={styles.pressable} onPress={() => {
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
-                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[8], shop: item[6]})
+                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[8], shop: item[6], image_url:item[5]})
                                     ;}}>
                                     <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
@@ -273,16 +273,16 @@ export default class ShowShop extends Component {
 
 const styles = StyleSheet.create({
   page: {
-    marginTop: 20,
-    backgroundColor: 'blue',
+    paddingTop: 20,
+    // backgroundColor: '#dedede',
 
   },
 
   flatlist: {
     padding: -60,
     marginLeft: 18,
-    marginBottom:100,
-    backgroundColor: 'green',
+    paddingBottom:100,
+    // backgroundColor: '#dedede',
   },
 
   card: {

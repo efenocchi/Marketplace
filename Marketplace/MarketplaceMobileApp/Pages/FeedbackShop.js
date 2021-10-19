@@ -15,6 +15,7 @@ import { IconButton } from 'react-native-paper';
 import CustomHeader from '../components/Header';
 const {width, height} = Dimensions.get('window');
 import Card from '../components/Card';
+import Entypo from "react-native-vector-icons/Entypo";
 
 export default class FeedbackShop extends Component{
     // In questa funzione verranno ritornati i feedback che un negozio loggato ha ricevuto
@@ -113,24 +114,54 @@ export default class FeedbackShop extends Component{
                         renderItem={({item, index}) =>
                             <Card style={styles.inputContainer}>
                                 <View style={styles.data}>
-
                                     <View style={styles.textInline}>
-                                        <Text style={{fontWeight: 'bold'}} numberOfLines={1}>Titolo:  </Text>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}}numberOfLines={1}>Titolo: </Text>
+                                        <Text style={{fontSize: 18}}>{item[5]}</Text>
                                     </View>
-                                    <Text>{item[5]}</Text>
                                     <View style={styles.textInline}>
-                                        <Text style={{fontWeight: 'bold'}} numberOfLines={2}>Descrizione:  </Text>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={2}>Descrizione: </Text>
+                                        <Text style={{fontSize: 18}}>{item[0]}</Text>
                                     </View>
-                                    <Text>{item[0]}</Text>
                                     <View style={styles.textInline}>
-                                        <Text style={{fontWeight: 'bold'}} numberOfLines={1}>Ricevuta da:  </Text>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}} numberOfLines={2}>Ricevuta da: </Text>
+                                        <Text style={{fontSize: 18}}>{item[6]}</Text>
                                     </View>
-                                    <Text>{item[6]}</Text>
-
-                                    <Text style={styles.feedbackCustomer}/>
+                                    <Text style={styles.feedbackCustomer}></Text>
                                     <View style={styles.textInline}>
-                                        <Text style={{fontWeight: 'bold', fontStyle: 'italic'}}>Valutazione: </Text>
-                                        <Text>{item[3]}</Text>
+                                        <Text style={{fontWeight: 'bold',fontSize: 18}} >Valutazione: </Text>
+                                        <Text style={{fontSize: 18}}>({item[3]})</Text>
+                                           {item[3] === 1 && (
+                                               <Entypo name="star" color='red' size={20}/>
+                                           )}
+                                           {item[3] === 2 && (
+                                               <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
+                                           {item[3] === 3 && (
+                                               <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
+                                           {item[3] === 4 && (
+                                               <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
+                                          {item[3] === 5 && (
+                                              <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
                                     </View>
                                 </View>
                             </Card>
@@ -169,13 +200,18 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center'
     },
+    ratingsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     title: {
         fontSize: 20,
         marginVertical: 10
     },
     inputContainer: {
         minWidth: '96%',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginLeft: 7
     },
     feedbackTitle: {
         fontSize: 18,

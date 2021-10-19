@@ -16,13 +16,14 @@ class ModifyItem extends Component {
     constructor(props){
         super(props);
         this.state ={
-            // id_item: this.props.route.params.id_item,
+
             name: "",
             price: "",
             discount_price: "",
             category: "Abbigliamento",
             quantity: "",
             description: "",
+            isLoading: true,
         }
     }
 
@@ -42,18 +43,19 @@ class ModifyItem extends Component {
         );
     }
 
-    // componentWillUnmount() {
-    // this.willFocusSubscription.remove();
-    // }
 
     fetchItemDetail() {
         return fetch('http://'+ global.ip + '/api/items/' + this.id_item + '/detail/?format=json')
         .then((response) => response.json())
         .then((responseJson) => {
+            console.log(responseJson)
+            console.log("name")
+            console.log(responseJson.name)
+            this.state.isLoading=false
         this.setState({
+
             isLoading: false,
-            id_item: this.props.navigation.state.params.id_item,
-            dataSource: responseJson,
+            id_item: this.id_item,
             error_message: "",
             name: responseJson.name,
             price: responseJson.price,
@@ -67,7 +69,7 @@ class ModifyItem extends Component {
 
         })
         .catch((error) =>{
-            // this.fetchItemDetail();
+            console.log(error)
         });
     }
 
@@ -114,26 +116,10 @@ class ModifyItem extends Component {
         }
     }
 
-    clearFields = () => {
-        this.setState({error_message: "",
-            name: "",
-            price: "",
-            discount_price: "",
-            category: "",
-            quantity: "",
-            description: "",
-            image_item: "",
-        });
-
-        this.txtName.clear();
-        this.txtPrice.clear();
-        this.txtDiscountPrice.clear();
-        this.txtQuantity.clear();
-        this.txtDescription.clear();
-
-    }
-
     render() {
+        console.log("isLoading")
+        console.log(this.state.isLoading)
+        console.log(this.state.discount_price)
         if(this.state.isLoading){
             return(
                 <View style={{flex: 1, paddingTop: height / 2}}>
@@ -141,21 +127,12 @@ class ModifyItem extends Component {
                 </View>
             )
         }
-
+        console.log("ENTRAAAA")
+        console.log(this.state.name)
+        console.log(this.state.price)
         return (
 
             <View style={styles.screen}>
-                {/*<CustomHeader parent={this.props} />*/}
-
-                {/*<View style={styles.contentbar}>*/}
-                {/*    <View style={styles.leftcontainer}>*/}
-                {/*        <IconButton icon="arrow-left" onPress={() => this.props.navigation.goBack(null)} />*/}
-                {/*    </View>*/}
-                {/*    <Text style={styles.title}>*/}
-                {/*        Inserisci un nuovo annuncio*/}
-                {/*    </Text>*/}
-                {/*    <View style={styles.rightcontainer}></View>*/}
-                {/*</View>*/}
 
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{alignItems: 'center'}}>
@@ -174,7 +151,6 @@ class ModifyItem extends Component {
                                         </View>
                                         <View style={styles.entryTitle}>
                                             <Text style={styles.textTitle}>Prezzo Scontato: </Text>
-                                            <Text style={styles.asteriskStyle}>*</Text>
                                         </View>
                                         <View style={styles.entryTitle}>
                                             <Text style={styles.textTitle}>Categoria: </Text>
@@ -193,19 +169,32 @@ class ModifyItem extends Component {
                                      <View>
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
+                                            value={this.state.name}
                                             ref={input => { this.txtName = input }}
                                             onChangeText={(value) => this.setState({name: value})} />
                                         </View>
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
+                                                       value={this.state.price.toString()}
                                             ref={input => { this.txtPrice = input }}
                                             onChangeText={(value) => this.setState({price: value})} />
                                         </View>
-                                        <View style={styles.textContainer}>
+                                         {this.state.discount_price !== null && (
+                                          <View style={styles.textContainer}>
+                                            <TextInput editable maxLength={95}
+                                                       value={this.state.discount_price.toString()}
+                                            ref={input => { this.txtDiscountPrice = input }}
+                                            onChangeText={(value) => this.setState({discount_price: value})}/>
+                                        </View>
+                                         )}
+
+                                        {this.state.discount_price === null && (
+                                          <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
                                             ref={input => { this.txtDiscountPrice = input }}
                                             onChangeText={(value) => this.setState({discount_price: value})}/>
                                         </View>
+                                        )}
                                         <View>
                                         <Picker
                                             style={styles.picker} itemStyle={styles.pickerItem}
@@ -222,12 +211,14 @@ class ModifyItem extends Component {
                                         </View>
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
+                                                       value={this.state.quantity.toString()}
                                             ref={input => { this.txtQuantity = input }}
                                             onChangeText={(value) => this.setState({quantity: value})}/>
                                         </View>
 
                                         <View style={styles.textContainer}>
                                             <TextInput editable maxLength={95}
+                                                       value={this.state.description}
                                             ref={input => { this.txtDescription = input }}
                                             onChangeText={(value) => this.setState({description: value})}/>
                                         </View>

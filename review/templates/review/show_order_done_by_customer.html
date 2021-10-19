@@ -44,22 +44,13 @@
         <br>
             <div class="row wow fadeIn">
             {% for k,v in dict.items %}
-<!--                chiave sono i ref code, valore è: order e a seguire i vari order item-->
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
                     <!-- evito che venga visualizzato l'order -->
                     <!-- se ho più di un oggetto -->
                     {% if v|length %}
-                    {% for name in v.0.review_customer_done.all%}
-                        {% if name.writer == user %}
-
-                    {% endif %}
-                    {% endfor %}
                         {% for single_obj in v %}
                             {% if forloop.first %}
-                            <!-- qua posso gestire i dati degli order quindi controllo se è già stata lasciata la recensione -->
-
-
 
                                 <h5>Ref. code: {{ k }}</h5>
                             {% endif %}

@@ -53,16 +53,16 @@
         <div class="empty-container">
                 <div class="col-empty">
                     <div class="row-empty-1">
-                        <img src="{% static 'images/empty_cart.png' %}" class="empty_cart-img">
+                        <img src="{% static 'images/check.png' %}" class="empty_cart-img">
                     </div>
                     <div class="row-empty-2">
-                        <h1>Congratulation, your order has been saved!</h1>
-                        <h4>Your ref code is: {{ref_code}}<br>
+                        <h1>Congratulazioni, il tuo ordine è stato salvato!</h1>
+                        <h4>Il tuo ref code è: {{ref_code}}<br>
                         </h4>
                     </div>
                     <div class="row-empty-3">
-                        <a class='btn btn-primary float-right' href="{% url 'items:item_page'%}">Continue shopping</a>
-                        <a class='btn btn-primary float-right' href="{% url 'items:view_order'%}">View Your Order</a>
+                        <a class='btn btn-primary float-right' href="{% url 'items:item_page'%}">Fai altri acquisti</a>
+                        <a class='btn btn-primary float-right' href="{% url 'items:view_order'%}">Visualizza ordini</a>
                     </div>
                 </div>
         </div>

@@ -89,15 +89,6 @@ export default class UserInfoModify extends Component {
 
             });
         }
-        // Se non è un negozio allora
-        //  else {
-        //     this.setState({
-        //         descrizione: responseJson.descrizione,
-        //         hobby: responseJson.hobby
-        //     }, function(){
-        //
-        //     });
-        // }
 
         })
         .catch((error) => {
@@ -109,7 +100,6 @@ export default class UserInfoModify extends Component {
     modifyNormalProfile = () => {
 
                 if (this.state.username !== "" && this.state.password !== "" && this.state.conferma_password !== "" &&
-            // this.state.nome !== "" && this.state.cognome !== "" && this.state.email !== "" &&
             this.state.indirizzo !== "" && this.state.citta !== ""
             // && this.state.telefono !== "" && this.state.codice_postale !== ""
             // this.state.eta !== "" && this.state.caratteristiche !== ""

@@ -5,7 +5,7 @@ import {
     Image,
     Text,
     View,
-    StyleSheet, ActivityIndicator,
+    StyleSheet, ActivityIndicator, TextInput,
 } from "react-native";
 import Card from "../components/Card";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
@@ -37,25 +37,6 @@ class Checkout extends Component {
         );
     }
 
-   //     fetchCheckout() {
-   //          return fetch('http://'+ global.ip +'/api/items/' + global.user_id + '/checkout/?format=json')
-   //
-   //         .then((response) => response.json())
-   //         .then((responseJson) => {
-   //
-   //             this.setState({
-   //                 isLoading: false,
-   //                 dataSource: responseJson.results,
-   //                 all_items: responseJson.count
-   //             }, function () {
-   //
-   //                  console.log(responseJson.results)
-   //             });
-   //         })
-   //         .catch((error) => {
-   //             console.error(error)
-   //         });
-   // }
 
           fetchConfirmcheckout() {
             return fetch('http://'+ global.ip +'/api/items/' + global.user_id + '/confirmcheckout/?format=json')
@@ -86,107 +67,111 @@ class Checkout extends Component {
                 </View>
             )
         }
-        // this.array_values = Array(this.state.all_items).fill().map(()=>Array(2).fill())
-        // for (var i in this.state.dataSource) {
-        //     this.array_values[i][0] = this.state.dataSource[i]["total_price"]
-        //     this.array_values[i][1] = this.state.dataSource[i]["total_price2"]
-        // }
+
         return(
 
             <View style={styles.page}>
-                    {/*<FlatList*/}
-                    {/*    data={this.array_values}*/}
-                    {/*    renderItem={({item, index}) =>*/}
-                    {/*        <Card>*/}
-                    {/*                <View>*/}
-                    {/*                    <Text numberOfLines={1}>Total: {item[0]}</Text>*/}
-                    {/*                </View>*/}
-                    {/*        </Card>*/}
 
-                    {/*    }*/}
-                    {/*    keyExtractor={(item, index) => index.toString()}*/}
-                    {/*/>*/}
-                <Text>Congratulation!</Text>
-                <Text>Ref.Code: {this.state.data[0]}</Text>
-                <Text>Number Order: {this.state.data[1]}</Text>
-                <Button
-                    text={'Acquista ancora'}
-                    onPress={() => {
-                    //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
-                    this.props.navigation.navigate('ItemList');}}
-                />
+                    <View style={{alignItems: 'center'}}>
+                        <Card style={styles.inputContainer}>
+                            <View style={styles.data}>
+                                <View style={{flexDirection: 'column'}}>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Ref. Code: </Text>
+                                        </View>
+                                        <Text style={{fontSize: 18, marginTop: -2, marginBottom: 5}}>{this.state.data[0]}</Text>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Numero ordine: </Text>
+                                            <Text style={{fontSize: 18}}>{this.state.data[1]}</Text>
+                                       </View>
+                                </View>
+
+                                <View style={{paddingTop: 10}}/>
+                                <View style={{borderBottomColor: 'black', borderBottomWidth: 1, width: width - (width * 10 / 100)}}/>
+                                <View style={{paddingTop: 25}}/>
+
+                                <View style={{flexDirection: 'row'}}>
+
+                                    <View>
+                                        <View style={styles.bottomButton}>
+                                            <Button
+                                                text={'Acquista ancora'}
+                                                onPress={() => {
+                                                //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
+                                                this.props.navigation.navigate('ItemList');}}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+                        </Card>
+                    </View>
                 </View>
         );
 
     }
 }
 const styles = StyleSheet.create({
-  page: {
-    marginTop: 10,
-    backgroundColor: 'blue',
-
+    screen: {
+        flex: 1,
+        backgroundColor: 'gray'
+    },
+    title: {
+        fontSize: 20,
+        marginVertical: 10
+    },
+    buttonview: {
+        width: 110,
+        paddingRight: 5,
+        paddingLeft: 5
+    },
+    inputContainer: {
+        marginTop: height/4,
+        minWidth: '96%'
+    },
+    controlli: {
+        paddingTop: 20,
+        paddingRight: 5,
+        alignItems: 'center'
+    },
+    data: {
+        paddingTop: 20,
+        alignItems: 'center'
+    },
+    entryTitle: {
+        marginBottom: 5,
+        marginTop: 9,
+        flexDirection: 'row'
+    },
+    textTitle: {
+        fontWeight: 'bold'
+    },
+    textContainer: {
+        borderWidth: 1,
+        height: 28,
+        width: width - width / 2,
+        marginLeft: 10,
+        marginBottom: 3,
+        marginTop: 3
+    },
+  bottomButton: {
+    width: width/2,
+    paddingRight: 5,
+    paddingLeft: 5,
+    marginLeft: 25,
+    marginTop: 0,
+    marginBottom: -2
   },
-
-  flatlist: {
-    padding: -60,
-    marginLeft: 15,
-    backgroundColor: 'green',
-  },
-
-  card: {
-    borderWidth: 1,
-    borderColor: 'white',
-    borderRadius: 10,
-    backgroundColor: 'white',
-    flex:1,
-    padding: -20,
-    marginTop: 5,
-  },
-  pressable: {
+    bottomTitle: {
+        marginBottom: 25,
+        marginTop: 17,
+        alignItems: 'flex-end'
+    },
+      textInline: {
       flexDirection: 'row',
-      borderWidth: 1,
-      borderColor: 'white',
-      borderRadius: 10,
-      backgroundColor: '#fff',
-      marginVertical: 5,
+      marginRight: -5,
+      marginTop: -5
   },
-
-  row: {
-    flexDirection: 'row',
-  },
-  image: {
-    flex: 2,
-    height: 150,
-    resizeMode: 'contain',
-  },
-  rightContainer: {
-    padding: 10,
-    flex: 3,
-    backgroundColor: 'white',
-  },
-  title: {
-    fontSize: 18,
-  },
-  price: {
-    fontSize: 12,
-    fontWeight: 'normal',
-    textDecorationLine: 'line-through',
-  },
-  discountprice: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  ratingsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  star: {
-    margin: 2,
-  },
-  quantityContainer: {
-    margin: 5,
-  }
-})
+});
 
 export default Checkout;

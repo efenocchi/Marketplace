@@ -20,8 +20,6 @@ class GeneralUser(models.Model):
     telefono = models.CharField(null=True, default="", max_length=20)
     data_nascita = models.DateField(null=True, default=None, blank=True)
     foto_profilo = models.FileField(null=True, default='', blank=True)
-    eta = models.PositiveIntegerField(null=True)
-    sesso = models.CharField(max_length=50, default="", null=True)
 
     # descrizione dei propri gusti in modo da poter ricevere consigli dai negozi tramite chat
     descrizione = models.CharField(max_length=250, default="", null=True)

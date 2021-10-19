@@ -218,7 +218,7 @@ class ShopRegistration extends Component {
             <View style={styles.screen}>
                 <View style={styles.contentBar}>
                     <Text style={styles.title}>
-                        Registra un account professionale
+                        Registrazione Negozio
                     </Text>
                 </View>
 
@@ -321,13 +321,13 @@ class ShopRegistration extends Component {
                                     <ErrorMessage errorValue={touched.citta && errors.citta} />
 
                                     <View style={styles.titleField}>
-                                        <Text style={styles.text}>Provincia: </Text>
+                                        <Text style={styles.textTitle}>Provincia: </Text>
 
                                         <TakeProvinces/>
                                     </View>
 
                                     <View style={styles.titleField}>
-                                        <Text style={styles.text}>Regione: </Text>
+                                        <Text style={styles.textTitle}>Regione: </Text>
 
                                         <TakeRegions />
                                     </View>
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginVertical: 10,
         marginTop: 80,
-        marginLeft: width/7
+        marginLeft: 110
     },
     form: {
         flex: 1,
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
         minWidth: '96%'
     },
     titleField: {
-        marginBottom: 30,
+        marginBottom: 10,
         paddingLeft: 10,
         flex: 1,
         flexDirection: 'row',
@@ -422,7 +422,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     textTitle: {
-        fontWeight: 'bold'
+        fontSize: 16,
     },
     contentBar: {
         height: 20,

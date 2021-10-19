@@ -38,7 +38,7 @@ nav ul li{
 a{
     text-decoration: none;
     color: black;
-    font-weight: 600;
+    font-weight: 100;
 
 }
 
@@ -70,7 +70,7 @@ p{
     padding-left: 25px;
     padding-right: 25px;
     margin-top: 30px;
-    margin-bottom: 93px;
+    margin-bottom: 103px;
 }
 .row{
     display: flex;
@@ -101,11 +101,13 @@ p{
 /* bottone Explore Now */
 .btn{
     display: inline-block;
-    background: #f0ecec;
-    border-color: black;
+    /*background: rgba(178, 25, 25, 0.83);*/
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    border: solid 1px black;
     padding: 8px 30px;
     margin: 30px 0;
-    border-radius: 0px;
+    border-radius: 10px;
     color: black;   /* colore scritta dentro */
     outline-width: thick;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
@@ -117,21 +119,34 @@ p{
     border-color: #a88734 #9c7e31 #846a29;
     color: white;
     padding: 8px 30px;
-    border-radius: 30px;
+    border-radius: 10px;
     color: black;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
 
+.btn_login{
+    display: inline-block;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    color: white;
+    padding: 6px 45px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    color: black;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
 .btn_cart{
     display: inline-block;
     background: #f0c14b;
     border-color: #a88734 #9c7e31 #846a29;
+    border: solid 1px black;
     padding-left: 18px;
     padding-right: 18px;
     padding-top: 3px;
     padding-bottom: 3px;
     margin-top: -5px;
-    border-radius: 0px;
+    border-radius: 10px;
     color: black;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
@@ -140,20 +155,40 @@ p{
     display: inline-block;
     background: #f0c14b;
     border-color: #a88734 #9c7e31 #846a29;
-    padding-left: 20px;
-    padding-right: 20px;
+    border: solid 1px black;
+    padding-left: 29px;
+    padding-right: 29px;
     padding-top: 8px;
     padding-bottom: 8px;
     margin-top: 20px;
     border-radius: 10px;
-    color: black;
+    outline-width: thick;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
+
+.btn_modify{
+    display: inline-block;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    border: solid 1px black;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 40px;
+    border-radius: 10px;
+    outline-width: thick;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+    text-decoration: none;
+    color: black;
+    font-weight: 200;
 }
 
 .btn_review{
     display: inline-block;
     background: #f0c14b;
     border-color: #a88734 #9c7e31 #846a29;
+    border: solid 1px black;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 8px;
@@ -167,12 +202,27 @@ p{
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
 
+.btn_email{
+    display: inline-block;
+    background: #f0c14b;
+    border-color: #a88734 #9c7e31 #846a29;
+    border: solid 1px black;
+    color: white;
+    padding: 7px 50px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    color: black;
+    transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
+}
+
 #acquista_btn{
     display: inline-block;
     background: #f0c14b;
     border-color: #a88734 #9c7e31 #846a29;
-    padding-left: 44px;
-    padding-right: 44px;
+    border: solid 1px black;
+    padding-left: 50px;
+    padding-right: 50px;
     padding-top: 8px;
     padding-bottom: 8px;
     margin-top: 20px;
@@ -183,36 +233,53 @@ p{
 
 /* transizione bottone da rosso a blu */
 .btn_cart:hover{
-    background: #ea420f;
+    background: #9aab92;
+    color: black;
+}
+
+.btn_login:hover{
+    background: #9aab92;
+    color: black;
+}
+
+.btn_email:hover{
+    background: #9aab92;
     color: black;
 }
 
 /* transizione bottone da rosso a blu */
 .btn_card:hover{
-    background: #ea420f;
+    background: #9aab92;
+    color: black;
+}
+
+.btn_modify:hover{
+    background: #9aab92;
     color: black;
 }
 
 /* transizione bottone da rosso a blu */
 .btn_review:hover{
-    background: #ea420f;
+    background: #9aab92;
     color: black;
 }
 
 /* transizione bottone da rosso a blu */
 .btn:hover{
-    background: white;
+    background: #9aab92;
     color: black;
 }
 
 #acquista_btn:hover{
-    background: #ea420f;
+    background: #9aab92;
     color: black;
 }
 
 /* colore sfondo */
 .header{
-    background: #dedede; /* se modifico questo modifico anche .offer e .login_page background */
+    /*background: rgba(232, 198, 29, 0.65); !* se modifico questo modifico anche .offer e .login_page background *!*/
+    /*background: rgba(236, 51, 10, 0.65); !* se modifico questo modifico anche .offer e .login_page background *!*/
+     background: rgba(241, 241, 241, 0.89);
 }
 
 .header .row{
@@ -383,9 +450,10 @@ small{
 }
 /* ---------------------------------- LOGIN_PAGE ----------------------------------------------------------- */
 .login_page{
-    margin: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
     font-family: sans-serif;
-    background: #ffebcd;        /* pink */
+    background: #f6f1f1;        /* bainco-sporco-rosato */
     background-size: cover;
     background-position: center;
 }
@@ -489,11 +557,11 @@ small{
 /* ------------------------------- MODIFY_PAGE ----------------------------------------------------------- */
 .modify_user_page{
     padding: 50px 0;
-    background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
+    background: #f6f1f1; /* deve avere lo stesso background di .header e .offer */
 }
 
 .form_container_modify_user_page{
-    background: #db7272;
+    background: rgba(159, 31, 31, 0.7);
     width: 550px;
     height: 990px;
     max-height: 990px;
@@ -501,7 +569,7 @@ small{
     text-align: center;
     padding: 20px 0;
     margin: 50px auto; /* distanza dal bordo alto */
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.1);
+    box-shadow: 0 0 20px 0px #9aab92;
     overflow: scroll;
     overflow: auto;
     overflow-y: auto;
@@ -510,7 +578,7 @@ small{
 
 .form_container_modify_user_page span{
     font-weight: bold;
-    color: #555;
+    color: rgba(0, 0, 0, 0.87);
     display: inline-block;
 }
 
@@ -537,7 +605,7 @@ small{
 }
 /* ------------------------------- INSERT_ITEM_PAGE ----------------------------------------------------------- */
 .form_container_insert_item{
-    background: #db7272;
+    background: rgba(159, 31, 31, 0.7);
     width: 550px;
     height: 880px;
     max-height: 900px;
@@ -590,7 +658,7 @@ small{
 }
 /* ------------------------------- ADD_REVIEW_PAGE ----------------------------------------------------------- */
 .form_container_add_review{
-    background: #db7272;
+    background: rgba(159, 31, 31, 0.7);
     width: 550px;
     height: 650px;
     max-height: 900px;
@@ -635,7 +703,7 @@ small{
 /* ------------------------------- REGISTRATION_PAGE ----------------------------------------------------------- */
 .registration_page{
     padding: 50px 0;
-    background: radial-gradient(white, green); /* deve avere lo stesso background di .header e .offer */
+    background: #f6f1f1; /* deve avere lo stesso background di .header e .offer */
 }
 #col-sm-10 #id_regione, #id_provincia{
     width: 300px;
@@ -729,7 +797,7 @@ form a{
 #Indicator{
     width: 100px;
     border: none;
-    background: #ff523b;
+    background: rgb(178, 25, 25);
     height: 3px;
     margin-top: 8px;
     transform: translateX(100px);
@@ -772,15 +840,16 @@ form a{
     cursor: pointer;
     background: #f0c14b;
     border-color: #a88734 #9c7e31 #846a29;
+    border: solid 1px black;
     border-radius: 10px;
-    border: black;
     color: black;
     transitions: background 0.5s;   /* serve per la trasizione del colore del bottone */
 }
 
+
 .btn:hover, #search_button:hover{
-    background-color: white;
-    border-color: white;
+    background: #9aab92;
+    color: black;
 }
 
 #title{
@@ -808,7 +877,13 @@ form a{
     /*max-width: auto;*/
     padding: 20px 20px 20px 20px;
 }
+#id_email{
+    padding-right: 20px;
+    margin-left: 10px;
+}
+.col-sm-10{
 
+}
 .col-gallery{
     flex-basis: 50%;
     min-width: 300px;
@@ -869,8 +944,8 @@ form a{
 
 input:focus, #search:focus{
     outline: none;
-    border-color: #e77600;
-    box-shadow: 0 0 3px 2px rgb(228 121 17);
+    border-color: rgba(178, 25, 25, 0.55);
+    box-shadow: 0 0 3px 2px rgba(178, 25, 25, 0.55);
 }
 
 .single-product .fa{
@@ -915,7 +990,9 @@ input:focus, #search:focus{
 }
 .thead_cart {
     color: #fff;
-    background: #ff523b;
+    background: #dc3545;;
+    /*background: rgba(229, 15, 15, 0.75);*/
+
 }
 
 /* ---------------------------------- END SITE ----------------------------------------------------------- */
@@ -1027,3 +1104,22 @@ ul{
         flex-basis: 100%;
     }
 }
+/*!* gestione errori scritte *!*/
+/*#id_name-error {*/
+/*    color: red;*/
+/*    margin-left: 31px;*/
+/*}*/
+
+/*#id_quantity-error{*/
+/*    color: red;*/
+/*    margin-left: 10px;*/
+/*}*/
+
+/*#id_description-error {*/
+/*    color: red;*/
+/*    margin-left: 25px;*/
+/*}*/
+
+/*#id_price-error {*/
+/*    color: red;*/
+/*}*/

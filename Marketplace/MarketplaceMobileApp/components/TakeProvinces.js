@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         width: width - width / 2,
         backgroundColor: '#e7e7e7',
         marginBottom: 4,
-        marginTop: 10,
+        marginTop: 0,
     },
     pickerItem: {
         color: 'white',

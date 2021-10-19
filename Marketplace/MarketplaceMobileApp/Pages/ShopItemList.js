@@ -23,8 +23,7 @@ class ShopItemList extends Component {
 
     componentDidMount() {
         this.fetchShopItems();
-        this.willFocusSubscription = this.props.navigation.addListener(
-          'willFocus',
+       this.focusListener = this.props.navigation.addListener('focus',
           () => {
             this.setState({
                 isLoading: true,
@@ -36,9 +35,6 @@ class ShopItemList extends Component {
         );
     }
 
-    // componentWillUnmount() {
-    // this.willFocusSubscription.remove();
-    // }
 
     fetchShopItems() {
             return fetch('http://'+ global.ip +'/api/items/' + global.user_id + '/shop_all_items/?format=json')
@@ -92,7 +88,7 @@ class ShopItemList extends Component {
                             <Card style={styles.card}>
                                 <Pressable style={styles.pressable} onPress={() => {
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
-                                    this.props.navigation.navigate('ItemDetailPage',{id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4] });}}>
+                                    this.props.navigation.navigate('ModifyItem',{id_item: item[0]});}}>
                                     <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
                                         <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
@@ -118,14 +114,15 @@ class ShopItemList extends Component {
 const styles = StyleSheet.create({
   page: {
     marginTop: 0,
-    backgroundColor: 'blue',
+    backgroundColor: '#ebc66d',
 
   },
 
   flatlist: {
     padding: -60,
     marginLeft: 15,
-    backgroundColor: 'green',
+      paddingBottom: 34,
+    backgroundColor: '#ebc66d',
   },
 
   card: {

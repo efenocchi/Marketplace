@@ -46,24 +46,10 @@
     {% endblock %}
 
     {% block buy_page %}
-    <div class="small-container single-product">
+    <div style="margin-bottom: 40px; margin-top: 40px;" class="small-container single-product">
         <div class="row">
             <div class="col-gallery">
                 <img src="{{ item_selected.image.url }}" width="100%" id="productImg">
-                <div class="small-img-row">
-                    <div class="small-img-col">
-                        <img src="{{ item_selected.image.url }}" width="100%" class="small-img">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="{% static 'images/gallery-2.jpg' %}" width="100%" class="small-img">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="{% static 'images/gallery-3.jpg' %}" width="100%" class="small-img">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="{% static 'images/gallery-4.jpg' %}" width="100%" class="small-img">
-                    </div>
-                </div>
             </div>
             <div class="col-gallery">
                 <p>Home / {{ item_selected.category }}</p>
@@ -89,13 +75,11 @@
 {#                </select>#}
                 <form class="d-flex" method="get" action="{% url 'items:add_to_cart' item_selected_id=item_selected.id %}">
                     <input name="quantity" id="quantity" type="number" value="1" min="1" max="{{ item_selected.quantity }}">
-                    <button id="search_button" class="btn btn-outline-secondary" type="submit">Add To Cart</button>
+                    <button id="search_button" class="btn_modify" type="submit">Aggiungi</button>
                 </form>
 {#                <input id="quantity_to_add" type="number" value="0" min="0" max="{{ item_selected.quantity }}">#}
                 {% if item_selected.quantity == 0 %}
-                <a href="{% url 'items:go_to_cart' %}" class="btn">Go To Cart</a>
-                <br>
-
+                <a href="{% url 'items:go_to_cart' %}" class="btn">Vai al carrello</a>
 {#                <input href="{% url 'items:insert_email' item_selected_id=item_selected.id %}" placeholder="Inserisci la tua email">#}
 
                 <form id="user-form" class="form-horizontal" role="form" action="{% url 'items:insert_email' item_selected_id=item_selected.id %}" method="post" enctype="multipart/form-data">
@@ -107,11 +91,11 @@
                             </div>
 
                             <label class="control-label col-sm-2" for="user">{{ form_email.label_tag }}</label>
-                            <div class="col-sm-10" > {{ form_email }}</div>
+                            <div class="col-sm-10"> {{ form_email }}</div>
                             </div>
-                        <div class="form-group">
+                       <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn_small">Lascia email</button>
+                                <button type="submit" class="btn_email">Lascia email</button>
                             </div>
                         </div>
                     </form>
@@ -119,10 +103,9 @@
                 {% endif %}
                 {% if item_selected.quantity > 0 %}
 {#                <a href="{% url 'items:add_to_cart' item_selected_id=item_selected.id %}" class="btn">Add To Cart</a> #}
-                <a href="{% url 'items:go_to_cart' %}" class="btn">Go To Cart</a>
+                <a href="{% url 'items:go_to_cart' %}" class="btn">Vai al carrello</a>
                 {% endif %}
-                <h3>Description</h3>
-                <br>
+                <h3>Descrizione</h3>
                 <p>{{ item_selected.description }}</p>
             </div>
         </div>

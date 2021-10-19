@@ -19,6 +19,8 @@ import {NavigationActions as navigation} from "react-navigation";
 import {useNavigation} from "@react-navigation/native";
 import Button from "../components/Button";
 import SearchBar from "react-native-dynamic-search-bar";
+import Entypo from "react-native-vector-icons/Entypo";
+import {red} from "react-native-reanimated/src/reanimated2/Colors";
 
 const {width, height} = Dimensions.get('window');
 
@@ -95,18 +97,20 @@ export default class LeaveShowReviewShop extends Component {
 
             <View style={styles.page}>
                     {this.review_done === false && (
-                       <Button
-                        text={'Lascia una recensione'}
-                        onPress={() => {
-                            // console.warn('ShowShop')
-                        this.props.navigation.navigate('LeaveOrReadReviewToShop',{username_shop: this.username_shop, review_left: this.review_done});
-                        }}
-                    />
+                       <View style={styles.buttonView}>
+                           <Button
+                            text={'Lascia una recensione'}
+                            onPress={() => {
+                                // console.warn('ShowShop')
+                            this.props.navigation.navigate('LeaveOrReadReviewToShop',{username_shop: this.username_shop, review_left: this.review_done});
+                            }}
+                        />
+                    </View>
                    )}
                     {this.review_done === true && (
                          <View style={styles.buttonView}>
                             <Button
-                            text={'Mostra recensione lasciata'}
+                            text={'Mostra recensione'}
                             onPress={() => {
                                 // console.warn('ShowShop')
                             this.props.navigation.navigate('LeaveOrReadReviewToShop',{username_shop: this.username_shop, review_left: this.review_done});
@@ -126,11 +130,54 @@ export default class LeaveShowReviewShop extends Component {
                         renderItem={({item, index}) =>
                             <Card style={styles.card}>
                                     <View style={styles.rightContainer}>
-                                        <Text style={styles.title} numberOfLines={1}>Titolo: {item[0]}</Text>
-                                        <Text style={styles.title} numberOfLines={1}>Descrizione: {item[1]}</Text>
-                                        <Text style={styles.title} numberOfLines={2}>Scritta da: {item[3]}</Text>
-                                        <Text style={styles.title} numberOfLines={2}>Valutazione: {item[2]}</Text>
-
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Titolo: </Text>
+                                            <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                        </View>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Descrizione: </Text>
+                                            <Text style={{fontSize: 18}}>{item[1]}</Text>
+                                        </View>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Scritta da: </Text>
+                                            <Text style={{fontSize: 18}}>{item[3]}</Text>
+                                        </View>
+                                       <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Valutazione: </Text>
+                                            <Text style={{fontSize: 18}}>({item[2]})</Text>
+                                           {item[2] === 1 && (
+                                               <Entypo name="star" color='red' size={20}/>
+                                           )}
+                                           {item[2] === 2 && (
+                                               <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
+                                           {item[2] === 3 && (
+                                               <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
+                                           {item[2] === 4 && (
+                                               <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
+                                          {item[2] === 5 && (
+                                              <View style={styles.ratingsContainer}>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                                  <Entypo name="star" color='red' size={20}/>
+                                              </View>
+                                           )}
+                                        </View>
                                     </View>
 
                             </Card>
@@ -145,7 +192,7 @@ export default class LeaveShowReviewShop extends Component {
 const styles = StyleSheet.create({
   page: {
     marginTop: 20,
-    backgroundColor: 'blue',
+    // backgroundColor: '#dedede',
 
   },
 buttonView: {
@@ -157,9 +204,12 @@ buttonView: {
   flatlist: {
     padding: -60,
     marginLeft: 15,
-    backgroundColor: 'green',
+    // backgroundColor: '#dedede',
   },
-
+    textInline: {
+        flexDirection: 'row',
+        marginRight: -10,
+    },
   card: {
     borderWidth: 1,
     borderColor: 'white',
@@ -214,7 +264,6 @@ buttonView: {
   ratingsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
   },
 
   button_small: {

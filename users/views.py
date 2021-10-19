@@ -468,8 +468,10 @@ def modify_profile(request):
 
     if shop_or_user.login_negozio:
         form_user_or_shop = ShopProfileForm(request.POST or None, instance=shop_or_user)
+        flag_negozio = 1
     else:
         form_user_or_shop = NormalUserForm(request.POST or None, instance=shop_or_user)
+        flag_negozio = 0
 
     if form_user_or_shop.is_valid() and form.is_valid():
 
@@ -483,10 +485,11 @@ def modify_profile(request):
             if shop_or_user.login_negozio:
                 print("sono un negozio")
                 set_shop_info(shop_or_user2, form_user_or_shop)
+                flag_negozio = 1
             else:
                 print("Non sono un negozio")
                 set_user_info(shop_or_user2, form_user_or_shop)
-
+                flag_negozio = 0
             user_form = form.save(commit=False)
             password = form.cleaned_data['password']
             user_form.set_password(password)
@@ -498,13 +501,15 @@ def modify_profile(request):
 
                     if shop_or_user.login_negozio:
                         return render(request, 'main/home_for_shop.html')
+
                     else:
                         return render(request, 'main/home_for_user.html')
 
     context = {
         "form": form,
         "form_user_or_shop": form_user_or_shop,
-        "all_items": order
+        "all_items": order,
+        "flag_negozio": flag_negozio
     }
 
     return render(request, 'users/modify_profile.html', context)

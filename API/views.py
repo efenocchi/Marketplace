@@ -245,7 +245,7 @@ class DeleteItem(generics.RetrieveUpdateDestroyAPIView):
                     order_item.quantity -= 1
                     order_item.save()
                 # se la quantità è 1 rimuovo direttamente
-                if order_item.quantity <= 1:
+                else:
                     print(62)
                     order.items.remove(order_item)
                     order_item.delete()
@@ -361,11 +361,15 @@ class ModifyItem(generics.RetrieveUpdateAPIView):
         return Item.objects.get(id=id_item_to_modify)
 
     def put(self, request, *args, **kwargs):
+
         id_item_to_modify = self.kwargs['id_item']
         item_to_modify = Item.objects.get(id=id_item_to_modify)
         item_to_modify.name = self.request.data["name"]
         item_to_modify.price = self.request.data["price"]
-        item_to_modify.discount_price = self.request.data["discount_price"]
+        if self.request.data["discount_price"] != None :
+            item_to_modify.discount_price = self.request.data["discount_price"]
+
+
         item_to_modify.category = self.request.data["category"]
         item_to_modify.quantity = self.request.data["quantity"]
         item_to_modify.description = self.request.data["description"]

@@ -178,22 +178,27 @@ class ItemDetailPage extends Component {
                     //     }}
                     // />
                     :
+                    <View style={styles.buttonView}>
+                        <Button
+                            text={'Add To Cart'}
+                            onPress={() => {
+                                console.warn('Add to cart')
+                                this.add_to_cart();
+                                // this.props.navigation.navigate('RegistrationStackNavigator');
+                            }}
+                        />
+                    </View>
+                }
+                <View style={styles.buttonView}>
                     <Button
-                        text={'Add To Cart'}
+                        text={'Go To Cart'}
                         onPress={() => {
-                            console.warn('Add to cart')
-                            this.add_to_cart();
-                            // this.props.navigation.navigate('RegistrationStackNavigator');
+                            console.warn('Go to cart')
+                            this.props.navigation.navigate('Cart');
                         }}
                     />
-                }
-                <Button
-                    text={'Go To Cart'}
-                    onPress={() => {
-                        console.warn('Go to cart')
-                        this.props.navigation.navigate('Cart');
-                    }}
-                />
+                </View>
+
             </ScrollView>
         );
     }
@@ -202,6 +207,11 @@ class ItemDetailPage extends Component {
 const styles = StyleSheet.create({
   root:{
       padding: 10,
+      backgroundColor:'white'
+  },
+    buttonView: {
+    marginRight: 50,
+    marginLeft: 50,
   },
   rootquantity: {
     flexDirection: 'row',
@@ -212,7 +222,7 @@ const styles = StyleSheet.create({
     width: 130,
   },
 
-  button: {
+button: {
     width: 35,
     height: 35,
     alignItems: 'center',

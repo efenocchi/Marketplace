@@ -41,18 +41,19 @@
             <div class="row">
                 <div class="col-3">
                     <div class="form_container_login">
-                        <img src="{% static 'images/user_icon.png' %}">
-                        <h3>Sign Up Now</h3>
+                        <img style="margin-left: 3px" src="{% static 'images/who.png' %}">
+                        <h3>Accedi</h3>
                         <form id="LoginForm" action="{% url 'users:login_all'%}" method="post">
                             {% csrf_token %} <!-- da mettere all'interno del form -->
                             <input type="text" name="username" class="input-box" placeholder="Username" maxlength="15">
                             <input type="password" name="password" class="input-box" placeholder="Password" maxlength="15">
-
-                            <input id="check_terms" type="checkbox"><p id="check_terms_text">I agree to the terms of services</p>
-                            <button type="submit" class="btn">Login</button>
+                            <h5 style="text-align: left; font-size: 15px; margin: 15px"> Accedendo al tuo account dichiari di aver letto e accetti le nostre <a style="color: blue; text-align: left; font-size: 15px;">Condizioni generali di uso e vendita.</a> Prendi visione della nostra <a style="color: blue; text-align: left; font-size: 15px;">Informativa sulla privacy</a>, della nostra <a style="color: blue; text-align: left; font-size: 15px;">Informativa sui Cookie</a> e della nostra <a style="color: blue; text-align: left; font-size: 15px;">Informativa sulla Pubblicità definita in base agli interessi.</a></h5>
+                            <button type="submit" class="btn_login">Login</button>
+                            <br>
+                            <br>
                             <hr>
                             <label>Sei nuovo?</label>
-                            <a href="{% url 'users:normal_user_registration' %}" class="btn">Crea il tuo account</a>
+                            <a style="font-size: 15px;" href="{% url 'users:normal_user_registration' %}" class="btn_review">Crea il tuo account</a>
                         </form>
                     </div>
                 </div>

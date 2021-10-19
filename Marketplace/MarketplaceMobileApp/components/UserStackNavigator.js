@@ -33,7 +33,7 @@ console.log(route.name);
         />
 
         <Tab.Screen component={ChooseUserInfo}
-                    name="UserInfo"
+                    name="Gestione utente"
                     options={{
                         headerShown: false,
                         tabBarIcon: ({color}) => (
@@ -43,7 +43,7 @@ console.log(route.name);
         />
 
         <Tab.Screen component={Cart}
-                    name="Cart"
+                    name="Carrello"
                     options={{
                         tabBarIcon: ({color}) => (
                             <Entypo name="shopping-cart" color={color} size={25}/>

@@ -44,7 +44,7 @@
         <div class="container">
             <div class="container text-center">
                 {% if user.user is not None %}
-                    <h3 id="title">Welcome: {{ user }}</h3>
+                    <h3 id="title">Benvenuto: {{ user }}</h3>
                 {% endif %}
             </div>
     <!------------------------------ NAVBAR +FILTRO ----------------------------------------->
@@ -69,7 +69,7 @@
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ item.name }}</h5>
-                            <p class="lead">
+                            <h5 class="lead">
                               {% if item.discount_price %}
                               <span class="mr-1">
                                 <del>€{{ item.price }}</del>
@@ -78,20 +78,18 @@
                               {% else %}
                               <span>€{{ item.price }}</span>
                               {% endif %}
-                            </p>
-                            <p>
-                                <span>Negozio: {{ item.user.username }}</span>
-                            </p>
-                            <p class="card-text">{{ item.category }}</p>
+                            </h5>
+                            <h5>Negozio: {{ item.user.username }}</h5>
+                            <h5 class="card-text">{{ item.category }}</h5>
                                 {% if item.quantity <= 0 %}
                                 <h5>Quantità: {{ item.quantity }}</h5>
-                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn_card">Insert Your Mail</a>
-                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
+                                <a href="{% url 'items:buy_page' item_selected_id=item.id %}" class="btn_card">Inserisci Email</a>
+                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn_card">Visita Negozio</a>
                                 {% endif %}
                                 {% if item.quantity > 0 %}
                                 <h5>Quantità: {{ item.quantity }}</h5>
                                 <a href="{% url 'items:buy_page' item_selected_id=item.id %}" id="acquista_btn" class="btn_card">Acquista</a>
-                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn btn-primary">Visita Negozio</a>
+                                <a href="{% url 'items:show_shop' username_shop=item.user.username%}" class="btn_card">Visita Negozio</a>
                                 {% endif %}
                         </div>
                     </div>
