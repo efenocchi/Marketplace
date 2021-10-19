@@ -16,6 +16,7 @@ import ShopStackNavigator from "./ShopStackNavigator";
 import ItemList from "../Pages/ItemList";
 import provaFetch from "../Pages/provaFetch";
 import OrdersPlaced from "../Pages/OrdersPlaced";
+import Logout from "../Pages/Logout";
 import AddItem from "../Pages/AddItem";
 import TakeAPicture from "../Pages/TakeAPictureOrVideo";
 import UploadPhoto2 from "../Pages/UploadPhoto2";
@@ -69,7 +70,7 @@ function DrawerNavigator() {
     return (
 
 <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home" screenOptions={{ gestureEnabled: false }} options={{headerShown: false, swipeEnabled: false}}>
+      <Drawer.Navigator initialRouteName="HomeScreen" screenOptions={{ gestureEnabled: false }} options={{headerShown: false, swipeEnabled: false}}>
         {/*Usati solo per prove*/}
           <Drawer.Screen name="Login" component={Login} screenOptions={{ gestureEnabled: false }} options={{headerShown: false, swipeEnabled: false}}/>
           {/*<Drawer.Screen name="UploadPhoto2" component={UploadPhoto2} />*/}
@@ -80,12 +81,13 @@ function DrawerNavigator() {
           <Drawer.Screen name="Home2" component={HomeScreen2} />
 
 
-          <Drawer.Screen name="Home" component={HomeScreen} screenOptions={{ gestureEnabled: false }} options={{headerShown: false, swipeEnabled: false}} />
+          <Drawer.Screen name="HomeScreen" component={HomeScreen} screenOptions={{ gestureEnabled: false }} options={{headerShown: false, swipeEnabled: false}} />
           <Drawer.Screen name="OrdersPlaced" component={OrdersPlaced} />
           <Drawer.Screen name="RegistrationStackNavigator" component={RegistrationStackNavigator} screenOptions={{ gestureEnabled: false }} options={{headerShown: false, swipeEnabled: false}}/>
           <Drawer.Screen name="UserStackNavigator" screenOptions={{ gestureEnabled: false }} component={UserStackNavigator} options={{headerShown: false, swipeEnabled: false}}/>
           <Drawer.Screen name="ShopStackNavigator" screenOptions={{ gestureEnabled: false }} component={ShopStackNavigator} options={{headerShown: false, swipeEnabled: false}}/>
           <Drawer.Screen name="ItemList" component={ItemList} />
+          <Drawer.Screen name="Logout" component={Logout} options={{headerShown: false}}/>
       </Drawer.Navigator>
 </NavigationContainer>
 

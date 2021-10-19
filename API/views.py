@@ -10,6 +10,7 @@ from rest_framework import generics
 from items.models import Order, OrderItem, Item, WhoHasReviewed, WaitUser
 from items.views import computeTime
 from review.models import ReviewCustomer, ReviewItem, ReviewShop
+from review.views import check_average_raging
 from users.models import GeneralUser
 from API.serializers import CompleteUserData, CompleteNormalUserData, CompleteShopUserData, ReviewCustomerSerializer, \
     OrderCustomerSerializer, OrderItemSerializer, ItemSerializer, ReviewItemSerializer, ReviewShopSerializer, \
@@ -714,6 +715,10 @@ class CreateReviewForCustomer(generics.CreateAPIView):
             raise Exception("Negozio recensore non aggiunto")
         print(self.request.data)
         serializer.save(writer=self.request.user, receiver=user, order=order)
+        general_user = GeneralUser.objects.get(user=user)
+
+        #controllo se deve avere un blocco oppure
+        check_average_raging(self.request, general_user, self.request.data["rating"])
 
 
 class GetSingleReviewCustomer(generics.RetrieveUpdateAPIView):

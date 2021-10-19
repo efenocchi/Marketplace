@@ -1,7 +1,6 @@
 import React, {Component, useState} from 'react';
 import {ActivityIndicator, Dimensions, Image, Picker, ScrollView, Text, TextInput, View} from "react-native";
 import {StyleSheet} from 'react-native';
-import ImageCarousel from "../components/ImageCarousel";
 import Button from "../components/Button";
 import product from "../components/product";
 import NumericInput from 'react-native-numeric-input'

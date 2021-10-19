@@ -214,6 +214,7 @@ def add_review_shop(request, shop_selected_id):
 
 def check_average_raging(request, receiver, last_rating_review):
     # controllo se l'utente deve essere penalizzato per aver ricevuto troppe recensioni negative
+
     review_received_by_customer = ReviewCustomer.objects.filter(receiver=receiver.user)
     average_value = 0
 
@@ -259,7 +260,6 @@ def add_review_customer(request, order_id, customer_id):
     order = Order.objects.get(id=order_id)
 
     # un utente sta cercando di fare una recensione a un altro utente, non è possibile
-    # [Modifica] devo ritornare anche l'errore dove faccio capire che non è possibile farlo
     if not writer.login_negozio:
         return HttpResponseRedirect("un utente non può dare un feedback a un altro utente")
 

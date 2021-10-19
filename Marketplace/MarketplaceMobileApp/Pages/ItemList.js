@@ -193,14 +193,14 @@ class ItemList extends Component {
                <SearchBar
                     onPressToFocus
                     autoFocus={false}
-                    fontColor="#c6c6c6"
-                    iconColor="#c6c6c6"
-                    shadowColor="#282828"
-                    cancelIconColor="#c6c6c6"
-                    backgroundColor= 'rgba(178,25,25,0.90)'
+                    fontColor="black"
+                    iconColor="black"
+                    shadowColor="black"
+                    cancelIconColor="black"
+                    backgroundColor= "#f0c14b"
                     placeholder="Cerca un oggetto"
                     width="93%"
-                    activeOpacity={.9}
+                    activeOpacity={0.9}
                     onChangeText={text => {
                         this.fetchSearchItem(text);
                     }}

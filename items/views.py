@@ -51,7 +51,6 @@ def search(request):
             'item_searched': item_searched,
             'word_searched': word_searched,
             'user': request.user,
-            'all_items': order
         }
         return render(request, 'items/search.html', context)
 
@@ -528,12 +527,15 @@ def go_to_cart(request):
     context = {
         "all_items": order,
         'user': request.user,
+        # gli passo il negato
         'allowed_to_buy': allowed_to_buy,
         'data_fine_blocco': general_user.data_fine_blocco
     }
 
     # se ha un blocco per recensioni negative => non può fare acquisti finchè non è finito il periodo di divieta
     return render(request, 'items/add_to_cart.html', context)
+
+
 
 @login_required(login_url='/users/login')
 def remove_single_item_from_cart(request, item_selected_id):
@@ -547,6 +549,10 @@ def remove_single_item_from_cart(request, item_selected_id):
         ordered=False
     )
     print(order_qs)
+    general_user = GeneralUser.objects.get(user=request.user)
+    allowed_to_buy = general_user.data_fine_blocco <= datetime.date.today()
+
+
     # se nel carrello c'è almeno un elemento
     if order_qs.exists():
         order = order_qs[0]
@@ -566,14 +572,22 @@ def remove_single_item_from_cart(request, item_selected_id):
             else:
                 order.items.remove(order_item)
             messages.info(request, "This item quantity was updated.")
-            context = {"all_items": order}
+            context = {
+                "all_items": order,
+                'allowed_to_buy': allowed_to_buy,
+                'data_fine_blocco': general_user.data_fine_blocco
+            }
             print(context)
             return render(request, 'items/add_to_cart.html', context)
 
         # controllo che l'elemento da eliminare sia in ordine(carrello) se no allora:
         else:
             messages.info(request, "This item was not in your cart")
-            context = {"all_items": order}
+            context = {
+                "all_items": order,
+                'allowed_to_buy': allowed_to_buy,
+                'data_fine_blocco': general_user.data_fine_blocco
+            }
             print(context)
             return render(request, 'items/add_to_cart.html', context)
     # se il carrello è vuoto
@@ -581,7 +595,12 @@ def remove_single_item_from_cart(request, item_selected_id):
         order = 0
         messages.info(request, "You do not have an active order")
 
-        context = {"all_items": order, 'user': request.user}
+        context = {
+            "all_items": order,
+            'user': request.user,
+            'allowed_to_buy': allowed_to_buy,
+            'data_fine_blocco': general_user.data_fine_blocco
+        }
         print(context)
 
         return render(request, 'items/add_to_cart.html', context)
@@ -597,6 +616,9 @@ def remove_entire_item_from_cart(request, item_selected_id):
         user=request.user,
         ordered=False
     )
+    general_user = GeneralUser.objects.get(user=request.user)
+    allowed_to_buy = general_user.data_fine_blocco <= datetime.date.today()
+
     if order_qs.exists():
         order = order_qs[0]
         # check if the order item is in the order
@@ -610,14 +632,23 @@ def remove_entire_item_from_cart(request, item_selected_id):
             order_item.delete()
             messages.info(request, "This item was removed from your cart.")
 
-            context = {"all_items": order, 'user': request.user, 'order_qs': order_item}
+            context = {"all_items": order,
+                       'user': request.user,
+                       'order_qs': order_item,
+                       'allowed_to_buy': allowed_to_buy,
+                       'data_fine_blocco': general_user.data_fine_blocco
+                       }
             print(context)
 
             return render(request, 'items/add_to_cart.html', context)
         else:
             messages.info(request, "This item was not in your cart")
 
-            context = {"all_items": order, 'user': request.user}
+            context = {"all_items": order,
+                       'user': request.user,
+                       'allowed_to_buy': allowed_to_buy,
+                       'data_fine_blocco': general_user.data_fine_blocco
+                       }
             print(context)
 
             return render(request, 'items/add_to_cart.html', context)
@@ -625,7 +656,11 @@ def remove_entire_item_from_cart(request, item_selected_id):
         order = 0
 
         messages.info(request, "You do not have an active order")
-        context = {"all_items": order, 'user': request.user}
+        context = {"all_items": order,
+                   'user': request.user,
+                   'allowed_to_buy': allowed_to_buy,
+                   'data_fine_blocco': general_user.data_fine_blocco
+                   }
         print(context)
 
         return render(request, 'items/add_to_cart.html', context)

@@ -36,12 +36,15 @@ export default class Login extends Component {
             // this.props.navigation.reset({
             // routes: [{ name: "UserStackNavigator" }]
             // });
+
+            this.clearFields();
             if(global.login_negozio === true) {
                 this.props.navigation.navigate('ShopStackNavigator');
             }
             else {
                 this.props.navigation.navigate('UserStackNavigator');
             }
+
 
         })
         .catch((error) =>{
@@ -193,7 +196,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: 'gray'
+        backgroundColor: '#dddada'
     },
     title: {
         fontSize: 20,

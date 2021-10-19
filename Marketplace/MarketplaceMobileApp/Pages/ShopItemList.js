@@ -91,14 +91,29 @@ class ShopItemList extends Component {
                                     this.props.navigation.navigate('ModifyItem',{id_item: item[0]});}}>
                                     <Image style={styles.image} source={{uri: item[5]}} />
                                     <View style={styles.rightContainer}>
-                                        <Text style={styles.title} numberOfLines={1}>Id: {item[0]}</Text>
-                                        <Text style={styles.title} numberOfLines={1}>Nome: {item[1]}</Text>
-                                        <Text style={styles.description} numberOfLines={3}>Descrizione: {item[2]}</Text>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Id: </Text>
+                                            <Text style={{fontSize: 18}}>{item[0]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={1}>Nome: </Text>
+                                            <Text style={{fontSize: 18}}>{item[1]}</Text>
+                                        </View>
+                                        <View style={styles.textInline}>
+                                            <Text style={{fontWeight: 'bold', fontSize: 18}} numberOfLines={2}>Descrizione: </Text>
+                                            <Text style={{fontSize: 18}}>{item[2]}</Text>
+                                        </View>
                                         <Text style={styles.discountprice}>
-                                          DiscountPrice: {item[4]}
-                                          {
-                                            <Text style={styles.price}>Price:  {item[3]}</Text>
-                                          }
+                                            {item[4] !== null && (
+                                        <Text style={styles.discountprice} numberOfLines={2}>Prezzo: { item[4]}€
+
+                                            <Text style={styles.price}>{item[3]}€</Text>
+
+                                        </Text>
+                                        )}
+                                        {item[4] === null && (
+                                            <Text style={styles.discountprice} numberOfLines={2}>Prezzo: {item[3]}€</Text>
+                                        )}
                                         </Text>
                                     </View>
                                 </Pressable>
@@ -109,20 +124,20 @@ class ShopItemList extends Component {
                 </View>
         );
 
+
     }
 }
 const styles = StyleSheet.create({
   page: {
     marginTop: 0,
-    backgroundColor: '#ebc66d',
+    backgroundColor: '#dddada',
 
   },
 
   flatlist: {
     padding: -60,
     marginLeft: 15,
-      paddingBottom: 34,
-    backgroundColor: '#ebc66d',
+    backgroundColor: '#dddada',
   },
 
   card: {
@@ -143,7 +158,10 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       marginVertical: 5,
   },
-
+    textInline: {
+        flexDirection: 'row',
+        marginRight: -10,
+    },
   row: {
     flexDirection: 'row',
   },
@@ -181,5 +199,6 @@ const styles = StyleSheet.create({
     margin: 5,
   }
 })
+
 
 export default ShopItemList;

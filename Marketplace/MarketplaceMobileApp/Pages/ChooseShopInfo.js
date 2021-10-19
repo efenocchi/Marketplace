@@ -9,7 +9,7 @@ import FeedbackShop from "./FeedbackShop"
 import AddItem from "./AddItem"
 import Button from "../components/Button";
 import ModifyItem from "./ModifyItem";
-
+import Logout from "../Pages/Logout"
 
 // Serve solo per visualizzare i bottoni con i quali si andrà nelle varie schermate
 export class ChooseShopInfoList extends Component{
@@ -33,6 +33,12 @@ export class ChooseShopInfoList extends Component{
                 <Button
                 text="Modifica informazioni profilo"
                 onPress={() => this.props.navigation.navigate('UserInfoModify')}
+                />
+            </View>
+            <View>
+                <Button
+                text="Logout"
+                onPress={() => this.props.navigation.navigate('Logout')}
                 />
             </View>
             </SafeAreaView>
@@ -60,7 +66,7 @@ export default class ChooseUserInfo extends Component {
                 {/*<Stack.Screen name="CheckItemsBought" component={CheckItemsBought}/>*/}
 
                 {/*<Stack.Screen name="ReadOrLeaveFeedBackToCustomer" component={ReadOrLeaveFeedbackItem}/>*/}
-
+                <Stack.Screen name="Logout" component={Logout} options={{headerShown: false}}/>
             </Stack.Navigator>
 
         );

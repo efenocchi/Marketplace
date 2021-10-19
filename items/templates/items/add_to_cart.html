@@ -76,7 +76,9 @@
                             ${{ order_item.get_total_item_price }}
                         {% endif %}
                         <td><a class="btn_cart" href="{% url 'items:remove_single_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Cancella</a></td>
-                        <td><a class="btn_cart" href="{% url 'items:remove_entire_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Cancella Tutto</a><td>
+                        {% if order_item.quantity > 1%}
+                            <td><a class="btn_cart" href="{% url 'items:remove_entire_item_from_cart' item_selected_id=order_item.item.id%}" class="button">Cancella Tutto</a><td>
+                        {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

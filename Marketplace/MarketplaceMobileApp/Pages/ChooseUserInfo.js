@@ -8,6 +8,7 @@ import CheckItemsBought from "./CheckItemsBought"
 import ReadOrLeaveFeedbackItem from "./ReadOrLeaveFeedbackItem"
 import ItemsRelatedToOneShopAndOneOrder from "./ItemsRelatedToOneShopAndOneOrder"
 import Button from "../components/Button";
+import Logout from "../Pages/Logout"
 
 
 export class ChooseUserInfoList extends Component{
@@ -31,6 +32,12 @@ export class ChooseUserInfoList extends Component{
                 <Button
                 text="Modifica informazioni utente"
                 onPress={() => this.props.navigation.navigate('UserInfoModify')}
+                />
+            </View>
+            <View>
+                <Button
+                text="Logout"
+                onPress={() => this.props.navigation.navigate('Logout')}
                 />
             </View>
             </SafeAreaView>
@@ -59,6 +66,7 @@ export default class ChooseUserInfo extends Component {
                 <Stack.Screen name="CheckItemsBought" component={CheckItemsBought} options={{headerShown: false}}/>
 
                 <Stack.Screen name="ReadOrLeaveFeedbackItem" component={ReadOrLeaveFeedbackItem} options={{headerShown: false}}/>
+                <Stack.Screen name="Logout" component={Logout} options={{headerShown: false}}/>
 
             </Stack.Navigator>
 

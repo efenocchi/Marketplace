@@ -57,7 +57,10 @@
         </nav>
     <!------------------------------ SEZIONE ELENCO PRODOTTI ----------------------------------------->
         <section class="text-center mb-4">
-            <div class="row wow fadeIn">
+            <div style="margin-bottom: 382px;" class="row wow fadeIn">
+            {% if not item_searched %}
+                <h3 id="no_search_result">No result for {{word_searched}}</h3>
+            {% endif %}
             {% for item in all_items %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card" style="width: 18rem;">
