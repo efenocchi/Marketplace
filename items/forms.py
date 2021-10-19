@@ -10,7 +10,8 @@ MIME_TYPES = ['image/jpeg', 'image/png']
 
 
 class WaitUserForm(ModelForm):
-    email = forms.EmailField(max_length=100)
+    # email = forms.EmailField(max_length=100)
+    email = forms.EmailField(widget=forms.Textarea(attrs={'cols': 20, 'rows': 1}))
 
     class Meta:
         model = WaitUser

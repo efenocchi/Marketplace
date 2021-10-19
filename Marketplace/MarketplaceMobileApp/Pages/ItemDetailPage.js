@@ -17,7 +17,7 @@ class ItemDetailPage extends Component {
     shop;
     quantity;
     value;
-
+    image_url;
 
     constructor(props) {
         super(props);
@@ -34,6 +34,7 @@ class ItemDetailPage extends Component {
         this.price = this.props.route.params.price;
         this.discountprice = this.props.route.params.discountprice;
         this.shop = this.props.route.params.shop;
+        this.image_url = this.props.route.params.image_url;
         this.quantity = this.props.route.params.quantity;  /* quantity = quantità di quell'item disponibile */
         this.setState({
             isLoading: false,
@@ -85,6 +86,7 @@ class ItemDetailPage extends Component {
                 </View>
             )
         }
+
         return (
             <ScrollView style={styles.root}>
 
@@ -100,7 +102,8 @@ class ItemDetailPage extends Component {
                 </View>
 
                 {/* Image Carousel */}
-                <ImageCarousel images={product.images}/>
+
+                <Image style={styles.image} source={{uri: this.image_url}} />
 
                 {/* Category */}
                 {/*
@@ -194,8 +197,8 @@ class ItemDetailPage extends Component {
             </ScrollView>
         );
     }
-
 }
+
 const styles = StyleSheet.create({
   root:{
       padding: 10,
@@ -234,7 +237,12 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     textDecorationLine: 'line-through',
   },
-
+  image: {
+    flex: 2,
+    height: 200,
+    resizeMode: 'contain',
+    marginBottom:15,
+  },
   discountprice: {
     fontSize: 18,
     fontWeight: 'bold',

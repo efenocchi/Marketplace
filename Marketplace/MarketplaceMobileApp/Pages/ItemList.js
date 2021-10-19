@@ -89,7 +89,7 @@ class ItemList extends Component {
                 dataSource: responseJson.results,
                 all_items: responseJson.count
             }, function(){
-
+                console.log(responseJson.results)
             });
             })
             .catch((error) =>{
@@ -216,7 +216,7 @@ class ItemList extends Component {
                                  <TouchableOpacity  style={styles.pressable} key={item.id} onPress={() =>
                                     //setto l'id dell'oggetto selezionato da mandare alla ItemDetailPage e visualizzarne i dettagli
                                     this.props.navigation.navigate('ItemDetailPage',
-                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[6], shop: item[7]})
+                                        {id: item[0], name: item[1], description: item[2], price: item[3], discountprice: item[4],quantity: item[6], shop: item[7], image_url: item[5] })
                                     }>
                                     {item[6] === 0 ?    //se la quantity è 0 -> item finito
                                     <Image style={styles.imagegray} source={{uri: item[5]}} />
